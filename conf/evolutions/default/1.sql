@@ -26,8 +26,8 @@ CREATE TABLE location (
 	address_2 VARCHAR(45),
 	address_3 VARCHAR(45),
 	postal_code VARCHAR(20),
-	geo_coord1 VARCHAR(20),
-	geo_coord2 VARCHAR(20),
+	latitude FLOAT,
+	longitude FLOAT,
 	"desc" VARCHAR(256),
 	url VARCHAR(60),
 	PRIMARY KEY(id)
@@ -68,7 +68,7 @@ CREATE TABLE user_contact (
 CREATE SEQUENCE group_id_seq;
 CREATE TABLE "group" (
 	id INTEGER NOT NULL DEFAULT nextval('group_id_seq'),
-	leader INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+	organizer INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
 	group_name VARCHAR(60),
 	"desc" VARCHAR(256),
 	min_size INTEGER,
@@ -84,6 +84,8 @@ CREATE TABLE event (
 	"desc" VARCHAR(256),
 	min_size INTEGER,
 	max_size INTEGER,
+	rsvp_tot INTEGER,
+	wait_list_tot INTEGER,
 	PRIMARY KEY(id)
 );
 
@@ -91,6 +93,14 @@ CREATE TABLE user_group (
 	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
 	group_id INTEGER NOT NULL REFERENCES "group"(id) ON DELETE CASCADE,
 	PRIMARY KEY(user_id, group_id)
+);
+
+CREATE SEQUENCE user_event_id_seq;
+CREATE TABLE user_event (
+	id INTEGER NOT NULL DEFAULT nextval('user_event_id_seq'),
+	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+	event_id INTEGER NOT NULL REFERENCES event(id) ON DELETE CASCADE,
+	status INTEGER
 );
 
 CREATE TABLE group_event (
@@ -190,6 +200,7 @@ CREATE TABLE promo (
 	"desc" VARCHAR(156),
 	promo_code VARCHAR(20),
 	status VARCHAR(16),
+	active BOOL,
 	start_time TIMESTAMP,
 	end_time TIMESTAMP,
 	PRIMARY KEY(id)
