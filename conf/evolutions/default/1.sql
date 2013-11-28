@@ -8,12 +8,38 @@ CREATE TABLE task (
 	label varchar(255)
 );
 
+CREATE SEQUENCE role_seq;
+CREATE TABLE role (
+    id integer NOT NULL DEFAULT nextval('role_seq'),
+    "role" varchar(20) UNIQUE NOT NULL,
+    PRIMARY KEY (id)
+);
+
 CREATE SEQUENCE user_id_seq;
 CREATE TABLE "user" (
 	id INTEGER NOT NULL DEFAULT nextval('user_id_seq'),
 	created TIMESTAMP NOT NULL DEFAULT current_timestamp,
 	last_active TIMESTAMP,
 	last_login TIMESTAMP,
+	user_name VARCHAR(45) UNIQUE,
+	email VARCHAR(60),
+	"role" varchar(20) REFERENCES "role"("role") ON DELETE CASCADE,
+	PRIMARY KEY(id)
+);
+
+CREATE SEQUENCE user_prof_id_seq;
+CREATE TABLE user_profile (
+	id INTEGER NOT NULL DEFAULT nextval('user_prof_id_seq'),
+	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+	first_name VARCHAR(45),
+	last_name VARCHAR(45),
+	gender CHAR(8),
+	birthdate TIMESTAMP,
+	nationality VARCHAR(45),
+	primary_loc INTEGER,
+	portrait_url VARCHAR(80),
+	bio VARCHAR(256),
+	story VARCHAR(256),
 	PRIMARY KEY(id)
 );
 
@@ -33,18 +59,16 @@ CREATE TABLE location (
 	PRIMARY KEY(id)
 );
 
-CREATE SEQUENCE user_prof_id_seq;
-CREATE TABLE user_profile (
-	id INTEGER NOT NULL DEFAULT nextval('user_prof_id_seq'),
-	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
-	user_name VARCHAR(45),
-	gender CHAR(8),
-	birthdate TIMESTAMP,
-	nationality VARCHAR(45),
-	primary_loc INTEGER,
-	portrait_url VARCHAR(80),
-	bio VARCHAR(256),
-	story VARCHAR(256),
+CREATE SEQUENCE event_id_seq;
+CREATE TABLE event (
+	id INTEGER NOT NULL DEFAULT nextval('event_id_seq'),
+	"date" TIMESTAMP,
+	loc_id INTEGER NOT NULL REFERENCES location(id) ON DELETE CASCADE, 
+	"desc" VARCHAR(256),
+	min_size INTEGER,
+	max_size INTEGER,
+	rsvp_tot INTEGER,
+	wait_list_tot INTEGER,
 	PRIMARY KEY(id)
 );
 
@@ -65,6 +89,13 @@ CREATE TABLE user_contact (
 	PRIMARY KEY(user_id, contact_id)
 );
 
+CREATE TABLE user_loc (
+	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+	loc_id INTEGER NOT NULL REFERENCES location(id) ON DELETE CASCADE,
+	index INTEGER,
+	PRIMARY KEY(user_id, loc_id)
+);
+
 CREATE SEQUENCE group_id_seq;
 CREATE TABLE "group" (
 	id INTEGER NOT NULL DEFAULT nextval('group_id_seq'),
@@ -73,19 +104,6 @@ CREATE TABLE "group" (
 	"desc" VARCHAR(256),
 	min_size INTEGER,
 	max_size INTEGER,
-	PRIMARY KEY(id)
-);
-
-CREATE SEQUENCE event_id_seq;
-CREATE TABLE event (
-	id INTEGER NOT NULL DEFAULT nextval('event_id_seq'),
-	"date" TIMESTAMP,
-	loc_id INTEGER NOT NULL REFERENCES location(id) ON DELETE CASCADE, 
-	"desc" VARCHAR(256),
-	min_size INTEGER,
-	max_size INTEGER,
-	rsvp_tot INTEGER,
-	wait_list_tot INTEGER,
 	PRIMARY KEY(id)
 );
 
@@ -100,7 +118,8 @@ CREATE TABLE user_event (
 	id INTEGER NOT NULL DEFAULT nextval('user_event_id_seq'),
 	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
 	event_id INTEGER NOT NULL REFERENCES event(id) ON DELETE CASCADE,
-	status INTEGER
+	status INTEGER,
+	PRIMARY KEY(id)
 );
 
 CREATE TABLE group_event (
@@ -155,14 +174,8 @@ CREATE SEQUENCE disp_id_seq;
 CREATE TABLE "dispatch" (
 	id INTEGER NOT NULL DEFAULT nextval('disp_id_seq'),
 	disp VARCHAR(256),
-	index INTEGER
-);
-
-CREATE TABLE user_loc (
-	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
-	loc_id INTEGER NOT NULL REFERENCES location(id) ON DELETE CASCADE,
 	index INTEGER,
-	PRIMARY KEY(user_id, loc_id)
+	PRIMARY KEY(id)
 );
 
 CREATE SEQUENCE int_id_seq;
@@ -211,6 +224,7 @@ CREATE TABLE promo (
 DROP TABLE task CASCADE;
 
 DROP TABLE user_contact CASCADE;
+DROP TABLE user_profile CASCADE;
 DROP TABLE user_group CASCADE;
 DROP TABLE group_event CASCADE;
 DROP TABLE photo_biz CASCADE;
@@ -220,8 +234,9 @@ DROP TABLE photo_event CASCADE;
 DROP TABLE user_loc CASCADE;
 DROP TABLE user_interest CASCADE;
 DROP TABLE business_category CASCADE;
+DROP TABLE user_event CASCADE;
 
-DROP TABLE user_profile CASCADE;
+DROP TABLE role CASCADE;
 DROP TABLE "group" CASCADE;
 DROP TABLE preferences CASCADE;
 DROP TABLE photo CASCADE;
@@ -246,4 +261,6 @@ DROP SEQUENCE biz_id_seq CASCADE;
 DROP SEQUENCE event_id_seq CASCADE;
 DROP SEQUENCE bizcat_id_seq CASCADE;
 DROP SEQUENCE promo_id_seq CASCADE;
+DROP SEQUENCE role_id_seq CASCADE;
 DROP SEQUENCE user_id_seq CASCADE;
+DROP SEQUENCE user_event_id_seq CASCADE;
