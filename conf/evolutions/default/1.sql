@@ -8,9 +8,9 @@ CREATE TABLE task (
 	label varchar(255)
 );
 
-CREATE SEQUENCE role_seq;
+CREATE SEQUENCE role_id_seq;
 CREATE TABLE role (
-    id integer NOT NULL DEFAULT nextval('role_seq'),
+    id integer NOT NULL DEFAULT nextval('role_id_seq'),
     "role" varchar(20) UNIQUE NOT NULL,
     PRIMARY KEY (id)
 );
@@ -23,6 +23,7 @@ CREATE TABLE "user" (
 	last_login TIMESTAMP,
 	user_name VARCHAR(45) UNIQUE,
 	email VARCHAR(60),
+	password VARCHAR(20),
 	"role" varchar(20) REFERENCES "role"("role") ON DELETE CASCADE,
 	PRIMARY KEY(id)
 );
@@ -264,3 +265,6 @@ DROP SEQUENCE promo_id_seq CASCADE;
 DROP SEQUENCE role_id_seq CASCADE;
 DROP SEQUENCE user_id_seq CASCADE;
 DROP SEQUENCE user_event_id_seq CASCADE;
+DROP SEQUENCE role_id_seq;
+
+DROP TABLE play_evolutions;

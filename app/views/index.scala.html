@@ -1,26 +1,13 @@
-@(tasks: List[Task], taskForm: Form[String]) <!-- All code here is TEMP and will be replaced by TerraTraveler code -->
+<!DOCTYPE html>
 
-@import helper._
+<html>
+<head>
+	<title>Terra Traveler Data Model Lab</title>
+    <script src="@routes.Assets.at("javascripts/jquery-1.7.1.min.js")" type="text/javascript"></script>
+    <script type="text/javascript" src="http://www.json.org/json2.js"></script>
+</head>
 
-@main("Todo List") {
+<body>
+	<p>Hi there!</p>
 
-    <h1>@tasks.size task(s)</h1>
-    
-    <ul>
-    	@tasks.map { task =>
-        	<li>
-            	@task.label
-                @form(routes.Application.deleteTask(task.id)) {
-                	<input type="submit" value="Delete"/>
-                }
-            </li>
-        }
-    </ul>
-	
-    <h2>Add new task</h2>
-    
-    @form(routes.Application.newTask) {
-    	@inputText(taskForm("label"))
-        <input type="submit" value="Create" />
-    }
-}
+</body>
