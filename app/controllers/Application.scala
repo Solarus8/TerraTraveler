@@ -20,11 +20,11 @@ object Application extends Controller {
 	def createUserJson = Action { implicit request =>
 	    request.body.asJson.map { json =>
 	        val userName = (json \ "userName").as[String]
-	        val email = (json \ "email").as[String]
+	        val email    = (json \ "email").as[String]
 	        val password = (json \ "password").as[String]
 	        
-	        val newUser = User(NotAssigned, userName, email, password)
-			val quizId = User.create(newUser)
+	        val newUser  = User(NotAssigned, userName, email, password)
+			val quizId   = User.create(newUser)
 			
 			Redirect(routes.Application.allUsers)
 		}.getOrElse {
@@ -33,8 +33,9 @@ object Application extends Controller {
 	}
 	
 	def createUser = Action { implicit request =>
-	    val anyData = Map("userName" -> "userName", "email" -> "email", "password" -> "password")
-	    val user: User = userForm.bind(anyData).get
+	    println("Application.createUser - request: " + request)
+	    //val anyData = Map("userName" -> "userName", "email" -> "email", "password" -> "password")
+	    val user: User = userForm.bindFromRequest.get
 	    User.create(user)
 	    
 	    Redirect(routes.Application.allUsers)
@@ -59,9 +60,9 @@ object Application extends Controller {
 	    val usersJson = Json.obj(
 	    	"users"	-> {
   		    	users.map(user => Json.obj(
-	    	  	    "userName"	-> user.userName,
-	        	    "email" 	-> user.email,
-	        	    "password"	-> user.password
+	    	  	    "userName" -> user.userName,
+	        	    "email"    -> user.email,
+	        	    "password" -> user.password
   		    ))}
 	    )
 	    

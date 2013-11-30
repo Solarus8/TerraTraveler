@@ -80,7 +80,7 @@ object User {
 	    DB.withConnection { implicit connection =>
 	      	SQL(
 	      		"""
-      			insert into "user" (user_name, email, password, role) values (
+      			insert into "user" (user_name, email, password) values (
       				{userName}, {email}, {password}
       			)
 	      		"""
@@ -100,7 +100,7 @@ object User {
 		DB.withConnection { implicit connection =>
 	      	SQL(
 	      		"""
-      			insert into "user" (user_name, email, password, role) values (
+      			insert into "user" (user_name, email, password) values (
       				{userName}, {email}, {password}
       			)
 	      		"""
