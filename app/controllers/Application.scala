@@ -2,9 +2,14 @@ package controllers
 
 import models.User
 import anorm.NotAssigned
+import anorm._
+import play.api.db._
 import play.api.mvc._
+import play.api._
 import play.api.libs.json.Json._
 import play.api.libs.json._
+import play.api.data._
+import play.api.data.Forms._
 
 object Application extends Controller {
 	 
@@ -12,7 +17,7 @@ object Application extends Controller {
 		Redirect(routes.Application.allUsers)
 	}
   
-	def createUser = Action { implicit request =>
+	def createUserJson = Action { implicit request =>
 	    request.body.asJson.map { json =>
 	        val userName = (json \ "userName").as[String]
 	        val email = (json \ "email").as[String]
@@ -27,7 +32,29 @@ object Application extends Controller {
 		}
 	}
 	
+	def createUser = Action { implicit request =>
+	    val anyData = Map("userName" -> "userName", "email" -> "email", "password" -> "password")
+	    val user: User = userForm.bind(anyData).get
+	    User.create(user)
+	    
+	    Redirect(routes.Application.allUsers)
+	}
+		
+	val userForm = Form(
+		mapping(
+			"userName" -> text,
+			"email"    -> text,
+			"password" -> text
+		)((userName, email, password) => User(NotAssigned, userName, email, password))
+		 ((user: User) => Some(user.userName, user.email, user.password))
+	)
+	
 	def allUsers = Action {
+	    val users = User.findAll	    
+	    Ok(views.html.proto(users, userForm))
+	}
+	
+	def allUsersJson = Action {
 	    val users = User.findAll
 	    val usersJson = Json.obj(
 	    	"users"	-> {

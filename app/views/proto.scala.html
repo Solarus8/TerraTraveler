@@ -1,0 +1,25 @@
+@(users: List[User], userForm: Form[User])
+
+@import helper._
+
+@main("Terra Traveler - Data Model Proto") {
+    
+    <h1>@users.size users</h1>
+    
+    <ul>
+        @users.map { user =>
+            <li>
+                @user.userName | @user.email
+            </li>
+        }
+    </ul>
+    
+    <h2>Add a new task</h2>
+    
+    @form(routes.Application.createUser) {
+        @inputText(userForm("userName")) 
+        @inputText(userForm("email"))
+        @inputText(userForm("password"))
+        <input type="submit" value="Create">
+    }   
+}
