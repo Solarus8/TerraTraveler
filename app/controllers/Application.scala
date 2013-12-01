@@ -33,11 +33,8 @@ object Application extends Controller {
 	}
 	
 	def createUser = Action { implicit request =>
-	    println("Application.createUser - request: " + request)
-	    //val anyData = Map("userName" -> "userName", "email" -> "email", "password" -> "password")
 	    val user: User = userForm.bindFromRequest.get
 	    User.create(user)
-	    
 	    Redirect(routes.Application.allUsers)
 	}
 		
