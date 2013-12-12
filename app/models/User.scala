@@ -16,12 +16,13 @@ case class User(
     userName:   String, 
     email: 	    String, 
     password:   String, 
-    role:       String
+    role:       String,
+    primaryLoc: Long
 )
 
 object User {
   
-  // -- Parsers
+	// -- Parsers
   
 	/**
 	 * Parse a User from a ResultSet
@@ -34,17 +35,18 @@ object User {
 	    get[String]("user.user_name") ~
 	    get[String]("user.email") ~
 	    get[String]("user.password") ~
-	    get[String]("user.role") map {
-			case id ~ created ~ lastActive ~ lastLogin ~ userName ~ email ~ password ~ role => 
-			  	User(id, created, lastActive, lastLogin, userName, email, password, role)
+	    get[String]("user.role") ~
+	    get[Long]("user.primary_loc") map {
+			case id ~ created ~ lastActive ~ lastLogin ~ userName ~ email ~ password ~ role ~ primaryLoc => 
+			  	User(id, created, lastActive, lastLogin, userName, email, password, role, primaryLoc)
 	    }
 	}
   
-  // -- Queries
+	// -- Queries
   
-  /**
-   * Retrieve a User from email.
-   */
+	/**
+	 * Retrieve a User from email.
+	 */
 	def findByEmail(email: String): Option[User] = {
 	    DB.withConnection { implicit connection =>
 	      	SQL("""
@@ -86,19 +88,20 @@ object User {
 	/**
 	 * Create a User with atomic User fields.
 	 */
-	def create(userName: String, email: String, password: String, role: String): Pk[Long] = {
+	def create(userName: String, email: String, password: String, role: String, primaryLoc: Long): Pk[Long] = {
 	    DB.withConnection { implicit connection =>
 	      	SQL(
 	      		"""
-      			insert into "user" (user_name, email, password, role) values (
-      				{userName}, {email}, {password}, {role}
+      			insert into "user" (user_name, email, password, role, primary_loc) values (
+      				{userName}, {email}, {password}, {role}, {primaryLoc}
       			)
 	      		"""
       		).on(
-      			'userName  -> userName,
-      			'email 	   -> email,
-      			'password  -> password,
-      			'role      -> role
+      			'userName   -> userName,
+      			'email 	    -> email,
+      			'password   -> password,
+      			'role       -> role,
+      			'primaryLoc -> primaryLoc
       		).executeInsert()
     	} match {
 	        case Some(long) => new Id[Long](long) // The Primary Key
@@ -111,15 +114,16 @@ object User {
 		DB.withConnection { implicit connection =>
 	      	SQL(
 	      		"""
-      			insert into "user" (user_name, email, password) values (
-      				{userName}, {email}, {password}, {role}
+      			insert into "user" (user_name, email, password, role, primary_loc) values (
+      				{userName}, {email}, {password}, {role}, {primaryLoc}
       			)
 	      		"""
       		).on(
-      			'userName  -> user.userName,
-      			'email 	   -> user.email,
-      			'password  -> user.password,
-      			'role	   -> user.role
+      			'userName   -> user.userName,
+      			'email 	    -> user.email,
+      			'password   -> user.password,
+      			'role	    -> user.role,
+      			'primaryLoc -> user.primaryLoc
       		).executeInsert()
     	} match {
 	        case Some(long) => new Id[Long](long) // The Primary Key

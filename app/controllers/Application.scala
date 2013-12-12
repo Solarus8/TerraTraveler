@@ -1,71 +1,98 @@
 package controllers
 
-import models.User
-import anorm.NotAssigned
-import anorm._
-import play.api.db._
-import play.api.mvc._
 import play.api._
-import play.api.libs.json.Json._
-import play.api.libs.json._
+import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
 
+import models._
+import views._
+
 object Application extends Controller {
-	 
-	def index = Action {
-		Redirect(routes.Application.allUsers)
-	}
-  
-	def createUserJson = Action { implicit request =>
-	    request.body.asJson.map { json =>
-	        val userName = (json \ "userName").as[String]
-	        val email    = (json \ "email").as[String]
-	        val password = (json \ "password").as[String]
-	        
-	        val newUser  = User(NotAssigned, userName, email, password)
-			val quizId   = User.create(newUser)
-			
-			Redirect(routes.Application.allUsers)
-		}.getOrElse {
-			BadRequest("Expecting Json data")
-		}
-	}
-	
-	def createUser = Action { implicit request =>
-	    val user: User = userForm.bindFromRequest.get
-	    User.create(user)
-	    Redirect(routes.Application.allUsers)
-	}
-		
-	val userForm = Form(
-		mapping(
-			"userName" -> text,
-			"email"    -> text,
+
+	// -- Authentication
+
+	val loginForm = Form(
+		tuple(
+			"email" -> text,
 			"password" -> text
-		)((userName, email, password) => User(NotAssigned, userName, email, password))
-		 ((user: User) => Some(user.userName, user.email, user.password))
+		) verifying ("Invalid email or password", result => result match {
+			case (email, password) => User.authenticate(email, password).isDefined
+		})
 	)
-	
-	def allUsers = Action {
-	    val users = User.findAll	    
-	    Ok(views.html.proto(users, userForm))
+
+	/**
+	 * Login page.
+	 */
+	def login = Action { implicit request =>
+    	Ok(html.login(loginForm))
 	}
-	
-	def allUsersJson = Action {
-	    val users = User.findAll
-	    val usersJson = Json.obj(
-	    	"users"	-> {
-  		    	users.map(user => Json.obj(
-	    	  	    "userName" -> user.userName,
-	        	    "email"    -> user.email,
-	        	    "password" -> user.password
-  		    ))}
+
+	/**
+	 * Handle login form submission.
+	 */
+	def authenticate = Action { implicit request =>
+    	loginForm.bindFromRequest.fold(
+			formWithErrors => BadRequest(html.login(formWithErrors)),
+			user => Redirect(routes.Locations.index).withSession("email" -> user._1)
+		)
+	}
+
+	/**
+	 * Logout and clean the session.
+	 */
+	def logout = Action {
+	    Redirect(routes.Application.login).withNewSession.flashing(
+			"success" -> "You've been logged out"
 	    )
-	    
-	    Json.toJson(usersJson)
-	    Ok(usersJson)
 	}
 }
 
+/**
+ * Provide security features
+ */
+trait Secured {
+  
+	/**
+	 * Retrieve the connected user email.
+	 */
+	private def username(request: RequestHeader) = request.session.get("email")
+
+	/**
+	 * Redirect to login if the user in not authorized.
+	 */
+	private def onUnauthorized(request: RequestHeader) = Results.Redirect(routes.Application.login)
+  
+	// --
+  
+  /** 
+   * Action for authenticated users.
+   */
+	def IsAuthenticated(f: => String => Request[AnyContent] => Result) = Security.Authenticated(username, onUnauthorized) { user =>
+    	Action(request => f(user)(request))
+	}
+
+	/**
+	 * Check if the connected user is a member of this project.
+	 */
+	def IsLocatedIn(location: Long)(f: => String => Request[AnyContent] => Result) = IsAuthenticated { user => request =>
+	    if(Location.islocated(location, user)) {
+	    	f(user)(request)
+	    } else {
+	    	Results.Forbidden
+	    }
+	}
+
+  /**
+   * Check if the connected user is a owner of this task.
+   */
+  def IsOriginatorOf(event: Long)(f: => String => Request[AnyContent] => Result) = IsAuthenticated { user => request =>
+    if(Event.isOwner(event, user)) {
+      f(user)(request)
+    } else {
+      Results.Forbidden
+    }
+  }
+
+}
 

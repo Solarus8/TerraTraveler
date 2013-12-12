@@ -2,17 +2,71 @@
 
 # --- !Ups
 
-CREATE SEQUENCE task_id_seq;
-CREATE TABLE task (
-	id INTEGER NOT NULL DEFAULT nextval('task_id_seq'),
-	label varchar(255)
-);
-
 CREATE SEQUENCE role_id_seq;
 CREATE TABLE role (
     id integer NOT NULL DEFAULT nextval('role_id_seq'),
-    "role" varchar(20) UNIQUE NOT NULL,
+    "role" VARCHAR(20) UNIQUE NOT NULL,
     PRIMARY KEY (id)
+);
+
+CREATE SEQUENCE loc_id_seq;
+CREATE TABLE location (
+	id INTEGER NOT NULL DEFAULT nextval('loc_id_seq'),
+	city VARCHAR(45),
+	country VARCHAR(45),
+	address_1 VARCHAR(45),
+	address_2 VARCHAR(45),
+	address_3 VARCHAR(45),
+	postal_code VARCHAR(20),
+	latitude FLOAT,
+	longitude FLOAT,
+	altitude INTEGER,
+	"desc" VARCHAR(256),
+	url VARCHAR(60),
+	PRIMARY KEY(id)
+);
+
+CREATE SEQUENCE group_id_seq;
+CREATE TABLE "group" (
+	id INTEGER NOT NULL DEFAULT nextval('group_id_seq'),
+	organizer INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+	group_name VARCHAR(60),
+	"desc" VARCHAR(256),
+	min_size INTEGER,
+	max_size INTEGER,
+	PRIMARY KEY(id)
+);
+
+CREATE SEQUENCE event_id_seq;
+CREATE TABLE event (
+	id INTEGER NOT NULL DEFAULT nextval('event_id_seq'),
+	"date" TIMESTAMP,
+	loc_id INTEGER NOT NULL REFERENCES location(id) ON DELETE CASCADE, 
+	"desc" VARCHAR(256),
+	min_size INTEGER,
+	max_size INTEGER,
+	rsvp_tot INTEGER,
+	wait_list_tot INTEGER,
+	PRIMARY KEY(id)
+);
+
+CREATE TABLE preferences (
+	id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+	pref_1 INTEGER,
+	pref_2 INTEGER,
+	pref_3 INTEGER,
+	PRIMARY KEY(id)
+);
+
+CREATE SEQUENCE place_id_seq;
+CREATE TABLE place (
+	id INTEGER NOT NULL DEFAULT nextval('place_id_seq'),
+	loc_id INTEGER NOT NULL REFERENCES location(id) ON DELETE CASCADE,
+	"name" VARCHAR(60),
+	"desc" VARCHAR(256),
+	"type" VARCHAR(14),
+	url VARCHAR(85),
+	PRIMARY KEY(id)
 );
 
 CREATE SEQUENCE user_id_seq;
@@ -24,7 +78,8 @@ CREATE TABLE "user" (
 	user_name VARCHAR(45) UNIQUE,
 	email VARCHAR(60),
 	password VARCHAR(20),
-	"role" varchar(20) REFERENCES "role"("role") ON DELETE CASCADE,
+	"role" VARCHAR(20) REFERENCES "role"("role") ON DELETE CASCADE,
+	primary_loc INTEGER REFERENCES location("id") ON DELETE CASCADE,
 	PRIMARY KEY(id)
 );
 
@@ -44,45 +99,6 @@ CREATE TABLE user_profile (
 	PRIMARY KEY(id)
 );
 
-CREATE SEQUENCE loc_id_seq;
-CREATE TABLE location (
-	id INTEGER NOT NULL DEFAULT nextval('loc_id_seq'),
-	city VARCHAR(45),
-	country VARCHAR(45),
-	address_1 VARCHAR(45),
-	address_2 VARCHAR(45),
-	address_3 VARCHAR(45),
-	postal_code VARCHAR(20),
-	latitude FLOAT,
-	longitude FLOAT,
-	"desc" VARCHAR(256),
-	url VARCHAR(60),
-	PRIMARY KEY(id)
-);
-
-CREATE SEQUENCE event_id_seq;
-CREATE TABLE event (
-	id INTEGER NOT NULL DEFAULT nextval('event_id_seq'),
-	"date" TIMESTAMP,
-	loc_id INTEGER NOT NULL REFERENCES location(id) ON DELETE CASCADE, 
-	"desc" VARCHAR(256),
-	min_size INTEGER,
-	max_size INTEGER,
-	rsvp_tot INTEGER,
-	wait_list_tot INTEGER,
-	PRIMARY KEY(id)
-);
-
-CREATE SEQUENCE biz_id_seq;
-CREATE TABLE business (
-	id INTEGER NOT NULL DEFAULT nextval('biz_id_seq'),
-	loc_id INTEGER NOT NULL REFERENCES location(id) ON DELETE CASCADE,
-	"name" VARCHAR(60),
-	"desc" VARCHAR(256),
-	url VARCHAR(85),
-	PRIMARY KEY(id)
-);
-
 CREATE TABLE user_contact (
 	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
 	contact_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
@@ -95,17 +111,6 @@ CREATE TABLE user_loc (
 	loc_id INTEGER NOT NULL REFERENCES location(id) ON DELETE CASCADE,
 	index INTEGER,
 	PRIMARY KEY(user_id, loc_id)
-);
-
-CREATE SEQUENCE group_id_seq;
-CREATE TABLE "group" (
-	id INTEGER NOT NULL DEFAULT nextval('group_id_seq'),
-	organizer INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
-	group_name VARCHAR(60),
-	"desc" VARCHAR(256),
-	min_size INTEGER,
-	max_size INTEGER,
-	PRIMARY KEY(id)
 );
 
 CREATE TABLE user_group (
@@ -129,14 +134,6 @@ CREATE TABLE group_event (
 	PRIMARY KEY(group_id, event_id)
 );
 
-CREATE TABLE preferences (
-	id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
-	pref1 INTEGER,
-	pref2 INTEGER,
-	pref3 INTEGER,
-	PRIMARY KEY(id)
-);
-
 CREATE SEQUENCE photo_id_seq;
 CREATE TABLE photo (
 	id INTEGER NOT NULL DEFAULT nextval('photo_id_seq'),
@@ -147,7 +144,7 @@ CREATE TABLE photo (
 	PRIMARY KEY(id)
 );
 
-CREATE TABLE photo_biz (
+CREATE TABLE photo_place (
 	photo_id INTEGER NOT NULL REFERENCES photo(id) ON DELETE CASCADE,
 	biz_id INTEGER NOT NULL REFERENCES business(id) ON DELETE CASCADE,
 	PRIMARY KEY(photo_id, biz_id)
@@ -192,17 +189,17 @@ CREATE TABLE user_interest (
 	PRIMARY KEY(user_id, int_id)
 );
 
-CREATE SEQUENCE bizcat_id_seq;
-CREATE TABLE bizcategory (
-	id INTEGER NOT NULL DEFAULT nextval('bizcat_id_seq'),
+CREATE SEQUENCE placecat_id_seq;
+CREATE TABLE placecategory (
+	id INTEGER NOT NULL DEFAULT nextval('placecat_id_seq'),
 	category VARCHAR(45),
 	PRIMARY KEY(id)
 );
 
-CREATE TABLE business_category (
-	biz_id INTEGER NOT NULL REFERENCES business(id) ON DELETE CASCADE,
-	cat_id INTEGER NOT NULL REFERENCES bizcategory(id) ON DELETE CASCADE,
-	PRIMARY KEY(biz_id, cat_id)
+CREATE TABLE place_category (
+	place_id INTEGER NOT NULL REFERENCES place(id) ON DELETE CASCADE,
+	cat_id INTEGER NOT NULL REFERENCES placecategory(id) ON DELETE CASCADE,
+	PRIMARY KEY(place_id, cat_id)
 );
 
 CREATE SEQUENCE promo_id_seq;
@@ -210,7 +207,7 @@ CREATE TABLE promo (
 	id INTEGER NOT NULL DEFAULT nextval('promo_id_seq'),
 	group_id INTEGER NOT NULL REFERENCES "group"(id) ON DELETE CASCADE,
 	event_id INTEGER NOT NULL REFERENCES event(id) ON DELETE CASCADE,
-	biz_id INTEGER NOT NULL REFERENCES business(id) ON DELETE CASCADE,
+	place_id INTEGER NOT NULL REFERENCES business(id) ON DELETE CASCADE,
 	"desc" VARCHAR(156),
 	promo_code VARCHAR(20),
 	status VARCHAR(16),
@@ -228,13 +225,13 @@ DROP TABLE user_contact CASCADE;
 DROP TABLE user_profile CASCADE;
 DROP TABLE user_group CASCADE;
 DROP TABLE group_event CASCADE;
-DROP TABLE photo_biz CASCADE;
+DROP TABLE photo_place CASCADE;
 DROP TABLE photo_location CASCADE;
 DROP TABLE photo_group CASCADE;
 DROP TABLE photo_event CASCADE;
 DROP TABLE user_loc CASCADE;
 DROP TABLE user_interest CASCADE;
-DROP TABLE business_category CASCADE;
+DROP TABLE place_category CASCADE;
 DROP TABLE user_event CASCADE;
 
 DROP TABLE role CASCADE;
@@ -245,7 +242,7 @@ DROP TABLE "dispatch" CASCADE;
 DROP TABLE interest CASCADE;
 DROP TABLE event CASCADE;
 DROP TABLE business CASCADE;
-DROP TABLE bizcategory CASCADE;
+DROP TABLE placecategory CASCADE;
 DROP TABLE promo CASCADE;
 DROP TABLE "user" CASCADE;
 DROP TABLE location CASCADE;
@@ -258,9 +255,9 @@ DROP SEQUENCE photo_id_seq CASCADE;
 DROP SEQUENCE disp_id_seq CASCADE;
 DROP SEQUENCE loc_id_seq CASCADE;
 DROP SEQUENCE int_id_seq CASCADE;
-DROP SEQUENCE biz_id_seq CASCADE;
+DROP SEQUENCE place_id_seq CASCADE;
 DROP SEQUENCE event_id_seq CASCADE;
-DROP SEQUENCE bizcat_id_seq CASCADE;
+DROP SEQUENCE placecat_id_seq CASCADE;
 DROP SEQUENCE promo_id_seq CASCADE;
 DROP SEQUENCE role_id_seq CASCADE;
 DROP SEQUENCE user_id_seq CASCADE;
