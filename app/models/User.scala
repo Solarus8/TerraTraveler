@@ -1,5 +1,7 @@
 package models
 
+import java.util.{Date}
+
 import play.api.db._
 import play.api.Play.current
 
@@ -7,10 +9,14 @@ import anorm._
 import anorm.SqlParser._
 
 case class User(
-    id: 	   Pk[Long] = NotAssigned,
-    userName:  String,  
-    email: 	   String, 
-    password:  String
+    id: 	    Pk[Long] = NotAssigned,
+    created:    Date,
+    lastActive: Date,
+    lastLogin:	Date,
+    userName:   String, 
+    email: 	    String, 
+    password:   String, 
+    role:       String
 )
 
 object User {
@@ -22,11 +28,15 @@ object User {
 	 */
 	val simple = {
 		get[Pk[Long]]("user.id") ~
+		get[Date]("user.created") ~
+		get[Date]("user.last_active") ~
+		get[Date]("user.last_login") ~
 	    get[String]("user.user_name") ~
 	    get[String]("user.email") ~
-	    get[String]("user.password") map {
-			case id~userName~email~password => 
-			  	User(id, userName, email, password)
+	    get[String]("user.password") ~
+	    get[String]("user.role") map {
+			case id ~ created ~ lastActive ~ lastLogin ~ userName ~ email ~ password ~ role => 
+			  	User(id, created, lastActive, lastLogin, userName, email, password, role)
 	    }
 	}
   
@@ -76,18 +86,19 @@ object User {
 	/**
 	 * Create a User with atomic User fields.
 	 */
-	def create(userName: String, email: String, password: String): Pk[Long] = {
+	def create(userName: String, email: String, password: String, role: String): Pk[Long] = {
 	    DB.withConnection { implicit connection =>
 	      	SQL(
 	      		"""
-      			insert into "user" (user_name, email, password) values (
-      				{userName}, {email}, {password}
+      			insert into "user" (user_name, email, password, role) values (
+      				{userName}, {email}, {password}, {role}
       			)
 	      		"""
       		).on(
       			'userName  -> userName,
       			'email 	   -> email,
-      			'password  -> password
+      			'password  -> password,
+      			'role      -> role
       		).executeInsert()
     	} match {
 	        case Some(long) => new Id[Long](long) // The Primary Key
@@ -101,13 +112,14 @@ object User {
 	      	SQL(
 	      		"""
       			insert into "user" (user_name, email, password) values (
-      				{userName}, {email}, {password}
+      				{userName}, {email}, {password}, {role}
       			)
 	      		"""
       		).on(
       			'userName  -> user.userName,
       			'email 	   -> user.email,
-      			'password  -> user.password
+      			'password  -> user.password,
+      			'role	   -> user.role
       		).executeInsert()
     	} match {
 	        case Some(long) => new Id[Long](long) // The Primary Key
