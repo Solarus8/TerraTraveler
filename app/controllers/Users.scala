@@ -89,4 +89,11 @@ object Users extends Controller {
 	      	}
 	    }.getOrElse(Forbidden)	
 	}
+	
+	def profile(userId: Long) = Action { implicit request =>
+	    User.findById(userId).map { user =>
+		  	val profile = UserProfile.findProfile(userId)
+		  	Ok(html.protoProfile(user, profile))
+	    }.getOrElse(Forbidden)
+	}
 }

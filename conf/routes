@@ -16,5 +16,6 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 # Users
 GET		/users						controllers.Users.allUsers
 POST	/users						controllers.Users.createUser
-GET		/user/:email				controllers.Users.byEmail(email: String)
+GET		/users/:email				controllers.Users.byEmail(email: String)
+GET		/users/:userId/profile			controllers.Users.profile(userId: Long)
 #POST	/users/:id/delete			controllers.Application.deleteUser(id: Long)

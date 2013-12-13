@@ -9,7 +9,9 @@
     <ul>
         @users.map { user =>
             <li>
-                <a href="@routes.Users.byEmail(user.email)" >@user.userName</a> | @user.email
+                <a href="@routes.Users.byEmail(user.email)" >
+                	@user.userName
+                </a> | @user.email
             </li>
         }
     </ul>
@@ -27,3 +29,4 @@
         <input type="submit" value="Create">
     }   
 }
+

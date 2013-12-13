@@ -92,7 +92,6 @@ CREATE TABLE user_profile (
 	gender CHAR(8),
 	birthdate TIMESTAMP,
 	nationality VARCHAR(45),
-	primary_loc INTEGER,
 	portrait_url VARCHAR(80),
 	bio VARCHAR(256),
 	story VARCHAR(256),

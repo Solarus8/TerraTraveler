@@ -145,6 +145,7 @@ object User {
 	        case None       => throw new Exception("SQL Error - Did not insert User.")
     	}
 	} // End - create
+	
 }
 
 
