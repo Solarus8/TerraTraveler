@@ -20,6 +20,10 @@
         @inputText(userForm("userName")) 
         @inputText(userForm("email"))
         @inputText(userForm("password"))
+        @inputRadioGroup(userForm("role"), 
+			options("NORM"->"Regular","BIZ"->"Business"), 
+			'_label -> "Role"
+		)
         <input type="submit" value="Create">
     }   
 }
