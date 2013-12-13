@@ -11,13 +11,13 @@ import anorm.SqlParser._
 case class User(
     id: 	    Pk[Long] = NotAssigned,
     created:    Date,
-    lastActive: Date,
-    lastLogin:	Date,
+    lastActive: Option[Date],
+    lastLogin:	Option[Date],
     userName:   String, 
     email: 	    String, 
     password:   String, 
     role:       String,
-    primaryLoc: Long
+    primaryLoc: Option[Long]
 )
 
 object User {
@@ -30,13 +30,13 @@ object User {
 	val simple = {
 		get[Pk[Long]]("user.id") ~
 		get[Date]("user.created") ~
-		get[Date]("user.last_active") ~
-		get[Date]("user.last_login") ~
+		get[Option[Date]]("user.last_active") ~
+		get[Option[Date]]("user.last_login") ~
 	    get[String]("user.user_name") ~
 	    get[String]("user.email") ~
 	    get[String]("user.password") ~
 	    get[String]("user.role") ~
-	    get[Long]("user.primary_loc") map {
+	    get[Option[Long]]("user.primary_loc") map {
 			case id ~ created ~ lastActive ~ lastLogin ~ userName ~ email ~ password ~ role ~ primaryLoc => 
 			  	User(id, created, lastActive, lastLogin, userName, email, password, role, primaryLoc)
 	    }
@@ -49,7 +49,9 @@ object User {
 	 */
 	def findByEmail(email: String): Option[User] = {
 	    DB.withConnection { implicit connection =>
-	      	SQL("select * from user where email = {email}").on(
+	      	SQL("""
+	      	    select * from "user" where email = {email}
+	      	    """).on(
 	  			'email -> email
 			).as(User.simple.singleOpt)
 	    }
@@ -60,9 +62,11 @@ object User {
 	 */
 	def findAll: List[User] = {
 	    DB.withConnection { implicit connection =>
-	      	SQL("""
+	      	SQL(
+	      	    """
 	      	    select * from "user"
-	      	""").as(User.simple *)
+      			"""
+	      	).as(User.simple *)
 	    }
 	}
   

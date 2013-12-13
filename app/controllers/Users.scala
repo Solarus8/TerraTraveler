@@ -20,7 +20,7 @@ object Users extends Controller {
 	        val email    	= (json \ "email").as[String]
 	        val password 	= (json \ "password").as[String]
 	        val role 	 	= (json \ "role").as[String]
-	        val primaryLoc 	= (json \ "primaryLoc").as[Long]
+	        val primaryLoc 	= (json \ "primaryLoc").as[Option[Long]]
 	        
 	        val newUser  = User(NotAssigned, null, null, null, userName, email, password, role, primaryLoc)
 	        User.create(newUser)
@@ -43,7 +43,7 @@ object Users extends Controller {
 			"email"    	 -> text,
 			"password"   -> text,
 			"role"	   	 -> text,
-			"primaryLoc" -> of[Long]
+			"primaryLoc" -> optional(of[Long])
 		)((userName, email, password, role, primaryLoc) => User(NotAssigned, null, null, null, userName, email, password, role, primaryLoc))
 		 ((user: User) => Some(user.userName, user.email, user.password, user.role, user.primaryLoc))
 	)
