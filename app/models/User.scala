@@ -56,6 +56,19 @@ object User {
 			).as(User.simple.singleOpt)
 	    }
   	}
+	
+	/**
+	 * Retrieve a User from email.
+	 */
+	def findById(id: Long): Option[User] = {
+		DB.withConnection { implicit connection =>
+	      	SQL("""
+	      	    select * from "user" where id = {id}
+	      	    """).on(
+	  			'id -> id
+			).as(User.simple.singleOpt)
+	    }
+	}
   
 	/**
 	 * Retrieve all users.

@@ -26,7 +26,8 @@ object Locations extends Controller with Secured {
   	  	  			)
   	  	  		)
 	      	}
-			
 	    }.getOrElse(Forbidden)
 	}
 }
+
+

@@ -1,6 +1,7 @@
 package controllers
 
-import models.User
+import models._
+import views._
 import anorm.NotAssigned
 import anorm._
 import play.api.db._
@@ -32,7 +33,7 @@ object Users extends Controller {
 	}
 	
 	def createUser = Action { implicit request =>
-	    val newUser: User = userForm.bindFromRequest.get
+	    val newUser:User = userForm.bindFromRequest.get
 	    User.create(newUser)
 	    Redirect(routes.Users.allUsers)
 	}
@@ -70,4 +71,22 @@ object Users extends Controller {
 	    Ok(usersJson)
 	}
 	
+	def byEmail(email: String) = Action { implicit request =>
+		User.findByEmail(email).map { user =>
+	      	user.primaryLoc match {
+	      	  	case Some(locId) => 
+	      	  	  	Ok(html.protoLocation(
+      	  	  			Location.single(locId),
+      	  	  			user
+  	  	  			)
+  	  			)
+	      	  	case _ => 
+	      	  	  	Ok(html.protoLocation(
+      	  	  			None,
+      	  	  			user
+  	  	  			)
+  	  	  		)
+	      	}
+	    }.getOrElse(Forbidden)	
+	}
 }

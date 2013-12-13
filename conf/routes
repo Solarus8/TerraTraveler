@@ -6,9 +6,9 @@
 GET     /                           controllers.Locations.index
 
 # Authentication
-GET     /login                              controllers.Application.login
-POST    /login                              controllers.Application.authenticate
-GET     /logout                             controllers.Application.logout
+GET     /login						controllers.Application.login
+POST    /login						controllers.Application.authenticate
+GET     /logout						controllers.Application.logout
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
@@ -16,4 +16,5 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 # Users
 GET		/users						controllers.Users.allUsers
 POST	/users						controllers.Users.createUser
+GET		/user/:email				controllers.Users.byEmail(email: String)
 #POST	/users/:id/delete			controllers.Application.deleteUser(id: Long)

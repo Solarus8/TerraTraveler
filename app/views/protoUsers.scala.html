@@ -9,7 +9,7 @@
     <ul>
         @users.map { user =>
             <li>
-                @user.userName | @user.email
+                <a href="@routes.Users.byEmail(user.email)" >@user.userName</a> | @user.email
             </li>
         }
     </ul>
