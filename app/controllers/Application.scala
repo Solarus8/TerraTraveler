@@ -65,34 +65,12 @@ trait Secured {
   
 	// --
   
-  /** 
-   * Action for authenticated users.
-   */
+	/** 
+	 * Action for authenticated users.
+	 */
 	def IsAuthenticated(f: => String => Request[AnyContent] => Result) = Security.Authenticated(username, onUnauthorized) { user =>
     	Action(request => f(user)(request))
 	}
-
-	/**
-	 * Check if the connected user is a member of this project.
-	 */
-	def IsLocatedIn(location: Long)(f: => String => Request[AnyContent] => Result) = IsAuthenticated { user => request =>
-	    if(Location.islocated(location, user)) {
-	    	f(user)(request)
-	    } else {
-	    	Results.Forbidden
-	    }
-	}
-
-  /**
-   * Check if the connected user is a owner of this task.
-   */
-  def IsOriginatorOf(event: Long)(f: => String => Request[AnyContent] => Result) = IsAuthenticated { user => request =>
-    if(Event.isOwner(event, user)) {
-      f(user)(request)
-    } else {
-      Results.Forbidden
-    }
-  }
 
 }
 

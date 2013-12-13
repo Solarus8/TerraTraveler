@@ -26,6 +26,20 @@ CREATE TABLE location (
 	PRIMARY KEY(id)
 );
 
+CREATE SEQUENCE user_id_seq;
+CREATE TABLE "user" (
+	id INTEGER NOT NULL DEFAULT nextval('user_id_seq'),
+	created TIMESTAMP NOT NULL DEFAULT current_timestamp,
+	last_active TIMESTAMP,
+	last_login TIMESTAMP,
+	user_name VARCHAR(45) UNIQUE,
+	email VARCHAR(60),
+	password VARCHAR(20),
+	"role" VARCHAR(20) REFERENCES "role"("role") ON DELETE CASCADE,
+	primary_loc INTEGER REFERENCES location("id") ON DELETE CASCADE,
+	PRIMARY KEY(id)
+);
+
 CREATE SEQUENCE group_id_seq;
 CREATE TABLE "group" (
 	id INTEGER NOT NULL DEFAULT nextval('group_id_seq'),
@@ -50,14 +64,6 @@ CREATE TABLE event (
 	PRIMARY KEY(id)
 );
 
-CREATE TABLE preferences (
-	id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
-	pref_1 INTEGER,
-	pref_2 INTEGER,
-	pref_3 INTEGER,
-	PRIMARY KEY(id)
-);
-
 CREATE SEQUENCE place_id_seq;
 CREATE TABLE place (
 	id INTEGER NOT NULL DEFAULT nextval('place_id_seq'),
@@ -69,17 +75,11 @@ CREATE TABLE place (
 	PRIMARY KEY(id)
 );
 
-CREATE SEQUENCE user_id_seq;
-CREATE TABLE "user" (
-	id INTEGER NOT NULL DEFAULT nextval('user_id_seq'),
-	created TIMESTAMP NOT NULL DEFAULT current_timestamp,
-	last_active TIMESTAMP,
-	last_login TIMESTAMP,
-	user_name VARCHAR(45) UNIQUE,
-	email VARCHAR(60),
-	password VARCHAR(20),
-	"role" VARCHAR(20) REFERENCES "role"("role") ON DELETE CASCADE,
-	primary_loc INTEGER REFERENCES location("id") ON DELETE CASCADE,
+CREATE TABLE preferences (
+	id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+	pref_1 INTEGER,
+	pref_2 INTEGER,
+	pref_3 INTEGER,
 	PRIMARY KEY(id)
 );
 
@@ -146,7 +146,7 @@ CREATE TABLE photo (
 
 CREATE TABLE photo_place (
 	photo_id INTEGER NOT NULL REFERENCES photo(id) ON DELETE CASCADE,
-	biz_id INTEGER NOT NULL REFERENCES business(id) ON DELETE CASCADE,
+	biz_id INTEGER NOT NULL REFERENCES place(id) ON DELETE CASCADE,
 	PRIMARY KEY(photo_id, biz_id)
 );
 
@@ -169,7 +169,7 @@ CREATE TABLE photo_event (
 );
 
 CREATE SEQUENCE disp_id_seq;
-CREATE TABLE "dispatch" (
+CREATE TABLE dispatch (
 	id INTEGER NOT NULL DEFAULT nextval('disp_id_seq'),
 	disp VARCHAR(256),
 	index INTEGER,
@@ -207,7 +207,7 @@ CREATE TABLE promo (
 	id INTEGER NOT NULL DEFAULT nextval('promo_id_seq'),
 	group_id INTEGER NOT NULL REFERENCES "group"(id) ON DELETE CASCADE,
 	event_id INTEGER NOT NULL REFERENCES event(id) ON DELETE CASCADE,
-	place_id INTEGER NOT NULL REFERENCES business(id) ON DELETE CASCADE,
+	place_id INTEGER NOT NULL REFERENCES place(id) ON DELETE CASCADE,
 	"desc" VARCHAR(156),
 	promo_code VARCHAR(20),
 	status VARCHAR(16),
@@ -218,8 +218,6 @@ CREATE TABLE promo (
 );
 
 # --- !Downs
-
-DROP TABLE task CASCADE;
 
 DROP TABLE user_contact CASCADE;
 DROP TABLE user_profile CASCADE;
@@ -241,13 +239,11 @@ DROP TABLE photo CASCADE;
 DROP TABLE "dispatch" CASCADE;
 DROP TABLE interest CASCADE;
 DROP TABLE event CASCADE;
-DROP TABLE business CASCADE;
+DROP TABLE place CASCADE;
 DROP TABLE placecategory CASCADE;
 DROP TABLE promo CASCADE;
 DROP TABLE "user" CASCADE;
 DROP TABLE location CASCADE;
-
-DROP SEQUENCE task_id_seq CASCADE;
 
 DROP SEQUENCE user_prof_id_seq CASCADE;
 DROP SEQUENCE group_id_seq CASCADE;
