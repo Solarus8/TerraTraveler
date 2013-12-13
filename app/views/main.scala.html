@@ -8,6 +8,11 @@
     </head>
     <body>
         @content
+        <p><a href="@routes.Users.allUsers"><em>All Users</em></a></p>
+        
+        @helper.form(routes.Application.logout()) {
+        	<p><button type="submit">Log out</button></p>
+        }
     </body>
 </html>
 
