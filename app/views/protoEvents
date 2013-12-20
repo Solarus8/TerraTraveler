@@ -1,0 +1,7 @@
+@(events: Option[Events], location: Option[Location], user)
+
+@main("Terra Traveler - Data Model Proto"){
+	
+	<h1>Events</h1>
+	
+}
