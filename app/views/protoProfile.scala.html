@@ -10,49 +10,34 @@
 		<dt>Email</dt>
 		<dd>@user.email</dd>
 		
-		<dt>First Name</dt>
 		@profile match {
-    		case Some(profile) => { <dd>@profile.firstName</dd> }
-    		case None => {}
-		}
-		
-		<dt>Last Name</dt>
-		@profile match {
-    		case Some(profile) => { <dd>@profile.lastName</dd> }
-    		case None => {}
-		}
-				
-		<dt>Gender</dt>
-		@profile match {
-    		case Some(profile) => { <dd>@profile.gender</dd> }
-    		case None => {}
-		}
-		
-		<dt>Birthdate</dt>
-		@profile match {
-    		case Some(profile) => { <dd>@profile.birthdate</dd> }
-    		case None => {}
-		}
-		
-		<dt>Nationality</dt>
-		@profile match {
-    		case Some(profile) => { <dd>@profile.nationality</dd> }
-    		case None => {}
-		}
-		
-		<dt>Portrait URL</dt>
-		@profile match {
-    		case Some(profile) => { <dd>@profile.portraitUrl</dd> }
-		}
-		
-		<dt>Bio</dt>
-		@profile match {
-    		case Some(profile) => { <dd>@profile.bio</dd> }
-		}
-		
-		<dt>Story</dt>
-		@profile match {
-    		case Some(profile) => { <dd>@profile.story</dd> }
+    		case Some(profile) => {
+    			<dt>First Name</dt>
+    			<dd>@profile.firstName</dd>
+    			<dt>Last Name</dt>
+    			<dd>@profile.lastName</dd>
+	    		<dt>Gender</dt>
+				<dd>@profile.gender</dd>
+				<dt>Birthdate</dt>
+				<dd>@profile.birthdate</dd>
+				<dt>Nationality</dt>
+				<dd>@profile.nationality</dd>
+				<dt>Portrait URL</dt>
+				<dt>Bio</dt>
+				<dd>@profile.bio</dd>
+				<dt>Story</dt>
+				<dd>@profile.story</dd>
+			}
+			case None => {
+				<dt>First Name</dt>
+    			<dt>Last Name</dt>
+	    		<dt>Gender</dt>
+				<dt>Birthdate</dt>
+				<dt>Nationality</dt>
+				<dt>Portrait URL</dt>
+				<dt>Bio</dt>
+				<dt>Story</dt>
+			}
 		}
 	</dl>
 }
