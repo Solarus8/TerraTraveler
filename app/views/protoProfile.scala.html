@@ -11,7 +11,10 @@
 		<dd>@user.email</dd>
 		
 		<dt>First Name</dt>
-		<dd>@profile?=firstName?</dd>
+		@profile match {
+    		case Some(profile) => { <dd>@profile.firstName</dd> }
+    		case None => { <dd>add</dd> }
+		}
 		
 		<dt>Last Name</dt>
 		<dd>$(@profile?.lastName?)</dd>
