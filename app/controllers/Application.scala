@@ -25,7 +25,7 @@ object Application extends Controller {
 	 * Login page.
 	 */
 	def login = Action { implicit request =>
-    	Ok(html.login(loginForm))
+    	Ok(html.login(loginForm, Users.registrationForm))
 	}
 
 	/**
@@ -33,7 +33,7 @@ object Application extends Controller {
 	 */
 	def authenticate = Action { implicit request =>
     	loginForm.bindFromRequest.fold(
-			formWithErrors => BadRequest(html.login(formWithErrors)),
+			formWithErrors => BadRequest(html.login(formWithErrors, Users.registrationForm)),
 			user => Redirect(routes.Locations.index).withSession("email" -> user._1)
 		)
 	}

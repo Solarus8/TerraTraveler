@@ -14,19 +14,6 @@
                 </a> | @user.email
             </li>
         }
-    </ul>
-    
-    <h2>Create a new user</h2>
-    
-    @form(routes.Users.createUser) {
-        @inputText(userForm("userName")) 
-        @inputText(userForm("email"))
-        @inputText(userForm("password"))
-        @inputRadioGroup(userForm("role"), 
-			options("NORM"->"Regular","BIZ"->"Business"), 
-			'_label -> "Role"
-		)
-        <input type="submit" value="Create">
-    }   
+    </ul>   
 }
 

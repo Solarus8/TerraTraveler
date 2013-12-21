@@ -49,6 +49,8 @@ object Users extends Controller {
 		 ((user: User) => Some(user.userName, user.email, user.password, user.role, user.primaryLoc))
 	)
 	
+	def registrationForm = userForm
+	
 	def allUsers = Action {
 	    val users = User.findAll	    
 	    Ok(views.html.protoUsers(users, userForm))

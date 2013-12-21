@@ -1,4 +1,4 @@
-@(form: Form[(String, String)])(implicit flash: Flash)
+@(loginForm: Form[(String, String)], registerForm: Form[User])(implicit flash: Flash)
 
 <html>
     <head>
@@ -10,7 +10,7 @@
             
             <h1>Sign in</h1>
             
-            @form.globalError.map { error =>
+            @loginForm.globalError.map { error =>
                 <p class="error">
                     @error.message
                 </p>
@@ -23,7 +23,7 @@
             }
             
             <p>
-                <input type="email" name="email" placeholder="Email" id="email" value="@form("email").value">
+                <input type="email" name="email" placeholder="Email" id="email" value="@loginForm("email").value">
             </p>
             <p>
                 <input type="password" name="password" id="password" placeholder="Password">
@@ -31,12 +31,26 @@
             <p>
                 <button type="submit" id="loginbutton">Login</button>
             </p>
-            
         }
         
         <p class="note">
             Try <em>yura@@sample.com</em> with <em>secret</em> as password.
         </p>
+        
+        <h2>Create a new user</h2>
+        
+        @import helper._
+    
+	    @form(routes.Users.createUser) {
+	        @inputText(registerForm("userName")) 
+	        @inputText(registerForm("email"))
+	        @inputText(registerForm("password"))
+	        @inputRadioGroup(registerForm("role"), 
+				options("NORM"->"Regular","BIZ"->"Business"), 
+				'_label -> "Role"
+			)
+	        <input type="submit" value="Create">
+	    }
             
     </body>
 </html>
