@@ -13,28 +13,46 @@
 		<dt>First Name</dt>
 		@profile match {
     		case Some(profile) => { <dd>@profile.firstName</dd> }
-    		case None => { <dd>add</dd> }
+    		case None => {}
 		}
 		
 		<dt>Last Name</dt>
-		<dd>$(@profile?.lastName?)</dd>
-		
+		@profile match {
+    		case Some(profile) => { <dd>@profile.lastName</dd> }
+    		case None => {}
+		}
+				
 		<dt>Gender</dt>
-		<dd>@profile?.gender?</dd>
+		@profile match {
+    		case Some(profile) => { <dd>@profile.gender</dd> }
+    		case None => {}
+		}
 		
 		<dt>Birthdate</dt>
-		<dd>@profile?.birthdate?</dd>
+		@profile match {
+    		case Some(profile) => { <dd>@profile.birthdate</dd> }
+    		case None => {}
+		}
 		
 		<dt>Nationality</dt>
-		<dd>@profile?.nationality?</dd>
+		@profile match {
+    		case Some(profile) => { <dd>@profile.nationality</dd> }
+    		case None => {}
+		}
 		
 		<dt>Portrait URL</dt>
-		<dd>@profile?.portraitUrl?</dd>
+		@profile match {
+    		case Some(profile) => { <dd>@profile.portraitUrl</dd> }
+		}
 		
 		<dt>Bio</dt>
-		<dd>@profile?.bio?</dd>
+		@profile match {
+    		case Some(profile) => { <dd>@profile.bio</dd> }
+		}
 		
 		<dt>Story</dt>
-		<dd>@profile?.story?</dd>
+		@profile match {
+    		case Some(profile) => { <dd>@profile.story</dd> }
+		}
 	</dl>
 }
