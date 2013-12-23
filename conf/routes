@@ -17,10 +17,10 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 GET		/users						controllers.Users.allUsers
 POST	/users						controllers.Users.createUser
 GET		/users/:email				controllers.Users.byEmail(email: String)
-GET		/users/:userId/profile			controllers.Users.profile(userId: Long)
+GET		/users/:userId/profile		controllers.Users.profile(userId: Long)
 #POST	/users/:id/delete			controllers.Application.deleteUser(id: Long)
 
 # Events
-#GET		/events						controllers.Events.allEvents
+GET		/events						controllers.Events.allEvents
 #Get		/events/:locId				controllers.Events.byLocation(locId: Long)
 #Get		/events/:id/user			controllers.Events.byUser(id: Long)

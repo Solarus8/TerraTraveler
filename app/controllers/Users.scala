@@ -15,7 +15,7 @@ import play.api.data.format.Formats._
 
 object Users extends Controller {
 	
-  def createUserJson = Action { implicit request =>
+	def createUserJson = Action { implicit request =>
 	    request.body.asJson.map { json =>
 	        val userName 	= (json \ "userName").as[String]
 	        val email    	= (json \ "email").as[String]
@@ -53,7 +53,7 @@ object Users extends Controller {
 	
 	def allUsers = Action {
 	    val users = User.findAll	    
-	    Ok(views.html.protoUsers(users, userForm))
+	    Ok(views.html.protoUsers(users))
 	}
 	
 	def allUsersJson = Action {

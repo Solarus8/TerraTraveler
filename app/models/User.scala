@@ -58,7 +58,7 @@ object User {
   	}
 	
 	/**
-	 * Retrieve a User from email.
+	 * Retrieve a User by id.
 	 */
 	def findById(id: Long): Option[User] = {
 		DB.withConnection { implicit connection =>
