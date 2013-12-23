@@ -78,4 +78,10 @@ object Events extends Controller {
 	    Json.toJson(eventsJson)
 	    Ok(eventsJson)
 	}
+	
+	def event(eventId: Long) = Action { implicit request =>
+	    Event.findById(eventId).map { event =>
+		  	Ok(html.protoEvent(event))
+	    }.getOrElse(Forbidden)
+	}
 }

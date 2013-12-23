@@ -1,0 +1,37 @@
+@(event: Event)
+
+@main("Terra Traveler - Data Model Proto"){
+	
+	<h1>Event</h1>
+	
+	<dl>
+		<dt>@event.date</dt>  
+		<dd>@event.description</dd>
+		
+		<dt>Location</dt>
+		<dd>@event.locationId</dd>
+		
+  		<dt>Minimum Size</dt>
+  		<dd>@event.minSize</dd>
+  		
+  		<dt>Maximum Size</dt>
+  		<dd>@event.maxSize</dd>
+  		
+  		<dt>Attending</dt>
+  		<dd>
+  			@event.rsvpTotal match {
+ 				case Some(rsvpTotal) => {@event.rsvpTotal}
+ 				case _ => {&ltempty&gt}
+ 			}
+ 		</dd>
+  		
+  		<dt>Wait List</dt>
+  		<dd>@event.waitListTotal match {
+ 				case Some(waitListTotal) => {@event.waitListTotal}
+ 				case _ => {&ltempty&gt}
+ 			}
+ 		</dd>
+	</dl>
+
+	
+}
