@@ -6,14 +6,15 @@
 	
 	<h3>@user.userName</h3>
 	
-	<dl>
+	<dl class="dd_editable">
 		<dt>Email</dt>
-		<dd>@user.email</dd>
+		<dd contenteditable="true">
+    				@user.email</dd>
 		
 		@profile match {
     		case Some(profile) => {
     			<dt>First Name</dt>
-    			<dd>
+    			<dd contenteditable="true">
     				@profile.firstName match {
     					case Some(firstName) => {@profile.firstName}
     					case _ => {&ltempty&gt}
@@ -21,49 +22,56 @@
     			</dd>
     			
     			<dt>Last Name</dt>
-    			<dd>@profile.lastName match {
-   					case Some(lastName) => {@profile.lastName}
-   					case _ => {&lt&ltempty&gt&gt}
+    			<dd contenteditable="true">
+    				@profile.lastName match {
+	   					case Some(lastName) => {@profile.lastName}
+	   					case _ => {&lt&ltempty&gt&gt}
    					}
  				</dd>
 	    		
 	    		<dt>Gender</dt>
-				<dd>@profile.gender match {
-   					case Some(gender) => {@profile.gender}
-   					case _ => {&ltempty&gt}
+				<dd contenteditable="true">
+    				@profile.gender match {
+	   					case Some(gender) => {@profile.gender}
+	   					case _ => {&ltempty&gt}
    					}
  				</dd>
 				
 				<dt>Birthdate</dt>
-				<dd>@profile.birthdate match {
-   					case Some(birthdate) => {@profile.birthdate}
-   					case _ => {&ltempty&gt}
+				<dd contenteditable="true">
+    				@profile.birthdate match {
+	   					case Some(birthdate) => {@profile.birthdate}
+	   					case _ => {&ltempty&gt}
    					}
  				</dd>
 				
 				<dt>Nationality</dt>
-				<dd>@profile.nationality match {
-   					case Some(nationality) => {@profile.nationality}
-   					case _ => {&ltempty&gt}
+				<dd contenteditable="true">
+    				@profile.nationality match {
+	   					case Some(nationality) => {@profile.nationality}
+	   					case _ => {&ltempty&gt}
    					}
  				</dd>
 				
 				<dt>Portrait URL</dt>
-				<dd>@profile.portraitUrl match {
-   					case Some(portraitUrl) => {@profile.portraitUrl}
-   					case _ => {&ltempty&gt}
+				<dd contenteditable="true">
+    				@profile.portraitUrl match {
+	   					case Some(portraitUrl) => {@profile.portraitUrl}
+	   					case _ => {&ltempty&gt}
    					}
  				</dd>
 				
 				<dt>Bio</dt>
-				<dd>@profile.bio match {
+				<dd contenteditable="true">
+    				@profile.bio match {
    					case Some(bio) => {@profile.bio}
    					case _ => {&ltempty&gt}
    					}
     			</dd>
 				
 				<dt>Story</dt>				
-				<dd>
+				<dd contenteditable="true">
+    				
     				@profile.story match {
     					case Some(story) => {@profile.story}
     					case _ => {&ltempty&gt}
@@ -72,28 +80,44 @@
 			}
 			case None => {
 				<dt>First Name</dt>
-				<dd>&ltempty&gt<dd>
+				<dd contenteditable="true">
+    				&ltempty&gt<dd contenteditable="true">
+    				
 				
     			<dt>Last Name</dt>
-    			<dd>&ltempty&gt<dd>
+    			<dd contenteditable="true">
+    				&ltempty&gt<dd contenteditable="true">
+    				
     			
 	    		<dt>Gender</dt>
-	    		<dd>&ltempty&gt<dd>
+	    		<dd contenteditable="true">
+    				&ltempty&gt<dd contenteditable="true">
+    				
 	    		
 				<dt>Birthdate</dt>
-				<dd>&ltempty&gt<dd>
+				<dd contenteditable="true">
+    				&ltempty&gt<dd contenteditable="true">
+    				
 				
 				<dt>Nationality</dt>
-				<dd>&ltempty&gt<dd>
+				<dd contenteditable="true">
+    				&ltempty&gt<dd contenteditable="true">
+    				
 				
 				<dt>Portrait URL</dt>
-				<dd>&ltempty&gt<dd>
+				<dd contenteditable="true">
+    				&ltempty&gt<dd contenteditable="true">
+    				
 				
 				<dt>Bio</dt>
-				<dd>&ltempty&gt<dd>
+				<dd contenteditable="true">
+    				&ltempty&gt<dd contenteditable="true">
+    				
 				
 				<dt>Story</dt>
-				<dd>&ltempty&gt<dd>
+				<dd contenteditable="true">
+    				&ltempty&gt<dd contenteditable="true">
+    				
 			}
 		}
 	</dl>
