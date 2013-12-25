@@ -68,16 +68,62 @@ insert into user_profile (user_id, first_name, last_name, gender, nationality, p
 insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
 	values (2, 'Melissa', 'Morgan', 'female', 'England', 'http://www.melissa.com', 'I am very nice!');
 insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
-	values (3, 'Yura', 'Yakov', 'male', 'Russian', 'http://www.yura.com', 'Working to make Siberia a warmer place!');
+	values (3, 'Billy', 'Nelson', 'male', 'Polish', 'http://www.gigger.com', 'Working to make Siberia a warmer place!');
+	insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (4, 'Richard', 'Baxter', 'male', 'Merkin', 'http://www.sveldt.com', 'I yam what I yam');
+insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (5, 'Melissa', 'Phillips', 'female', 'England', 'http://www.crypto.com', 'I am very nice!');
+insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (6, 'Carla', 'Smith', 'male', 'Maylay', 'http://www.xtra.com', 'Working to make Earth a warmer place!');
+insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (7, 'Sam', 'Walker', 'male', 'Merkin', 'http://www.codemonkey.com', 'I yam what I yam');
+insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (8, 'Melissa', 'Morgan', 'female', 'England', 'http://www.melissa.com', 'I am very nice!');
+insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (9, 'Billy', 'Nelson', 'male', 'Polish', 'http://www.gigger.com', 'Working to make Siberia a warmer place!');
+	insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (10, 'Rachael', 'Miller', 'male', 'Merkin', 'http://www.sveldt.com', 'I yam what I yam');
+insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (11, 'Mary', 'Phillips', 'female', 'England', 'http://www.crypto.com', 'I am very nice!');
+insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (12, 'Poochie', 'Smith', 'male', 'Maylay', 'http://www.xtra.com', 'Working to make Earth a warmer place!');
+insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (13, 'Richard', 'Walker', 'male', 'Merkin', 'http://www.codemonkey.com', 'I yam what I yam');
+insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (14, 'Melissa', 'Morgan', 'female', 'England', 'http://www.melissa.com', 'I am very nice!');
+insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (15, 'Billy', 'Nelson', 'male', 'Polish', 'http://www.gigger.com', 'Working to make Siberia a warmer place!');
+	insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (16, 'Richard', 'Baxter', 'male', 'Merkin', 'http://www.sveldt.com', 'I yam what I yam');
+insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (17, 'Melissa', 'Phillips', 'female', 'England', 'http://www.crypto.com', 'I am very nice!');
+insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (18, 'Carla', 'Smith', 'male', 'Maylay', 'http://www.xtra.com', 'Working to make Earth a warmer place!');
+insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (19, 'Sam', 'Walker', 'male', 'Merkin', 'http://www.codemonkey.com', 'I yam what I yam');
+insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (20, 'Melissa', 'Morgan', 'female', 'England', 'http://www.melissa.com', 'I am very nice!');
+insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (21, 'Billy', 'Nelson', 'male', 'Polish', 'http://www.gigger.com', 'Working to make Siberia a warmer place!');
+	insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (22, 'Rachael', 'Miller', 'male', 'Merkin', 'http://www.sveldt.com', 'I yam what I yam');
+insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (23, 'Mary', 'Phillips', 'female', 'England', 'http://www.crypto.com', 'I am very nice!');
+insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
+	values (24, 'Poochie', 'Smith', 'male', 'Maylay', 'http://www.xtra.com', 'Working to make Earth a warmer place!');
 	
-insert into event (date, loc_id, "desc", min_size, max_size)
-	values ('2014-01-14', '1', 'Pub crawl along Danube', '4', '20');
-	
-insert into event (date, loc_id, "desc", min_size, max_size)
-	values ('2014-01-06', '1', 'Sky diving at Lasha Karnak', '8', '30');
-	
-insert into event (date, loc_id, "desc", min_size, max_size)
-	values ('2014-02-01', '1', 'Picnic at Hanging Rock', '6', '40');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (1, '2014-01-14', '1', 'Pub crawl along Danube', '4', '20');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (2, '2014-01-06', '1', 'Sky diving at Lasha Karnak', '8', '30');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (3, '2014-02-01', '1', 'Picnic at Hanging Rock', '6', '40');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (4, '2014-01-14', '1', 'Pub crawl along Danube', '4', '20');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (5, '2014-01-06', '1', 'Sky diving at Lasha Karnak', '8', '30');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (6, '2014-02-01', '1', 'Picnic at Hanging Rock', '6', '40');
 
 # --- !Downs
 
