@@ -14,8 +14,8 @@ case class Location (
     addr2:		Option[String],
     addr3:		Option[String],
     postalCode: Option[String],
-    lat:		String,
-    lon:		String,
+    lat:		Double,
+    lon:		Double,
     alt:		Option[Int],
     desc:		Option[String],
     url:		Option[String]
@@ -36,8 +36,8 @@ object Location {
 		get[Option[String]]("location.address_2") ~
 		get[Option[String]]("location.address_3") ~
 		get[Option[String]]("location.postal_code") ~
-		get[String]("location.latitude") ~
-		get[String]("location.longitude") ~
+		get[Double]("location.latitude") ~
+		get[Double]("location.longitude") ~
 		get[Option[Int]]("location.altitude") ~
 		get[Option[String]]("location.desc") ~
 		get[Option[String]]("location.url") map {
