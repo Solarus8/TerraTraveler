@@ -119,11 +119,47 @@ insert into event (id, date, loc_id, "desc", min_size, max_size)
 insert into event (id, date, loc_id, "desc", min_size, max_size)
 	values (3, '2014-02-01', '1', 'Picnic at Hanging Rock', '6', '40');
 insert into event (id, date, loc_id, "desc", min_size, max_size)
-	values (4, '2014-01-14', '1', 'Pub crawl along Danube', '4', '20');
+	values (4, '2014-01-14', '2', 'Pub crawl along Danube', '4', '20');
 insert into event (id, date, loc_id, "desc", min_size, max_size)
-	values (5, '2014-01-06', '1', 'Sky diving at Lasha Karnak', '8', '30');
+	values (5, '2014-01-06', '2', 'Sky diving at Lasha Karnak', '8', '30');
 insert into event (id, date, loc_id, "desc", min_size, max_size)
-	values (6, '2014-02-01', '1', 'Picnic at Hanging Rock', '6', '40');
+	values (6, '2014-02-01', '2', 'Picnic at Hanging Rock', '6', '40');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (7, '2014-01-14', '3', 'Pub crawl along Danube', '4', '20');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (8, '2014-01-06', '3', 'Sky diving at Lasha Karnak', '8', '30');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (9, '2014-02-01', '4', 'Picnic at Hanging Rock', '6', '40');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (10, '2014-01-14', '3', 'Pub crawl along Danube', '4', '20');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (11, '2014-01-06', '4', 'Sky diving at Lasha Karnak', '8', '30');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (12, '2014-02-01', '4', 'Picnic at Hanging Rock', '6', '40');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (13, '2014-01-14', '5', 'Pub crawl along Danube', '4', '20');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (14, '2014-01-06', '5', 'Sky diving at Lasha Karnak', '8', '30');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (15, '2014-02-01', '5', 'Picnic at Hanging Rock', '6', '40');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (16, '2014-01-14', '6', 'Pub crawl along Danube', '4', '20');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (17, '2014-01-06', '6', 'Sky diving at Lasha Karnak', '8', '30');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (18, '2014-02-01', '6', 'Picnic at Hanging Rock', '6', '40');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (19, '2014-01-14', '7', 'Pub crawl along Danube', '4', '20');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (20, '2014-01-06', '7', 'Sky diving at Lasha Karnak', '8', '30');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (21, '2014-02-01', '7', 'Picnic at Hanging Rock', '6', '40');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (22, '2014-01-14', '8', 'Pub crawl along Danube', '4', '20');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (23, '2014-01-06', '8', 'Sky diving at Lasha Karnak', '8', '30');
+insert into event (id, date, loc_id, "desc", min_size, max_size)
+	values (24, '2014-02-01', '8', 'Picnic at Hanging Rock', '6', '40');
 
 # --- !Downs
 
