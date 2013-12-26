@@ -1,0 +1,18 @@
+@(locations: List[Location])
+
+@main("Terra Traveler - Data Model Proto"){
+	
+	<h1>@locations.size locations</h1>
+    
+    <dl>
+        @locations.map { location =>
+            <dt>
+                <a href="@routes.Locations.location(location.id.get)" >
+                	@location.city
+                </a>
+            </dt>
+            <dd>@location.lat @location.lon</dd>
+        }
+    </dl>
+	
+}
