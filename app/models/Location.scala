@@ -52,6 +52,33 @@ object Location {
 	        'id -> id
 	    ).as(Location.simple.singleOpt)
 	}
+	
+	/**
+	 * Retrieve all locations.
+	 * TODO: This is an impractical function and WILL NOT SCALE ###############
+	 */
+	def findAll: List[Location] = {
+	    DB.withConnection { implicit connection =>
+	      	SQL(
+	      	    """
+	      	    select * from "user"
+      			"""
+	      	).as(Location.simple *)
+	    }
+	}
+	
+	/**
+	 * Retrieve a Location by id.
+	 */
+	def findById(id: Long): Option[Location] = {
+		DB.withConnection { implicit connection =>
+	      	SQL("""
+	      	    select * from Location where id = {id}
+	      	    """).on(
+	  			'id -> id
+			).as(Location.simple.singleOpt)
+	    }
+	}
 }
 
 

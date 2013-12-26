@@ -15,18 +15,23 @@ object Locations extends Controller with Secured {
 	      	user.primaryLoc match {
 	      	  	case Some(locId) => 
 	      	  	  	Ok(html.protoLocation(
-      	  	  			Location.single(locId),
-      	  	  			user
-  	  	  			)
+      	  	  			Location.single(locId))(user)
   	  			)
 	      	  	case _ => 
-	      	  	  	Ok(html.protoLocation(
-      	  	  			None,
-      	  	  			user
-  	  	  			)
+	      	  	  	Ok(html.protoLocation(None)(user)
   	  	  		)
 	      	}
 	    }.getOrElse(Forbidden)
+	}
+	
+	// TODO: This is an impractical functions and will NOT SCALE ############
+	def allLocations = Action {
+	    val locations = Location.findAll	    
+	    Ok(views.html.protoLocations(locations))
+	}
+	
+	def location(locId: Long) = Action { implicit request =>
+	    Ok(html.protoLocation(Location.findById(locId))(null))
 	}
 }
 

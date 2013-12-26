@@ -77,17 +77,9 @@ object Users extends Controller {
 		User.findByEmail(email).map { user =>
 	      	user.primaryLoc match {
 	      	  	case Some(locId) => 
-	      	  	  	Ok(html.protoLocation(
-      	  	  			Location.single(locId),
-      	  	  			user
-  	  	  			)
-  	  			)
+	      	  	  	Ok(html.protoLocation(Location.single(locId))(user))
 	      	  	case _ => 
-	      	  	  	Ok(html.protoLocation(
-      	  	  			None,
-      	  	  			user
-  	  	  			)
-  	  	  		)
+	      	  	  	Ok(html.protoLocation(null)(user))
 	      	}
 	    }.getOrElse(Forbidden)	
 	}

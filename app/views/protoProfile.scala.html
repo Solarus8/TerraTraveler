@@ -6,6 +6,15 @@
 	
 	<h3>@user.userName</h3>
 	
+	<h2>
+		@user.primaryLoc match {
+			case Some(locId) => {
+				@routes.Locations.location(locId: Long)
+			}
+			case _ => {&ltempty&gt}
+		}
+	</h2>
+	
 	<dl class="dd_editable">
 		<dt>Email</dt>
 		<dd contenteditable="true">
@@ -71,7 +80,6 @@
 				
 				<dt>Story</dt>				
 				<dd contenteditable="true">
-    				
     				@profile.story match {
     					case Some(story) => {@profile.story}
     					case _ => {&ltempty&gt}

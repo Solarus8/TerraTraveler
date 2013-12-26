@@ -72,6 +72,7 @@ object User {
   
 	/**
 	 * Retrieve all users.
+	 * TODO: This is an impractical function and WILL NOT SCALE ###############
 	 */
 	def findAll: List[User] = {
 	    DB.withConnection { implicit connection =>

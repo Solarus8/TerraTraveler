@@ -2,10 +2,10 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# Home page
+### Home page ###
 GET     /                           controllers.Locations.index
 
-# Authentication
+### Authentication ###
 GET     /login						controllers.Application.login
 POST    /login						controllers.Application.authenticate
 GET     /logout						controllers.Application.logout
@@ -13,15 +13,20 @@ GET     /logout						controllers.Application.logout
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 
-# Users
+### Users ###
 GET		/users						controllers.Users.allUsers
 POST	/users						controllers.Users.createUser
 GET		/users/:email				controllers.Users.byEmail(email: String)
 GET		/users/:userId/profile		controllers.Users.profile(userId: Long)
-#POST	/users/:id/delete			controllers.Application.deleteUser(id: Long)
+#GET		/users/:id/contacts			controllers.Users.profile(userId: Long)
+#GET		/users/:id/contacts/:id		controllers.Users.profile(userId: Long, otherUserId: Long)
 
-# Events
+### Events ###
 GET		/events						controllers.Events.allEvents
 GET		/events/:id					controllers.Events.event(id: Long)		
-#Get		/events/:id/location			controllers.Events.byLocation(id: Long)
-#Get		/events/:id/user			controllers.Events.byUser(id: Long)
+#Get		/events/:id/location	controllers.Events.byLocation(LocId: Long)
+#Get		/events/:id/user		controllers.Events.byUser(userId: Long)
+
+### Events ###
+GET		/locations					controllers.Locations.allLocations
+GET		/locations:locId			controllers.Locations.location(locId: Long)
