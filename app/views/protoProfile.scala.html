@@ -6,14 +6,12 @@
 	
 	<h3>@user.userName</h3>
 	
-	<h2>
-		@user.primaryLoc match {
-			case Some(locId) => {
-				@routes.Locations.location(locId: Long)
-			}
-			case _ => {&ltempty&gt}
+	@user.primaryLoc match {
+		case Some(locId) => {
+			<a href="@routes.Locations.location(locId: Long)">Location</a>
 		}
-	</h2>
+		case _ => {&ltempty&gt}
+	}
 	
 	<dl class="dd_editable">
 		<dt>Email</dt>
