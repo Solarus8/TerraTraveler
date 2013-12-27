@@ -66,6 +66,20 @@ object Event {
 	    }
 	}
 	
+	def findByUserId(userId: Long): List[Event] = {
+	    DB.withConnection { implicit connection =>
+	      	SQL(
+	      	    """
+	      	    SELECT * FROM event e
+	      	    JOIN user_event ue ON ue.eventId = e.id
+	      	    where ue.user_id = {userId}
+      			"""
+	      	)
+	      	.on("userId" -> userId)
+	      	.as(Event.simple *)
+	    }
+	}
+	
 	/**
 	 * Create an Event with atomic Event fields.
 	 */

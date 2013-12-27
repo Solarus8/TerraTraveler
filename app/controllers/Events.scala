@@ -57,7 +57,12 @@ object Events extends Controller {
 	
 	def allEvents = Action {
 	    val events = Event.findAll	    
-	    Ok(views.html.protoEvents(events)(null))
+	    Ok(views.html.protoEvents(events))
+	}
+	
+	def byUser(userId: Long) = Action { implicit request =>
+	    val events = Event.findByUserId(userId)
+	    Ok(views.html.protoEvents(events))
 	}
 	
 	def allEventsJson = Action {

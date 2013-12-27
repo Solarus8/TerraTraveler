@@ -24,8 +24,8 @@ GET		/users/:userId/profile		controllers.Users.profile(userId: Long)
 ### Events ###
 GET		/events						controllers.Events.allEvents
 GET		/events/:id					controllers.Events.event(id: Long)		
-#Get		/events/:id/location	controllers.Events.byLocation(LocId: Long)
-#Get		/events/user/:id			controllers.Events.byUser(userId: Long)
+#GET		/events/:id/location	controllers.Events.byLocation(LocId: Long)
+GET		/events/user/:userId			controllers.Events.byUser(userId: Long)
 
 ### Events ###
 GET		/locations					controllers.Locations.allLocations
