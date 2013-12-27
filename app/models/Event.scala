@@ -71,7 +71,7 @@ object Event {
 	      	SQL(
 	      	    """
 	      	    SELECT * FROM event e
-	      	    JOIN user_event ue ON ue.eventId = e.id
+	      	    JOIN user_event ue ON ue.event_id = e.id
 	      	    where ue.user_id = {userId}
       			"""
 	      	)

@@ -160,6 +160,40 @@ insert into event (id, date, loc_id, "desc", min_size, max_size)
 	values (23, '2014-01-06', '8', 'Sky diving at Lasha Karnak', '8', '30');
 insert into event (id, date, loc_id, "desc", min_size, max_size)
 	values (24, '2014-02-01', '8', 'Picnic at Hanging Rock', '6', '40');
+	
+insert into user_event(user_id, event_id) values(1, 1);
+insert into user_event(user_id, event_id) values(1, 2);
+insert into user_event(user_id, event_id) values(2, 2);
+insert into user_event(user_id, event_id) values(2, 3);
+insert into user_event(user_id, event_id) values(3, 3);
+insert into user_event(user_id, event_id) values(3, 4);
+insert into user_event(user_id, event_id) values(4, 4);
+insert into user_event(user_id, event_id) values(4, 5);
+insert into user_event(user_id, event_id) values(5, 5);
+insert into user_event(user_id, event_id) values(5, 6);
+insert into user_event(user_id, event_id) values(6, 6);
+insert into user_event(user_id, event_id) values(6, 7);
+insert into user_event(user_id, event_id) values(7, 7);
+insert into user_event(user_id, event_id) values(7, 8);
+insert into user_event(user_id, event_id) values(8, 8);
+insert into user_event(user_id, event_id) values(8, 9);
+insert into user_event(user_id, event_id) values(9, 9);
+insert into user_event(user_id, event_id) values(9, 10);
+insert into user_event(user_id, event_id) values(10, 10);
+insert into user_event(user_id, event_id) values(10, 11);
+insert into user_event(user_id, event_id) values(11, 11);
+insert into user_event(user_id, event_id) values(11, 12);
+insert into user_event(user_id, event_id) values(12, 12);
+insert into user_event(user_id, event_id) values(12, 13);
+insert into user_event(user_id, event_id) values(13, 14);
+insert into user_event(user_id, event_id) values(14, 15);
+insert into user_event(user_id, event_id) values(15, 16);
+insert into user_event(user_id, event_id) values(16, 17);
+insert into user_event(user_id, event_id) values(17, 18);
+insert into user_event(user_id, event_id) values(18, 19);
+insert into user_event(user_id, event_id) values(19, 20);
+insert into user_event(user_id, event_id) values(20, 21);
+insert into user_event(user_id, event_id) values(21, 22);
 
 # --- !Downs
 
