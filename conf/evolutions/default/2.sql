@@ -228,6 +228,31 @@ insert into user_event(user_id, event_id) values(19, 10);
 insert into user_event(user_id, event_id) values(20, 11);
 insert into user_event(user_id, event_id) values(21, 12);
 
+insert into user_contact(user_id, contact_id) values(1, 2);
+insert into user_contact(user_id, contact_id) values(1, 3);
+insert into user_contact(user_id, contact_id) values(1, 4);
+insert into user_contact(user_id, contact_id) values(1, 5);
+insert into user_contact(user_id, contact_id) values(1, 6);
+insert into user_contact(user_id, contact_id) values(1, 7);
+insert into user_contact(user_id, contact_id) values(2, 8);
+insert into user_contact(user_id, contact_id) values(2, 9);
+insert into user_contact(user_id, contact_id) values(2, 10);
+insert into user_contact(user_id, contact_id) values(2, 11);
+insert into user_contact(user_id, contact_id) values(2, 12);
+insert into user_contact(user_id, contact_id) values(2, 13);
+insert into user_contact(user_id, contact_id) values(3, 2);
+insert into user_contact(user_id, contact_id) values(3, 3);
+insert into user_contact(user_id, contact_id) values(3, 4);
+insert into user_contact(user_id, contact_id) values(3, 5);
+insert into user_contact(user_id, contact_id) values(3, 6);
+insert into user_contact(user_id, contact_id) values(3, 7);
+insert into user_contact(user_id, contact_id) values(4, 8);
+insert into user_contact(user_id, contact_id) values(4, 9);
+insert into user_contact(user_id, contact_id) values(4, 10);
+insert into user_contact(user_id, contact_id) values(4, 11);
+insert into user_contact(user_id, contact_id) values(4, 12);
+insert into user_contact(user_id, contact_id) values(4, 13);
+
 # --- !Downs
 
 delete from user_profile;

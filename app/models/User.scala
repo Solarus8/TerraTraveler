@@ -147,6 +147,20 @@ object User {
     	}
 	} // End - create
 	
+	def contacts(userId: Long): List[User] = {
+	    DB.withConnection { implicit connection =>
+	      	SQL(
+	      	    """
+	      	    SELECT * FROM "user" u
+	      	    JOIN user_contact uc ON uc.user_id = u.id
+	      	    where uc.user_id = {userId}
+      			"""
+	      	)
+	      	.on("userId" -> userId)
+	      	.as(User.simple *)
+	    }
+	}
+	
 }
 
 

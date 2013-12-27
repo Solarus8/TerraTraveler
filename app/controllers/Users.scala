@@ -90,4 +90,14 @@ object Users extends Controller {
 		  	Ok(html.protoProfile(user, profile))
 	    }.getOrElse(Forbidden)
 	}
+	
+	def contacts(userId: Long) = Action { implicit request =>
+	    val users = User.contacts(userId)
+	    Ok(html.protoContacts(users))
+	}
 }
+
+
+
+
+

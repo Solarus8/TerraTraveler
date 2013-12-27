@@ -17,16 +17,15 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 GET		/users						controllers.Users.allUsers
 POST	/users						controllers.Users.createUser
 GET		/users/:email				controllers.Users.byEmail(email: String)
-GET		/users/:userId/profile		controllers.Users.profile(userId: Long)
-#GET		/users/:id/contacts			controllers.Users.profile(userId: Long)
-#GET		/users/:id/contacts/:id		controllers.Users.profile(userId: Long, otherUserId: Long)
+GET		/users/:id/profile			controllers.Users.profile(id: Long)
+GET		/users/:id/contacts			controllers.Users.contacts(id: Long)
 
 ### Events ###
 GET		/events						controllers.Events.allEvents
 GET		/events/:id					controllers.Events.event(id: Long)		
-#GET		/events/:id/location	controllers.Events.byLocation(LocId: Long)
-GET		/events/user/:userId			controllers.Events.byUser(userId: Long)
+#GET	/events/:id/location		controllers.Events.byLocation(LocId: Long)
+GET		/events/user/:userId		controllers.Events.byUser(userId: Long)
 
-### Events ###
+### Locations ###
 GET		/locations					controllers.Locations.allLocations
 GET		/locations:locId			controllers.Locations.location(locId: Long)
