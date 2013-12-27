@@ -86,7 +86,12 @@ object Events extends Controller {
 	
 	def event(eventId: Long) = Action { implicit request =>
 	    Event.findById(eventId).map { event =>
-		  	Ok(html.protoEvent(event))
+	        val users = Event.attendies(eventId)
+		  	Ok(html.protoEvent(event, users))
 	    }.getOrElse(Forbidden)
 	}
 }
+
+
+
+

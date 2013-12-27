@@ -129,6 +129,20 @@ object Event {
 	        case None       => throw new Exception("SQL Error - Did not insert User.")
     	}
 	} // End - create
+	
+	def attendies(eventId: Long): List[User] = {
+	    DB.withConnection { implicit connection =>
+	      	SQL(
+	      	    """
+	      	    SELECT * FROM "user" u
+	      	    JOIN user_event ue ON ue.user_id = u.id
+	      	    where ue.event_id = {eventId}
+      			"""
+	      	)
+	      	.on("eventId" -> eventId)
+	      	.as(User.simple *)
+	    }
+	}
 }
 	
 	
