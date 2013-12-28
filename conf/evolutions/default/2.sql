@@ -112,53 +112,70 @@ insert into user_profile (user_id, first_name, last_name, gender, nationality, p
 insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
 	values (24, 'Poochie', 'Smith', 'male', 'Maylay', 'http://www.xtra.com', 'Working to make Earth a warmer place!');
 	
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into place (id, loc_id, name) values (1, 2, 'Dairy Queen');
+insert into place (id, loc_id, name) values (2, 1, 'Royal Museum');
+insert into place (id, loc_id, name) values (3, 3, 'Google South');
+insert into place (id, loc_id, name) values (4, 4, 'West Park Fields');
+insert into place (id, loc_id, name) values (5, 5, 'Angel Island Restaurant');
+insert into place (id, loc_id, name) values (6, 6, 'ZZs Pool Hall');
+insert into place (id, loc_id, name) values (7, 6, 'Roy Rogers Museum');
+insert into place (id, loc_id, name) values (8, 7, 'Cryptic Castle');
+insert into place (id, loc_id, name) values (9, 8, 'Downtown Dance Hall');
+insert into place (id, loc_id, name) values (10, 9, 'Eagles Hall');
+insert into place (id, loc_id, name) values (11, 16, 'Berts Beanery');
+insert into place (id, loc_id, name) values (12, 10, 'City Hall');
+insert into place (id, loc_id, name) values (13, 2, 'Rendezvous Lounge');
+insert into place (id, loc_id, name) values (14, 7, 'Hacienda Stables');
+insert into place (id, loc_id, name) values (15, 8, 'Glenwood Park');
+insert into place (id, loc_id, name) values (16, 15, 'Milky Way');
+	
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (1, '2014-01-14', '1', 'Pub crawl along Danube', '4', '20');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (2, '2014-01-06', '1', 'Sky diving at Lasha Karnak', '8', '30');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (3, '2014-02-01', '1', 'Picnic at Hanging Rock', '6', '40');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (4, '2014-01-14', '2', 'Pub crawl along Danube', '4', '20');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (5, '2014-01-06', '2', 'Sky diving at Lasha Karnak', '8', '30');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (6, '2014-02-01', '2', 'Picnic at Hanging Rock', '6', '40');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (7, '2014-01-14', '3', 'Pub crawl along Danube', '4', '20');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (8, '2014-01-06', '3', 'Sky diving at Lasha Karnak', '8', '30');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (9, '2014-02-01', '4', 'Picnic at Hanging Rock', '6', '40');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (10, '2014-01-14', '3', 'Pub crawl along Danube', '4', '20');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (11, '2014-01-06', '4', 'Sky diving at Lasha Karnak', '8', '30');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (12, '2014-02-01', '4', 'Picnic at Hanging Rock', '6', '40');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (13, '2014-01-14', '5', 'Pub crawl along Danube', '4', '20');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (14, '2014-01-06', '5', 'Sky diving at Lasha Karnak', '8', '30');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (15, '2014-02-01', '5', 'Picnic at Hanging Rock', '6', '40');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (16, '2014-01-14', '6', 'Pub crawl along Danube', '4', '20');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (17, '2014-01-06', '6', 'Sky diving at Lasha Karnak', '8', '30');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (18, '2014-02-01', '6', 'Picnic at Hanging Rock', '6', '40');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (19, '2014-01-14', '7', 'Pub crawl along Danube', '4', '20');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (20, '2014-01-06', '7', 'Sky diving at Lasha Karnak', '8', '30');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (21, '2014-02-01', '7', 'Picnic at Hanging Rock', '6', '40');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (22, '2014-01-14', '8', 'Pub crawl along Danube', '4', '20');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (23, '2014-01-06', '8', 'Sky diving at Lasha Karnak', '8', '30');
-insert into event (id, date, loc_id, "desc", min_size, max_size)
+insert into event (id, date, place_id, "desc", min_size, max_size)
 	values (24, '2014-02-01', '8', 'Picnic at Hanging Rock', '6', '40');
 	
 insert into user_event(user_id, event_id) values(1, 1);
@@ -240,18 +257,42 @@ insert into user_contact(user_id, contact_id) values(2, 10);
 insert into user_contact(user_id, contact_id) values(2, 11);
 insert into user_contact(user_id, contact_id) values(2, 12);
 insert into user_contact(user_id, contact_id) values(2, 13);
-insert into user_contact(user_id, contact_id) values(3, 2);
-insert into user_contact(user_id, contact_id) values(3, 3);
-insert into user_contact(user_id, contact_id) values(3, 4);
-insert into user_contact(user_id, contact_id) values(3, 5);
-insert into user_contact(user_id, contact_id) values(3, 6);
-insert into user_contact(user_id, contact_id) values(3, 7);
-insert into user_contact(user_id, contact_id) values(4, 8);
-insert into user_contact(user_id, contact_id) values(4, 9);
-insert into user_contact(user_id, contact_id) values(4, 10);
-insert into user_contact(user_id, contact_id) values(4, 11);
-insert into user_contact(user_id, contact_id) values(4, 12);
-insert into user_contact(user_id, contact_id) values(4, 13);
+insert into user_contact(user_id, contact_id) values(3, 12);
+insert into user_contact(user_id, contact_id) values(3, 23);
+insert into user_contact(user_id, contact_id) values(3, 14);
+insert into user_contact(user_id, contact_id) values(3, 15);
+insert into user_contact(user_id, contact_id) values(3, 16);
+insert into user_contact(user_id, contact_id) values(3, 17);
+insert into user_contact(user_id, contact_id) values(4, 18);
+insert into user_contact(user_id, contact_id) values(4, 19);
+insert into user_contact(user_id, contact_id) values(4, 20);
+insert into user_contact(user_id, contact_id) values(4, 21);
+insert into user_contact(user_id, contact_id) values(4, 22);
+insert into user_contact(user_id, contact_id) values(4, 23);
+insert into user_contact(user_id, contact_id) values(5, 2);
+insert into user_contact(user_id, contact_id) values(5, 3);
+insert into user_contact(user_id, contact_id) values(5, 4);
+insert into user_contact(user_id, contact_id) values(6, 5);
+insert into user_contact(user_id, contact_id) values(6, 6);
+insert into user_contact(user_id, contact_id) values(6, 7);
+insert into user_contact(user_id, contact_id) values(7, 8);
+insert into user_contact(user_id, contact_id) values(7, 9);
+insert into user_contact(user_id, contact_id) values(7, 10);
+insert into user_contact(user_id, contact_id) values(8, 11);
+insert into user_contact(user_id, contact_id) values(8, 12);
+insert into user_contact(user_id, contact_id) values(8, 13);
+insert into user_contact(user_id, contact_id) values(9, 12);
+insert into user_contact(user_id, contact_id) values(9, 23);
+insert into user_contact(user_id, contact_id) values(10, 14);
+insert into user_contact(user_id, contact_id) values(11, 15);
+insert into user_contact(user_id, contact_id) values(13, 16);
+insert into user_contact(user_id, contact_id) values(14, 17);
+insert into user_contact(user_id, contact_id) values(15, 18);
+insert into user_contact(user_id, contact_id) values(16, 19);
+insert into user_contact(user_id, contact_id) values(17, 20);
+insert into user_contact(user_id, contact_id) values(18, 21);
+insert into user_contact(user_id, contact_id) values(19, 22);
+insert into user_contact(user_id, contact_id) values(20, 23);
 
 # --- !Downs
 
@@ -260,3 +301,6 @@ delete from "user";
 delete from "role";
 delete from event;
 delete from location;
+delete from user_contact;
+delete from user_event;
+delete from place;

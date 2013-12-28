@@ -52,7 +52,7 @@ object Events extends Controller {
 			"waitListTotal"	-> optional(of[Int])
 		)((date, locationId, description, minSize, maxSize, rsvpTotal, waitListTotal) => 
 		    Event(NotAssigned, date, locationId, description, minSize, maxSize, rsvpTotal, waitListTotal))
-		 ((event: Event) => Some(event.date, event.locationId, event.description, event.minSize, event.maxSize, event.rsvpTotal, event.waitListTotal))
+		 ((event: Event) => Some(event.date, event.placeId, event.description, event.minSize, event.maxSize, event.rsvpTotal, event.waitListTotal))
 	)
 	
 	def allEvents = Action {
@@ -71,7 +71,7 @@ object Events extends Controller {
 	    	"events" -> {
   		    	events.map(event => Json.obj(
 	    	  	    "date" 		  -> event.date,
-	        	    "locId"    	  -> event.locationId,
+	        	    "locId"    	  -> event.placeId,
 	        	    "desc"		  -> event.description,
 	        	    "minSize"	  -> event.minSize,
 	        	    "maxSize" 	  -> event.maxSize,

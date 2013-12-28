@@ -36,8 +36,14 @@ CREATE TABLE "user" (
 	email VARCHAR(60),
 	password VARCHAR(20),
 	"role" VARCHAR(20) REFERENCES "role"("role") ON DELETE CASCADE,
-	primary_loc INTEGER REFERENCES location("id") ON DELETE CASCADE,
+	primary_loc INTEGER REFERENCES location(id) ON DELETE CASCADE,
 	PRIMARY KEY(id)
+);
+
+CREATE TABLE user_contact (
+	user_id INTEGER NOT NULL REFERENCES "user"(id),
+	contact_id INTEGER NOT NULL REFERENCES "user"(id),
+	CONSTRAINT use_cont_pkey PRIMARY KEY (user_id, contact_id)
 );
 
 CREATE SEQUENCE group_id_seq;
@@ -48,19 +54,6 @@ CREATE TABLE "group" (
 	"desc" VARCHAR(256),
 	min_size INTEGER,
 	max_size INTEGER,
-	PRIMARY KEY(id)
-);
-
-CREATE SEQUENCE event_id_seq;
-CREATE TABLE event (
-	id INTEGER NOT NULL DEFAULT nextval('event_id_seq'),
-	"date" TIMESTAMP,
-	loc_id INTEGER NOT NULL REFERENCES location(id) ON DELETE CASCADE, 
-	"desc" VARCHAR(256),
-	min_size INTEGER,
-	max_size INTEGER,
-	rsvp_tot INTEGER,
-	wait_list_tot INTEGER,
 	PRIMARY KEY(id)
 );
 
@@ -75,11 +68,35 @@ CREATE TABLE place (
 	PRIMARY KEY(id)
 );
 
+CREATE SEQUENCE event_id_seq;
+CREATE TABLE event (
+	id INTEGER NOT NULL DEFAULT nextval('event_id_seq'),
+	"date" TIMESTAMP,
+	place_id INTEGER NOT NULL REFERENCES place(id) ON DELETE CASCADE, 
+	"desc" VARCHAR(256),
+	min_size INTEGER,
+	max_size INTEGER,
+	rsvp_tot INTEGER,
+	wait_list_tot INTEGER,
+	PRIMARY KEY(id)
+);
+
 CREATE TABLE preferences (
 	id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
 	pref_1 INTEGER,
 	pref_2 INTEGER,
 	pref_3 INTEGER,
+	PRIMARY KEY(id)
+);
+
+CREATE SEQUENCE itin_id_seq;
+CREATE TABLE itinerary (
+	id INTEGER NOT NULL DEFAULT nextval('itin_id_seq'),
+	name VARCHAR(80),
+	"desc" VARCHAR(256),
+	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+	date_from TIMESTAMP,
+	data_to TIMESTAMP,
 	PRIMARY KEY(id)
 );
 
@@ -98,11 +115,27 @@ CREATE TABLE user_profile (
 	PRIMARY KEY(id)
 );
 
-CREATE TABLE user_contact (
-	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+CREATE SEQUENCE tag_id_seq;
+CREATE TABLE tag (
+	id INTEGER NOT NULL DEFAULT nextval('tag_id_seq'),
+	tag VARCHAR(45),
+	PRIMARY KEY(id)
+);
+
+CREATE SEQUENCE itin_item_id_seq;
+CREATE TABLE itinerary_item (
+	id INTEGER NOT NULL DEFAULT nextval('itin_item_id_seq'),
+	itinerary_id INTEGER NOT NULL REFERENCES itinerary(id) ON DELETE CASCADE,
+	loc_id INTEGER NOT NULL REFERENCES location(id) ON DELETE CASCADE,
+	place_id INTEGER NOT NULL REFERENCES place(id) ON DELETE CASCADE,
 	contact_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+	group_id INTEGER NOT NULL REFERENCES "group"(id) ON DELETE CASCADE,
+	event_id INTEGER NOT NULL REFERENCES event(id) ON DELETE CASCADE,
+	tag_id INTEGER NOT NULL REFERENCES tag(id) ON DELETE CASCADE,
+	date_from TIMESTAMP,
+	data_to TIMESTAMP,
 	index INTEGER,
-	PRIMARY KEY(user_id, contact_id)
+	PRIMARY KEY(id)
 );
 
 CREATE TABLE user_loc (
@@ -230,6 +263,7 @@ DROP TABLE user_loc CASCADE;
 DROP TABLE user_interest CASCADE;
 DROP TABLE place_category CASCADE;
 DROP TABLE user_event CASCADE;
+DROP TABLE itinerary_item CASCADE;
 
 DROP TABLE role CASCADE;
 DROP TABLE "group" CASCADE;
@@ -244,6 +278,8 @@ DROP TABLE promo CASCADE;
 DROP TABLE "user" CASCADE;
 DROP TABLE location CASCADE;
 DROP TABLE business CASCADE;
+DROP TABLE itinerary CASCADE;
+DROP TABLE tag CASCADE;
 
 DROP SEQUENCE user_prof_id_seq CASCADE;
 DROP SEQUENCE group_id_seq CASCADE;
@@ -259,5 +295,9 @@ DROP SEQUENCE role_id_seq CASCADE;
 DROP SEQUENCE user_id_seq CASCADE;
 DROP SEQUENCE user_event_id_seq CASCADE;
 DROP SEQUENCE role_id_seq;
+DROP SEQUENCE itin_item_id_seq;
+DROP SEQUENCE itin_id_seq;
+DROP SEQUENCE user_cont_id_seq;
+DROP SEQUENCE tag_id_seq;
 
 DROP TABLE play_evolutions;

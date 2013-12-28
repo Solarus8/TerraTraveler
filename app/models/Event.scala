@@ -11,7 +11,7 @@ import anorm.SqlParser._
 case class Event (
     id:				Pk[Long] = NotAssigned,
     date:			Date,
-    locationId:		Long,
+    placeId:		Long,
     description:	String,
     minSize:		Int,
     maxSize:		Int,
@@ -29,14 +29,14 @@ object Event {
 	val simple = {
 		get[Pk[Long]]("event.id") ~
 		get[Date]("event.date") ~
-		get[Long]("event.loc_id") ~
+		get[Long]("event.place_id") ~
 		get[String]("event.desc") ~
 		get[Int]("event.min_size") ~
 		get[Int]("event.max_size") ~
 		get[Option[Int]]("event.rsvp_tot") ~
 		get[Option[Int]]("event.wait_list_tot") map {
-		    case id ~ date ~ locationId ~ description ~ minSize ~ maxSize ~ rsvpTotal ~ waitListTotal =>
-		        Event(id, date, locationId, description, minSize, maxSize, rsvpTotal, waitListTotal)
+		    case id ~ date ~ placeId ~ description ~ minSize ~ maxSize ~ rsvpTotal ~ waitListTotal =>
+		        Event(id, date, placeId, description, minSize, maxSize, rsvpTotal, waitListTotal)
 		}	
 	}
 	
@@ -83,17 +83,17 @@ object Event {
 	/**
 	 * Create an Event with atomic Event fields.
 	 */
-	def create(date: Date, locId: Long, desc: String, minSize: Int, maxSize: Int, rsvpTot: Int, waitListTot: Int): Pk[Long] = {
+	def create(date: Date, placeId: Long, desc: String, minSize: Int, maxSize: Int, rsvpTot: Int, waitListTot: Int): Pk[Long] = {
 	    DB.withConnection { implicit connection =>
 	      	SQL(
 	      		"""
-      			insert into event (date, loc_id, desc, min_size, max_size, rsvp_tot, wait_list_tot) values (
-      				{date}, {locId}, {desc}, {minSize}, {maxSize}, {rsvpTot}, {waitListTot}
+      			insert into event (date, place_id, desc, min_size, max_size, rsvp_tot, wait_list_tot) values (
+      				{date}, {placeId}, {desc}, {minSize}, {maxSize}, {rsvpTot}, {waitListTot}
       			)
 	      		"""
       		).on(
       			'date   	 -> date,
-      			'locId 	     -> locId,
+      			'placeId 	 -> placeId,
       			'desc   	 -> desc,
       			'minSize     -> minSize,
       			'maxSize	 -> maxSize,
@@ -117,7 +117,7 @@ object Event {
 	      		"""
       		).on(
       			'date   	 -> event.date,
-      			'locId 	     -> event.locationId,
+      			'locId 	     -> event.placeId,
       			'desc   	 -> event.description,
       			'minSize     -> event.minSize,
       			'maxSize	 -> event.maxSize,

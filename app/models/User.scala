@@ -152,7 +152,7 @@ object User {
 	      	SQL(
 	      	    """
 	      	    SELECT * FROM "user" u
-	      	    JOIN user_contact uc ON uc.user_id = u.id
+	      	    JOIN user_contact uc ON uc.contact_id = u.id
 	      	    where uc.user_id = {userId}
       			"""
 	      	)
