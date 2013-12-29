@@ -95,6 +95,14 @@ object Users extends Controller {
 	    val users = User.contacts(userId)
 	    Ok(html.protoContacts(users))
 	}
+	
+	def itinerary(userId: Long) = Action { implicit request =>
+	    val itineraries = Itinerary.findByUserId(userId).map { itinerary =>
+	        val items = ItineraryItem.findById(itinerary.id.get)
+	        (itinerary, items)
+	    }
+	    Ok(html.protoItinerary(itineraries))
+	}
 }
 
 

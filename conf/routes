@@ -19,12 +19,13 @@ POST	/users						controllers.Users.createUser
 GET		/users/:email				controllers.Users.byEmail(email: String)
 GET		/users/:id/profile			controllers.Users.profile(id: Long)
 GET		/users/:id/contacts			controllers.Users.contacts(id: Long)
+GET		/users/:id/itinerary		controllers.Users.itinerary(id: Long)
 
 ### Events ###
 GET		/events						controllers.Events.allEvents
 GET		/events/:id					controllers.Events.event(id: Long)		
-#GET	/events/location/:locId		controllers.Events.byLocation(locId: Long)
-GET		/events/user/:userId		controllers.Events.byUser(userId: Long)
+#GET	/events/location/:id		controllers.Events.byLocation(id: Long)
+GET		/events/user/:id		controllers.Events.byUser(id: Long)
 
 ### Locations ###
 GET		/locations					controllers.Locations.allLocations

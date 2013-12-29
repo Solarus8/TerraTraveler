@@ -1,0 +1,33 @@
+@(itineraries: List[(Itinerary, List[ItineraryItem])])
+
+@main("Terra Traveler - Data Model Proto"){
+
+	@itineraries.map { tup =>
+		<h2>Itinerary: @tup._1.name</h2>
+		
+    	<dl>
+    		<dt>Descripton</dt>
+    		<dd>@tup._1.description</dd>
+    		
+            <dt>Date from</dt>
+            <dd>@tup._1.dateFrom</dd>
+            
+            <dt>Date to</dt>
+            <dd>@tup._1.dateTo</dd>
+            
+            @tup._2.map { item =>
+            	
+            	<dt>Date from: @item.dateFrom</dt>
+            	
+            	<dt>Date to: @item.dateTo</dt>
+            	
+            	<dt>Event id: @item.eventId</dt>
+            	
+            	<dt>Place id: @item.placeId</dt>
+            	
+            	<dt>Contact id: @item.contactId</dt>
+            }
+        </dl>
+    }
+	
+}

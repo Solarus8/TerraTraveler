@@ -134,7 +134,7 @@ CREATE TABLE itinerary_item (
 	event_id INTEGER REFERENCES event(id) ON DELETE CASCADE,
 	tag_id INTEGER REFERENCES tag(id) ON DELETE CASCADE,
 	date_from TIMESTAMP,
-	data_to TIMESTAMP,
+	date_to TIMESTAMP,
 	index INTEGER,
 	PRIMARY KEY(id)
 );
