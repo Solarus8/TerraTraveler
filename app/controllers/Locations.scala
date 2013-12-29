@@ -33,6 +33,17 @@ object Locations extends Controller with Secured {
 	def location(locId: Long) = Action { implicit request =>
 	    Ok(html.protoLocation(Location.findById(locId))(null))
 	}
+	
+	def place(placeId: Long) = Action { implicit request =>
+	    val p = Place.findById(placeId) match {
+	        case Some(p) => { p }
+	    }
+	    val l = Location.findById(p.locId) match {
+	        case Some(l) => { l }
+	    }
+	    
+	    Ok(html.protoPlace(p, l))
+	}
 }
 
 

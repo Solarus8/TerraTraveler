@@ -61,9 +61,10 @@ CREATE SEQUENCE place_id_seq;
 CREATE TABLE place (
 	id INTEGER NOT NULL DEFAULT nextval('place_id_seq'),
 	loc_id INTEGER NOT NULL REFERENCES location(id) ON DELETE CASCADE,
-	"name" VARCHAR(60),
+	"name" VARCHAR(60) NOT NULL,
 	"desc" VARCHAR(256),
-	"type" VARCHAR(14),
+	cat VARCHAR(14),
+	tag	VARCHAR(32),
 	url VARCHAR(85),
 	PRIMARY KEY(id)
 );

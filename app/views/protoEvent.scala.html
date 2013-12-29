@@ -9,7 +9,12 @@
 		<dd>@event.description</dd>
 		
 		<dt>Place</dt>
-		<dd>@event.placeId</dd>
+		@Place.findById(event.placeId) match {
+			case Some(pl) => {
+				<dd><a href="@routes.Locations.place(pl.id.get)">@pl.name</a></dd>
+			}
+			case None => {<dd>{&ltempty&gt}</dd>}
+		}
 		
   		<dt>Minimum Size</dt>
   		<dd>@event.minSize</dd>
