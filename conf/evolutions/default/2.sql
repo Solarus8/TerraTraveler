@@ -294,6 +294,19 @@ insert into user_contact(user_id, contact_id) values(18, 21);
 insert into user_contact(user_id, contact_id) values(19, 22);
 insert into user_contact(user_id, contact_id) values(20, 23);
 
+insert into itinerary(id, name, "desc", user_id, date_from) values (1, 'San Francisco', 'Gonna make this dock my home...', 3, '2014-3-21');
+insert into itinerary(id, name, "desc", user_id, date_from, date_to) values (2, 'Austin', 'South X Southwest - first time!', 3, '2014-6-14', '2014-6-17');
+insert into itinerary(id, name, "desc", user_id, date_from, date_to) values (3, 'Istanbul', 'XYZ Project', 1, '2014-1-5', '2014-1-25');
+
+insert into itinerary_item(id, itinerary_id, loc_id, place_id) values (1, 1, 1, 5);
+insert into itinerary_item(id, itinerary_id, loc_id, event_id) values (2, 1, 1, 9);
+insert into itinerary_item(id, itinerary_id, loc_id, place_id, event_id) values (3, 1, 1, 6, 10);
+insert into itinerary_item(id, itinerary_id, loc_id, place_id, event_id) values (4, 1, 1, 7, 11);
+insert into itinerary_item(id, itinerary_id, loc_id, place_id) values (5, 2, 2, 6);
+insert into itinerary_item(id, itinerary_id, loc_id, place_id) values (6, 2, 2, 7);
+insert into itinerary_item(id, itinerary_id, loc_id, place_id) values (7, 3, 3, 10);
+insert into itinerary_item(id, itinerary_id, loc_id, place_id) values (8, 3, 3, 11);
+
 # --- !Downs
 
 delete from user_profile;
@@ -304,3 +317,5 @@ delete from location;
 delete from user_contact;
 delete from user_event;
 delete from place;
+delete from itinerary_item;
+delete from itinerary;
