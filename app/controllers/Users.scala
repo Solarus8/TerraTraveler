@@ -51,26 +51,28 @@ object Users extends Controller {
 	
 	def registrationForm = userForm
 	
-	def allUsers = Action {
-	    val users = User.findAll	    
-	    Ok(views.html.protoUsers(users))
-	}
-	
-	def allUsersJson = Action {
+	def allUsers = Action { implicit request =>
 	    val users = User.findAll
-	    val usersJson = Json.obj(
-	    	"users"	-> {
-  		    	users.map(user => Json.obj(
-	    	  	    "userName" -> user.userName,
-	        	    "email"    -> user.email,
-	        	    "password" -> user.password,
-	        	    "role"	   -> user.role,
-	        	    "primaryLoc" -> user.primaryLoc
-  		    ))}
-	    )
+	    render {
+	        case Accepts.Html() => Ok(views.html.protoUsers(users))
+	        
+	        case Accepts.Json() => {
+	            val usersJson = Json.obj(
+            		"users"	-> {
+            			users.map(user   => Json.obj(
+			    	  	    "userName"   -> user.userName,
+			        	    "email"      -> user.email,
+			        	    "password" 	 -> user.password,
+			        	    "role"	     -> user.role,
+			        	    "primaryLoc" -> user.primaryLoc
+            			))
+            		}
+        		)
 	    
-	    Json.toJson(usersJson)
-	    Ok(usersJson)
+			    Json.toJson(usersJson)
+			    Ok(usersJson)
+	        }
+	    }   
 	}
 	
 	def byEmail(email: String) = Action { implicit request =>
