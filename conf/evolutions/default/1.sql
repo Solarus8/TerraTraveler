@@ -295,10 +295,10 @@ DROP SEQUENCE promo_id_seq CASCADE;
 DROP SEQUENCE role_id_seq CASCADE;
 DROP SEQUENCE user_id_seq CASCADE;
 DROP SEQUENCE user_event_id_seq CASCADE;
-DROP SEQUENCE role_id_seq;
-DROP SEQUENCE itin_item_id_seq;
-DROP SEQUENCE itin_id_seq;
-DROP SEQUENCE user_cont_id_seq;
-DROP SEQUENCE tag_id_seq;
+DROP SEQUENCE role_id_seq CASCADE;
+DROP SEQUENCE itin_item_id_seq CASCADE;
+DROP SEQUENCE itin_id_seq CASCADE;
+DROP SEQUENCE user_cont_id_seq CASCADE;
+DROP SEQUENCE tag_id_seq CASCADE;
 
 DROP TABLE play_evolutions;
