@@ -33,9 +33,47 @@ object Users extends Controller {
 	}
 	
 	def createUser = Action { implicit request =>
-	    val newUser:User = userForm.bindFromRequest.get
-	    User.create(newUser)
-	    Redirect(routes.Users.allUsers)
+	    render {
+	        case Accepts.Json() => {
+	            request.body.asJson.map { json =>
+			        val userName 	= (json \ "userName").as[String]
+			        val email    	= (json \ "email").as[String]
+			        val password 	= (json \ "password").as[String]
+			        val role 	 	= (json \ "role").as[String]
+			        val primaryLoc 	= (json \ "primaryLoc").as[Option[Long]]
+			        
+			        val newUser  = User(NotAssigned, null, null, null, userName, email, password, role, primaryLoc)
+			        val pk = User.create(newUser)
+			        
+			        val persistedUser = User.findById(pk.get)
+			        
+			        persistedUser match {
+			            case Some(persistedUser) => {
+			                val jsonResp = Json.obj( "user" -> {
+			                    Json.obj(
+				                    "id"		 -> persistedUser.id.get,
+					    	  	    "userName"   -> persistedUser.userName,
+					        	    "email"      -> persistedUser.email,
+					        	    "password" 	 -> persistedUser.password,
+					        	    "role"	     -> persistedUser.role,
+					        	    "primaryLoc" -> persistedUser.primaryLoc
+					        	)
+				            })
+				            Ok(jsonResp)
+			            }
+			            case None => BadRequest("User not found")
+			        }
+				}.getOrElse {
+					BadRequest("Expecting Json data")
+				}
+	        } // End - case Accpts.Json()
+	        
+	        case Accepts.Html() => {
+	            val newUser:User = userForm.bindFromRequest.get
+			    User.create(newUser)
+			    Redirect(routes.Users.allUsers)
+	        }
+	    }
 	}
 		
 	val userForm = Form(

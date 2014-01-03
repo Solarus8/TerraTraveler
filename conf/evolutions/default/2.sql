@@ -38,30 +38,30 @@ Insert into location (id, city, latitude, longitude)
 Insert into location (id, city, latitude, longitude)
 	values (16, 'Cork', 51.896892, -8.486316);
 
-insert into "user" (id, user_name, password, role, email, primary_loc) values (1, 'Homer', 'secret', 'BIZ', 'richard@aqume.com', 1);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (2, 'MJ', 'secret', 'NORM', 'melissa@sample.com', 1);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (3, 'Yubba', 'secret', 'NORM', 'yura@sample.com', 1);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (4, 'Jaz', 'secret', 'BIZ', 'jasper@sample.com', 2);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (5, 'Cooter', 'secret', 'NORM', 'kellyo@sample.com', 2);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (6, 'Baba', 'secret', 'NORM', 'basil888@sample.com', 2);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (7, 'gage', 'secret', 'BIZ', 'gg@sample.com', 3);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (8, 'MT', 'secret', 'NORM', 'mm1K32@sample.com', 3);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (9, 'Boingo', 'secret', 'NORM', 'ttt666@sample.com', 3);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (10, 'starchild', 'secret', 'BIZ', 'rr5@sample.com', 4);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (11, 'Crunchy', 'secret', 'NORM', 'rr4@sample.com', 4);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (12, 'spacey', 'secret', 'NORM', 'rr3@sample.com', 4);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (13, 'papo', 'secret', 'BIZ', 'rr2@aqume.com', 5);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (14, 'QP', 'secret', 'NORM', 'rrr8@sample.com', 5);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (15, 'Yazzo', 'secret', 'NORM', 'rrr7@sample.com', 5);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (16, 'KingKong', 'secret', 'BIZ', 'rrr6@sample.com', 6);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (17, 'Zippo', 'secret', 'NORM', 'rrr5@sample.com', 6);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (18, 'Mike', 'secret', 'NORM', 'rrr4@sample.com', 6);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (19, 'Flack', 'secret', 'BIZ', 'rrr3@sample.com', 7);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (20, 'Hector', 'secret', 'NORM', 'sss6@sample.com', 7);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (21, 'Peet', 'secret', 'NORM', 'sss5@sample.com', 7);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (22, 'Casey', 'secret', 'BIZ', 'sss4@sample.com', 8);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (23, 'Pooter', 'secret', 'NORM', 'fff4@sample.com', 8);
-insert into "user" (id, user_name, password, role, email, primary_loc) values (24, 'Lamphrey', 'secret', 'NORM', 'ggg2@sample.com', 8);
+insert into "user" (user_name, password, role, email, primary_loc) values ('Homer', 'secret', 'BIZ', 'richard@aqume.com', 1);
+insert into "user" (user_name, password, role, email, primary_loc) values ('MJ', 'secret', 'NORM', 'melissa@sample.com', 1);
+insert into "user" (user_name, password, role, email, primary_loc) values ('Yubba', 'secret', 'NORM', 'yura@sample.com', 1);
+insert into "user" (user_name, password, role, email, primary_loc) values ('Jaz', 'secret', 'BIZ', 'jasper@sample.com', 2);
+insert into "user" (user_name, password, role, email, primary_loc) values ('Cooter', 'secret', 'NORM', 'kellyo@sample.com', 2);
+insert into "user" (user_name, password, role, email, primary_loc) values ('Baba', 'secret', 'NORM', 'basil888@sample.com', 2);
+insert into "user" (user_name, password, role, email, primary_loc) values ('gage', 'secret', 'BIZ', 'gg@sample.com', 3);
+insert into "user" (user_name, password, role, email, primary_loc) values ('MT', 'secret', 'NORM', 'mm1K32@sample.com', 3);
+insert into "user" (user_name, password, role, email, primary_loc) values ('Boingo', 'secret', 'NORM', 'ttt666@sample.com', 3);
+insert into "user" (user_name, password, role, email, primary_loc) values ('starchild', 'secret', 'BIZ', 'rr5@sample.com', 4);
+insert into "user" (user_name, password, role, email, primary_loc) values ('Crunchy', 'secret', 'NORM', 'rr4@sample.com', 4);
+insert into "user" (user_name, password, role, email, primary_loc) values ('spacey', 'secret', 'NORM', 'rr3@sample.com', 4);
+insert into "user" (user_name, password, role, email, primary_loc) values ('papo', 'secret', 'BIZ', 'rr2@aqume.com', 5);
+insert into "user" (user_name, password, role, email, primary_loc) values ('QP', 'secret', 'NORM', 'rrr8@sample.com', 5);
+insert into "user" (user_name, password, role, email, primary_loc) values ('Yazzo', 'secret', 'NORM', 'rrr7@sample.com', 5);
+insert into "user" (user_name, password, role, email, primary_loc) values ('KingKong', 'secret', 'BIZ', 'rrr6@sample.com', 6);
+insert into "user" (user_name, password, role, email, primary_loc) values ('Zippo', 'secret', 'NORM', 'rrr5@sample.com', 6);
+insert into "user" (user_name, password, role, email, primary_loc) values ('Mike', 'secret', 'NORM', 'rrr4@sample.com', 6);
+insert into "user" (user_name, password, role, email, primary_loc) values ('Flack', 'secret', 'BIZ', 'rrr3@sample.com', 7);
+insert into "user" (user_name, password, role, email, primary_loc) values ('Hector', 'secret', 'NORM', 'sss6@sample.com', 7);
+insert into "user" (user_name, password, role, email, primary_loc) values ('Peet', 'secret', 'NORM', 'sss5@sample.com', 7);
+insert into "user" (user_name, password, role, email, primary_loc) values ('Casey', 'secret', 'BIZ', 'sss4@sample.com', 8);
+insert into "user" (user_name, password, role, email, primary_loc) values ('Pooter', 'secret', 'NORM', 'fff4@sample.com', 8);
+insert into "user" (user_name, password, role, email, primary_loc) values ('Lamphrey', 'secret', 'NORM', 'ggg2@sample.com', 8);
 
 insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
 	values (1, 'Richard', 'Walker', 'male', 'Merkin', 'http://www.codemonkey.com', 'I yam what I yam');
