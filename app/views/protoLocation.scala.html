@@ -5,7 +5,7 @@
 	<h1>User Location: 
 		@location match {
 			case Some(location) => {@location.lat @location.lon}
-			case None => {&ltempty&gt}
+			case _ => {&ltempty&gt}
 		}
 	</h1>
 	

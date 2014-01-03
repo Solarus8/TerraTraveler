@@ -24,12 +24,12 @@ object Users extends Controller {
 			        val password 	= (json \ "password").as[String]
 			        val role 	 	= (json \ "role").as[String]
 			        val primaryLoc 	= (json \ "primaryLoc").as[Option[Long]]
-			        
+			        			        
 			        val newUser  = User(NotAssigned, null, null, null, userName, email, password, role, primaryLoc)
 			        val pk = User.create(newUser)
-			        
+			        			        
 			        val persistedUser = User.findById(pk.get)
-			        
+			        			        
 			        persistedUser match {
 			            case Some(persistedUser) => {
 			                val jsonResp = Json.obj( "user" -> {

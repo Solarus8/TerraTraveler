@@ -120,7 +120,9 @@ object User {
       			'primaryLoc -> primaryLoc
       		).executeInsert()
     	} match {
-	        case Some(long) => new Id[Long](long) // The Primary Key
+	        case Some(long) => {
+	            new Id[Long](long) // The Primary Key
+	        }
 	        case None       => throw new Exception("SQL Error - Did not insert User.")
     	}
 	}
