@@ -15,23 +15,6 @@ import play.api.data.format.Formats._
 
 object Users extends Controller {
 	
-	def createUserJson = Action { implicit request =>
-	    request.body.asJson.map { json =>
-	        val userName 	= (json \ "userName").as[String]
-	        val email    	= (json \ "email").as[String]
-	        val password 	= (json \ "password").as[String]
-	        val role 	 	= (json \ "role").as[String]
-	        val primaryLoc 	= (json \ "primaryLoc").as[Option[Long]]
-	        
-	        val newUser  = User(NotAssigned, null, null, null, userName, email, password, role, primaryLoc)
-	        User.create(newUser)
-			
-			Redirect(routes.Users.allUsers)
-		}.getOrElse {
-			BadRequest("Expecting Json data")
-		}
-	}
-	
 	def createUser = Action { implicit request =>
 	    render {
 	        case Accepts.Json() => {
