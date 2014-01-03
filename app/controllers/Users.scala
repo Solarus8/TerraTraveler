@@ -54,8 +54,6 @@ object Users extends Controller {
 	def allUsers = Action { implicit request =>
 	    val users = User.findAll
 	    render {
-	        case Accepts.Html() => Ok(views.html.protoUsers(users))
-	        
 	        case Accepts.Json() => {
 	            val usersJson = Json.obj(
             		"users"	-> {
@@ -72,6 +70,7 @@ object Users extends Controller {
 			    Json.toJson(usersJson)
 			    Ok(usersJson)
 	        }
+	        case Accepts.Html() => Ok(views.html.protoUsers(users))
 	    }   
 	}
 	
