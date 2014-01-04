@@ -67,7 +67,7 @@ object Events extends Controller {
                 			 "placeId"		-> event.placeId,
                 			 "description"	-> event.description,
                 			 "minSize"		-> event.minSize,
-                			 "maxSize"		-> event.minSize,
+                			 "maxSize"		-> event.maxSize,
                 			 "rsvpTotal"	-> event.rsvpTotal,
                 			 "waitListTotal"-> event.waitListTotal
             			 ))
@@ -117,7 +117,7 @@ object Events extends Controller {
                 			 "placeId"		-> persistedEvent.placeId,
                 			 "description"	-> persistedEvent.description,
                 			 "minSize"		-> persistedEvent.minSize,
-                			 "maxSize"		-> persistedEvent.minSize,
+                			 "maxSize"		-> persistedEvent.maxSize,
                 			 "rsvpTotal"	-> persistedEvent.rsvpTotal,
                 			 "waitListTotal"-> persistedEvent.waitListTotal
 					         )
