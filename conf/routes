@@ -30,7 +30,7 @@ GET		/events						controllers.Events.allEvents
 GET		/events/:id					controllers.Events.event(id: Long)		
 
 #GET	/events/location/:id		controllers.Events.byLocation(id: Long)
-GET		/events/user/:id		controllers.Events.byUser(id: Long)
+GET		/events/user/:id			controllers.Events.byUser(id: Long)
 
 ### Locations ###
 # This will NOT SCALE - needs pagination, range, or filter by some limiting criteria like location

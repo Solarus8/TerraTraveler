@@ -104,7 +104,7 @@ CREATE TABLE itinerary (
 CREATE SEQUENCE user_prof_id_seq;
 CREATE TABLE user_profile (
 	id INTEGER NOT NULL DEFAULT nextval('user_prof_id_seq'),
-	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+	user_id INTEGER UNIQUE NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
 	first_name VARCHAR(45),
 	last_name VARCHAR(45),
 	gender CHAR(8),
