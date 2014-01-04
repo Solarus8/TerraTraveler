@@ -79,6 +79,7 @@ object Users extends Controller {
 	            val usersJson = Json.obj(
             		"users"	-> {
             			users.map(user   => Json.obj(
+            			    "id"		 -> user.id.get,
 			    	  	    "userName"   -> user.userName,
 			        	    "email"      -> user.email,
 			        	    "password" 	 -> user.password,
@@ -107,10 +108,25 @@ object Users extends Controller {
 	}
 	
 	def profile(userId: Long) = Action { implicit request =>
-	    User.findById(userId).map { user =>
-		  	val profile = UserProfile.findProfile(userId)
-		  	Ok(html.protoProfile(user, profile))
-	    }.getOrElse(Forbidden)
+		UserProfile.findProfile(userId) match {
+		    case Some(persistedProfile) => {
+		        val profile = Json.obj(
+			        "profile" -> Json.obj(
+			            "id" 			-> persistedProfile.id.get,
+			            "userId"		-> persistedProfile.userId,
+			            "firstName"		-> persistedProfile.firstName,
+			            "lastName"		-> persistedProfile.lastName,
+			            "gender"		-> persistedProfile.gender,
+			            "birthdate"		-> persistedProfile.birthdate,
+			            "nationality"	-> persistedProfile.portraitUrl,
+			            "bio"			-> persistedProfile.bio,
+			            "story"			-> persistedProfile.story
+			         )
+		         )
+		         Ok(profile)
+		    }
+		    case _ => NotFound
+		}
 	}
 	
 	def contacts(userId: Long) = Action { implicit request =>
