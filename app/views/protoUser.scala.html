@@ -1,0 +1,13 @@
+@(user: User)
+
+@main("Terra Traveler - Data Model Proto"){
+	
+	@if(user != null) { 
+		<h3>User: @user.userName | email: @user.email</h3>
+		<p><a href="@routes.Users.profile(user.id.get)"><em>User Profile</em></a></p>
+		<p><a href="@routes.Events.byUser(user.id.get)"><em>User Events</em></a></p>
+		<p><a href="@routes.Users.contacts(user.id.get)"><em>User Contacts</em></a></p>
+		<p><a href="@routes.Users.itinerary(user.id.get)"><em>User Itineraries</em></a></p>
+	}
+	
+}

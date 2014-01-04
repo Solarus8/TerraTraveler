@@ -7,7 +7,7 @@
     <ul>
         @users.map { user =>
             <li>
-                <a href="@routes.Users.byEmail(user.email)" >
+                <a href="@routes.Users.byId(user.id.get)" >
                 	@user.userName
                 </a> | @user.email
             </li>

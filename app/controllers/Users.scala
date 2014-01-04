@@ -96,7 +96,7 @@ object Users extends Controller {
 	    }   
 	}
 	
-	def byEmail(email: String) = Action { implicit request =>
+	/*def byEmail(email: String) = Action { implicit request =>
 		User.findByEmail(email).map { user =>
 	      	user.primaryLoc match {
 	      	  	case Some(locId) => 
@@ -105,6 +105,25 @@ object Users extends Controller {
 	      	  	  	Ok(html.protoLocation(null)(user))
 	      	}
 	    }.getOrElse(Forbidden)	
+	}*/
+	
+	def byId(id: Long) = Action { implicit request =>
+	    User.findById(id) match { 
+	        case Some(user) => {
+	             val userJson = Json.obj(
+	                 "user" -> Json.obj(
+	                      "id"		 -> user.id.get,
+			    	  	  "userName"   -> user.userName,
+			        	  "email"      -> user.email,
+			        	  "password" 	 -> user.password,
+			        	  "role"	     -> user.role,
+			        	  "primaryLoc" -> user.primaryLoc
+	                 )   
+	             )
+	             Ok(userJson)
+	        }
+	        case _ => Ok(Json.obj("status" -> "None"))
+	    }
 	}
 	
 	def profile(userId: Long) = Action { implicit request =>
