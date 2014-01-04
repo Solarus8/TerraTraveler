@@ -55,11 +55,6 @@ object Events extends Controller {
 		 ((event: Event) => Some(event.date, event.placeId, event.description, event.minSize, event.maxSize, event.rsvpTotal, event.waitListTotal))
 	)
 	
-	def allEvents = Action {
-	    val events = Event.findAll	    
-	    Ok(views.html.protoEvents(events))
-	}
-	
 	def byUser(userId: Long) = Action { implicit request =>
 	    val events = Event.findByUserId(userId)
 	    render {
@@ -86,6 +81,11 @@ object Events extends Controller {
 	    }	    
 	}
 	
+	def allEvents = Action {
+	    val events = Event.findAll	    
+	    Ok(views.html.protoEvents(events))
+	}
+	
 	def allEventsJson = Action {
 	    val events = Event.findAll
 	    val eventsJson = Json.obj(
@@ -105,11 +105,35 @@ object Events extends Controller {
 	    Ok(eventsJson)
 	}
 	
-	def event(eventId: Long) = Action { implicit request =>
-	    Event.findById(eventId).map { event =>
-	        val users = Event.attendies(eventId)
-		  	Ok(html.protoEvent(event, users))
-	    }.getOrElse(Forbidden)
+	def event(id: Long) = Action { implicit request =>
+		Event.findById(id) match {
+		    case Some(persistedEvent) => {
+		        render {
+		            case Accepts.Json() => {
+				        val eventJson = Json.obj(
+					         "event" -> Json.obj(
+					         "id"			-> persistedEvent.id.get,
+                			 "date"			-> persistedEvent.date,
+                			 "placeId"		-> persistedEvent.placeId,
+                			 "description"	-> persistedEvent.description,
+                			 "minSize"		-> persistedEvent.minSize,
+                			 "maxSize"		-> persistedEvent.minSize,
+                			 "rsvpTotal"	-> persistedEvent.rsvpTotal,
+                			 "waitListTotal"-> persistedEvent.waitListTotal
+					         )
+				         )
+				         Ok(eventJson)
+		            }
+				         
+		            case Accepts.Html() => Ok(html.protoEvent(persistedEvent))
+		        }
+		    }
+		    
+		    case _ => render {
+		        case Accepts.Json() => Ok(Json.obj("status" -> "None"))
+		        case Accepts.Html() => NotFound
+		    }
+		}
 	}
 }
 

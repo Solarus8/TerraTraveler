@@ -1,4 +1,4 @@
-@(event: Event, attendies: List[User])
+@(event: Event)
 
 @main("Terra Traveler - Data Model Proto"){
 	
@@ -30,22 +30,10 @@
  		</dd>
  	</dl>
  		
- 		@*@event.rsvpTotal match {
-			case Some(rsvpTotal) => {
-				<p>@event.rsvpTotal Attending</p>
-			}
-			case _ => {&ltempty&gt}
-		}*@
-		
-	<h3>@attendies.size attendies</h3>
-	
-	<ul>
-        @attendies.map { user =>
-            <li>
-                <a href="@routes.Users.byEmail(user.email)" >
-                	@user.userName
-                </a> | @user.email
-            </li>
-        }
-    </ul>
+	@*@event.rsvpTotal match {
+		case Some(rsvpTotal) => {
+			<p>@event.rsvpTotal Attending</p>
+		}
+		case _ => {&ltempty&gt}
+	}*@
 }
