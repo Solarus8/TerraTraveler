@@ -108,24 +108,35 @@ object Users extends Controller {
 	}
 	
 	def profile(userId: Long) = Action { implicit request =>
-		UserProfile.findProfile(userId) match {
+		val up = UserProfile.findProfile(userId) 
+		up match {
 		    case Some(persistedProfile) => {
-		        val profile = Json.obj(
-			        "profile" -> Json.obj(
-			            "id" 			-> persistedProfile.id.get,
-			            "userId"		-> persistedProfile.userId,
-			            "firstName"		-> persistedProfile.firstName,
-			            "lastName"		-> persistedProfile.lastName,
-			            "gender"		-> persistedProfile.gender,
-			            "birthdate"		-> persistedProfile.birthdate,
-			            "nationality"	-> persistedProfile.portraitUrl,
-			            "bio"			-> persistedProfile.bio,
-			            "story"			-> persistedProfile.story
-			         )
-		         )
-		         Ok(profile)
+		        render {
+		            case Accepts.Json() => {
+				        val profile = Json.obj(
+					        "profile" -> Json.obj(
+					            "id" 			-> persistedProfile.id.get,
+					            "userId"		-> persistedProfile.userId,
+					            "firstName"		-> persistedProfile.firstName,
+					            "lastName"		-> persistedProfile.lastName,
+					            "gender"		-> persistedProfile.gender,
+					            "birthdate"		-> persistedProfile.birthdate,
+					            "nationality"	-> persistedProfile.portraitUrl,
+					            "bio"			-> persistedProfile.bio,
+					            "story"			-> persistedProfile.story
+					         )
+				         )
+				         Ok(profile)
+		            }
+				         
+		            case Accepts.Html() => Ok(html.protoProfile(up))
+		        }
 		    }
-		    case _ => NotFound
+		    
+		    case _ => render {
+		        case Accepts.Json() => NotFound
+		        case Accepts.Html() => Ok(html.protoProfile(up))
+		    }
 		}
 	}
 	

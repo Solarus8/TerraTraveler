@@ -1,22 +1,10 @@
-@(user: User, profile: Option[UserProfile])
+@(profile: Option[UserProfile])
 
 @main("Terra Traveler - Data Model Proto"){
 	
 	<h1>User Profile</h1>
 	
-	<h3>@user.userName</h3>
-	
-	@user.primaryLoc match {
-		case Some(locId) => {
-			<a href="@routes.Locations.location(locId: Long)">Location</a>
-		}
-		case _ => {&ltempty&gt}
-	}
-	
 	<dl class="dd_editable">
-		<dt>Email</dt>
-		<dd contenteditable="true">
-    				@user.email</dd>
 		
 		@profile match {
     		case Some(profile) => {
@@ -84,7 +72,7 @@
     				}
     			</dd>
 			}
-			case None => {
+			case _ => {
 				<dt>First Name</dt>
 				<dd contenteditable="true">
     				&ltempty&gt<dd contenteditable="true">
