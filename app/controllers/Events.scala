@@ -62,14 +62,35 @@ object Events extends Controller {
 	
 	def byUser(userId: Long) = Action { implicit request =>
 	    val events = Event.findByUserId(userId)
-	    Ok(views.html.protoEvents(events))
+	    render {
+	        case Accepts.Json() => {
+	            val eventsJson = Json.obj(
+	                 "events"	-> {
+	                	 events.map(event 	=> Json.obj(
+                			 "id"			-> event.id.get,
+                			 "date"			-> event.date,
+                			 "placeId"		-> event.placeId,
+                			 "description"	-> event.description,
+                			 "minSize"		-> event.minSize,
+                			 "maxSize"		-> event.minSize,
+                			 "rsvpTotal"	-> event.rsvpTotal,
+                			 "waitListTotal"-> event.waitListTotal
+            			 ))
+	                 }
+	            )
+	            Json.toJson(eventsJson)
+			    Ok(eventsJson)
+	        }
+	        
+	        case Accepts.Html() => Ok(views.html.protoEvents(events))
+	    }	    
 	}
 	
 	def allEventsJson = Action {
 	    val events = Event.findAll
 	    val eventsJson = Json.obj(
 	    	"events" -> {
-  		    	events.map(event => Json.obj(
+  		    	events.map(event  => Json.obj(
 	    	  	    "date" 		  -> event.date,
 	        	    "locId"    	  -> event.placeId,
 	        	    "desc"		  -> event.description,
