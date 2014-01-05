@@ -19,14 +19,14 @@ object Events extends Controller {
     def createEventJson = Action { implicit request =>
 	    request.body.asJson.map { json =>
 	        val date 		= (json \ "date").as[Date]
-	        val locId    	= (json \ "locId").as[Long]
+	        val placeId    	= (json \ "placeId").as[Long]
 	        val desc 		= (json \ "desc").as[String]
 	        val minSize	 	= (json \ "minSize").as[Int]
 	        val maxSize 	= (json \ "maxSize").as[Int]
 	        val rsvpTot		= (json \ "rsvpTot").as[Option[Int]]
 	        val waitListTot = (json \ "waitListTot").as[Option[Int]]
 	        
-	        val newEvent  = Event(NotAssigned, date, locId, desc, minSize, maxSize, rsvpTot, waitListTot)
+	        val newEvent  = Event(NotAssigned, date, placeId, desc, minSize, maxSize, rsvpTot, waitListTot)
 	        Event.create(newEvent)
 			
 			Redirect(routes.Events.allEvents)
@@ -92,7 +92,7 @@ object Events extends Controller {
 	    	"events" -> {
   		    	events.map(event  => Json.obj(
 	    	  	    "date" 		  -> event.date,
-	        	    "locId"    	  -> event.placeId,
+	        	    "placeId"     -> event.placeId,
 	        	    "desc"		  -> event.description,
 	        	    "minSize"	  -> event.minSize,
 	        	    "maxSize" 	  -> event.maxSize,

@@ -111,13 +111,13 @@ object Event {
 		DB.withConnection { implicit connection =>
 	      	SQL(
 	      		"""
-      			insert into event (date, loc_id, desc, min_size, max_size, rsvp_tot, wait_list_tot) values (
-      				{date}, {locId}, {desc}, {minSize}, {maxSize}, {rsvpTot}, {waitListTot}
+      			insert into event (date, place_id, desc, min_size, max_size, rsvp_tot, wait_list_tot) values (
+      				{date}, {placeId}, {desc}, {minSize}, {maxSize}, {rsvpTot}, {waitListTot}
       			)
 	      		"""
       		).on(
       			'date   	 -> event.date,
-      			'locId 	     -> event.placeId,
+      			'placeId 	 -> event.placeId,
       			'desc   	 -> event.description,
       			'minSize     -> event.minSize,
       			'maxSize	 -> event.maxSize,
