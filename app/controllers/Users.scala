@@ -19,16 +19,21 @@ object Users extends Controller {
 	    render {
 	        case Accepts.Json() => {
 	            request.body.asJson.map { json =>
-			        val userName 	= (json \ "userName").as[String]
-			        val email    	= (json \ "email").as[String]
-			        val password 	= (json \ "password").as[String]
-			        val role 	 	= (json \ "role").as[String]
-			        val primaryLoc 	= (json \ "primaryLoc").as[Option[Long]]
+			        val userName 	= (json \ "userName").validate[String]
+			        val email    	= (json \ "email").validate[String]
+			        val password 	= (json \ "password").validate[String]
+			        val role 	 	= (json \ "role").validate[String]
+			        val primaryLoc 	= (json \ "primaryLoc").validate[Option[Long]]
+			        val latitude	= (json \ "latitude").validate[Float]
+			        val longitude	= (json \ "longitude").validate[Float]
+			        
+			        val newUserLoc	= Location(NotAssigned, null, null, null, null, null, null, latitude.get, longitude.get, null, null, null)
+			        val newLocPK = Location.create(newUserLoc)
 			        			        
-			        val newUser  = User(NotAssigned, null, null, null, userName, email, password, role, primaryLoc)
-			        val pk = User.create(newUser)
+			        val newUser  = User(NotAssigned, null, null, null, userName.get, email.get, password.get, role.get, primaryLoc.get)
+			        val newUserPK = User.create(newUser)
 			        			        
-			        val persistedUser = User.findById(pk.get)
+			        val persistedUser = User.findById(newUserPK.get)
 			        			        
 			        persistedUser match {
 			            case Some(persistedUser) => {

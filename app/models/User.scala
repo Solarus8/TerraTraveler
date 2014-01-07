@@ -13,9 +13,9 @@ case class User(
     created:    Date,
     lastActive: Option[Date],
     lastLogin:	Option[Date],
-    userName:   String, 
-    email: 	    String, 
-    password:   String, 
+    userName:   String,
+    email: 	    String,
+    password:   String,
     role:       String,
     primaryLoc: Option[Long]
 )
