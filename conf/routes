@@ -16,7 +16,6 @@ GET     /assets/*file               controllers.Assets.at(path="/public", file)
 ### Users ###
 # This will NOT SCALE - needs pagination, range, or filter by some limiting criteria like location
 GET		/users						controllers.Users.allUsers
- 
 POST	/users						controllers.Users.createUser
 GET		/users/:id					controllers.Users.byId(id: Long)
 GET		/users/:id/profile			controllers.Users.profile(id: Long)
@@ -26,15 +25,12 @@ GET		/users/:id/itinerary		controllers.Users.itinerary(id: Long)
 ### Events ###
 # This will NOT SCALE - needs pagination, range, or filter by some limiting criteria like location
 GET		/events						controllers.Events.allEvents
-
-GET		/events/:id					controllers.Events.event(id: Long)		
-
+GET		/events/:id					controllers.Events.event(id: Long)
 #GET	/events/location/:id		controllers.Events.byLocation(id: Long)
 GET		/events/user/:id			controllers.Events.byUser(id: Long)
 
 ### Locations ###
 # This will NOT SCALE - needs pagination, range, or filter by some limiting criteria like location
 GET		/locations					controllers.Locations.allLocations
-
 GET		/locations:locId			controllers.Locations.location(locId: Long)
 GET		/locations/place/:placeId	controllers.Locations.place(placeId: Long)

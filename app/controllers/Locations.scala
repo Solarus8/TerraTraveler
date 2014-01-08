@@ -23,7 +23,7 @@ object Locations extends Controller with Secured {
 	      	}
 	    }.getOrElse(Forbidden)
 	}
-	
+		
 	// TODO: This is an impractical functions and will NOT SCALE ############
 	def allLocations = Action {
 	    val locations = Location.findAll	    

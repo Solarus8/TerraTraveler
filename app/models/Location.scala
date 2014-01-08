@@ -6,6 +6,8 @@ import play.api.Play.current
 import anorm._
 import anorm.SqlParser._
 
+import org.postgis._
+
 case class Location (
     id: 	    Pk[Long] = NotAssigned,
     city:		Option[String],
@@ -50,8 +52,28 @@ object Location {
 		DB.withConnection { implicit connection =>
 	      	SQL(
 	      		"""
-	      	    insert into location (city, country, address_1, address_2, address_3, postal_code, latitude, longitude, altitude, "desc", url) values (
-      				{city}, {country}, {addr1}, {addr2}, {addr3}, {postalCode}, {lat}, {lon}, {alt}, {desc}, {url}
+	      	    insert into location (
+	      	        city, 
+	      	        country, 
+	      	        address_1, 
+	      	        address_2, 
+	      	        address_3, 
+	      	        postal_code, 
+	      			geoloc,
+	      	        altitude, 
+	      	        "desc", 
+	      	        url
+	      	    ) values (
+      				{city}, 
+	      	        {country}, 
+	      	        {addr1}, 
+	      	        {addr2}, 
+	      	        {addr3}, 
+	      	        {postalCode}, 
+	      	        ST_GeographyFromText('SRID=4326;POINT({lat} {lon})'), 
+	      	        {alt}, 
+	      	        {desc}, 
+	      	        {url}
       			)
 	      	    """
 	      	).on(
@@ -61,8 +83,6 @@ object Location {
 	      	      'addr2		-> loc.addr2,
 	      	      'addr3		-> loc.addr3,
 	      	      'postalCode	-> loc.postalCode,
-	      	      'lat			-> loc.lat,
-	      	      'lon			-> loc.lon,
 	      	      'alt			-> loc.alt,
 	      	      'desc			-> loc.desc,
 	      	      'url			-> loc.url
