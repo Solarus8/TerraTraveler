@@ -17,7 +17,7 @@ case class User(
     email: 	    String,
     password:   String,
     role:       String,
-    primaryLoc: Option[Long]
+    primaryLoc: Long
 )
 
 object User {
@@ -36,7 +36,7 @@ object User {
 	    get[String]("user.email") ~
 	    get[String]("user.password") ~
 	    get[String]("user.role") ~
-	    get[Option[Long]]("user.primary_loc") map {
+	    get[Long]("user.primary_loc") map {
 			case id ~ created ~ lastActive ~ lastLogin ~ userName ~ email ~ password ~ role ~ primaryLoc => 
 			  	User(id, created, lastActive, lastLogin, userName, email, password, role, primaryLoc)
 	    }

@@ -76,14 +76,12 @@ object Events extends Controller {
 	            Json.toJson(eventsJson)
 			    Ok(eventsJson)
 	        }
-	        
-	        case Accepts.Html() => Ok(views.html.protoEvents(events))
 	    }	    
 	}
 	
 	def allEvents = Action {
 	    val events = Event.findAll	    
-	    Ok(views.html.protoEvents(events))
+	    NotFound // TEMP
 	}
 	
 	def allEventsJson = Action {
@@ -106,7 +104,7 @@ object Events extends Controller {
 	}
 	
 	def event(id: Long) = Action { implicit request =>
-		Event.findById(id) match {
+		Event.findById(id) match { 
 		    case Some(persistedEvent) => {
 		        render {
 		            case Accepts.Json() => {
@@ -123,15 +121,12 @@ object Events extends Controller {
 					         )
 				         )
 				         Ok(eventJson)
-		            }
-				         
-		            case Accepts.Html() => Ok(html.protoEvent(persistedEvent))
+		            }      
 		        }
 		    }
 		    
 		    case _ => render {
 		        case Accepts.Json() => Ok(Json.obj("status" -> "None"))
-		        case Accepts.Html() => NotFound
 		    }
 		}
 	}

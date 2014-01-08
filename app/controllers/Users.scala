@@ -19,18 +19,27 @@ object Users extends Controller {
 	    render {
 	        case Accepts.Json() => {
 	            request.body.asJson.map { json =>
+	                
+	                println("Users.createUser - json: " + json)
+	                
 			        val userName 	= (json \ "userName").validate[String]
+			        println("Users.createUser - userName: " + userName)
 			        val email    	= (json \ "email").validate[String]
+			        println("Users.createUser - email: " + email)
 			        val password 	= (json \ "password").validate[String]
+			        println("Users.createUser - password: " + password)
 			        val role 	 	= (json \ "role").validate[String]
-			        val primaryLoc 	= (json \ "primaryLoc").validate[Option[Long]]
-			        val latitude	= (json \ "latitude").validate[Float]
-			        val longitude	= (json \ "longitude").validate[Float]
+			        println("Users.createUser - role: " + role)
+			        //val primaryLoc 	= (json \ "primaryLoc").validate[Option[Long]]
+			        val latitude	= (json \ "latitude").validate[Double]
+			        println("Users.createUser - latitude: " + latitude)
+			        val longitude	= (json \ "longitude").validate[Double]
+			        println("Users.createUser - longitude: " + longitude)
 			        
 			        val newUserLoc	= Location(NotAssigned, null, null, null, null, null, null, latitude.get, longitude.get, null, null, null)
 			        val newLocPK = Location.create(newUserLoc)
 			        			        
-			        val newUser  = User(NotAssigned, null, null, null, userName.get, email.get, password.get, role.get, primaryLoc.get)
+			        val newUser  = User(NotAssigned, null, null, null, userName.get, email.get, password.get, role.get, newLocPK.get)
 			        val newUserPK = User.create(newUser)
 			        			        
 			        val persistedUser = User.findById(newUserPK.get)
@@ -55,28 +64,9 @@ object Users extends Controller {
 					BadRequest("Expecting Json data")
 				}
 	        } // End - case Accpts.Json()
-	        
-	        case Accepts.Html() => {
-	            val newUser:User = userForm.bindFromRequest.get
-			    User.create(newUser)
-			    Redirect(routes.Users.allUsers)
-	        }
 	    }
 	}
 		
-	val userForm = Form(
-		mapping(
-			"userName"   -> text,
-			"email"    	 -> text,
-			"password"   -> text,
-			"role"	   	 -> text,
-			"primaryLoc" -> optional(of[Long])
-		)((userName, email, password, role, primaryLoc) => User(NotAssigned, null, null, null, userName, email, password, role, primaryLoc))
-		 ((user: User) => Some(user.userName, user.email, user.password, user.role, user.primaryLoc))
-	)
-	
-	def registrationForm = userForm
-	
 	def allUsers = Action { implicit request =>
 	    val users = User.findAll
 	    render {
@@ -97,7 +87,6 @@ object Users extends Controller {
 			    Json.toJson(usersJson)
 			    Ok(usersJson)
 	        }
-	        case Accepts.Html() => Ok(views.html.protoUsers(users))
 	    }   
 	}
 	
@@ -127,7 +116,6 @@ object Users extends Controller {
 	             )
 	             Ok(userJson)
 	        }
-	        case _ => Ok(Json.obj("status" -> "None"))
 	    }
 	}
 	
@@ -152,21 +140,18 @@ object Users extends Controller {
 				         )
 				         Ok(profile)
 		            }
-				         
-		            case Accepts.Html() => Ok(html.protoProfile(up))
 		        }
 		    }
 		    
 		    case _ => render {
 		        case Accepts.Json() => NotFound
-		        case Accepts.Html() => Ok(html.protoProfile(up))
 		    }
 		}
 	}
 	
 	def contacts(userId: Long) = Action { implicit request =>
 	    val users = User.contacts(userId)
-	    Ok(html.protoContacts(users))
+	    NotFound // TEMP
 	}
 	
 	def itinerary(userId: Long) = Action { implicit request =>
@@ -174,7 +159,7 @@ object Users extends Controller {
 	        val items = ItineraryItem.findById(itinerary.id.get)
 	        (itinerary, items)
 	    }
-	    Ok(html.protoItinerary(itineraries))
+	    NotFound // TEMP
 	}
 }
 

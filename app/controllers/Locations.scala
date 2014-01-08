@@ -8,9 +8,9 @@ import play.api.data.Forms._
 import models._
 import views._
 
-object Locations extends Controller with Secured {
+object Locations extends Controller { // with Secured {
   
-	def index = IsAuthenticated { username => _ =>
+	/*def index = IsAuthenticated { username => _ =>
 	    User.findByEmail(username).map { user =>
 	      	user.primaryLoc match {
 	      	  	case Some(locId) => 
@@ -22,16 +22,16 @@ object Locations extends Controller with Secured {
   	  	  		)
 	      	}
 	    }.getOrElse(Forbidden)
-	}
+	}*/
 		
 	// TODO: This is an impractical functions and will NOT SCALE ############
 	def allLocations = Action {
 	    val locations = Location.findAll	    
-	    Ok(views.html.protoLocations(locations))
+	    NotFound // TEMP
 	}
 	
 	def location(locId: Long) = Action { implicit request =>
-	    Ok(html.protoLocation(Location.findById(locId))(null))
+	    NotFound // TEMP
 	}
 	
 	def place(placeId: Long) = Action { implicit request =>
@@ -42,7 +42,7 @@ object Locations extends Controller with Secured {
 	        case Some(l) => { l }
 	    }
 	    
-	    Ok(html.protoPlace(p, l))
+	    NotFound // TEMP
 	}
 }
 
