@@ -12,7 +12,10 @@ object JSON_lab {
 	
 	val dub2: JsValue = myJson2 \ "json2"     //> dub2  : play.api.libs.json.JsValue = {"aDouble2":37.4928}
 	
-	(dub2 \ "aDouble2").validate[Double]      //> res0: play.api.libs.json.JsResult[Double] = JsSuccess(37.4928,)
+	(dub \ "aDouble").validate[Double]        //> res0: play.api.libs.json.JsResult[Double] = JsError(List((,List(ValidationEr
+                                                  //| ror(error.expected.jsnumber,WrappedArray())))))
+	(dub2 \ "aDouble2").validate[Double]      //> res1: play.api.libs.json.JsResult[Double] = JsSuccess(37.4928,)
+	
 	
 		
 }
