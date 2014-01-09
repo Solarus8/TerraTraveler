@@ -48,8 +48,9 @@ object Location {
 		}
 	}
 	
-	def create(loc: Location): Pk[Long] = {
+	/*def create(loc: Location): Pk[Long] = {
 		DB.withConnection { implicit connection =>
+		    println("Location.create - inside DB.withConnection")
 	      	SQL(
 	      		"""
 	      	    insert into location (
@@ -68,9 +69,9 @@ object Location {
 	      	        {country}, 
 	      	        {addr1}, 
 	      	        {addr2}, 
-	      	        {addr3}, 
+	      	        {addr3},
 	      	        {postalCode}, 
-	      	        ST_GeographyFromText('SRID=4326;POINT({lat} {lon})'), 
+	      	        ST_GeographyFromText('SRID=4326;POINT({lat} {lon})'),
 	      	        {alt}, 
 	      	        {desc}, 
 	      	        {url}
@@ -82,16 +83,36 @@ object Location {
 	      	      'addr1		-> loc.addr1,
 	      	      'addr2		-> loc.addr2,
 	      	      'addr3		-> loc.addr3,
+	      	      'lat			-> loc.lat,
+	      	      'lon			-> loc.lon,
 	      	      'postalCode	-> loc.postalCode,
 	      	      'alt			-> loc.alt,
 	      	      'desc			-> loc.desc,
 	      	      'url			-> loc.url
 	      	).executeInsert()
     	} match {
+    	    case null => { throw new Exception("SQL Error - GOT NULL.")}
 	        case Some(long) => new Id[Long](long) // The Primary Key
-	        case None       => throw new Exception("SQL Error - Did not insert Location.")
+	        case _          => throw new Exception("SQL Error - Did not insert Location.")
     	}
-	} // End - create
+	}*/ // End - create
+	
+	def create(loc: Location): Pk[Long] = {
+		DB.withConnection { implicit connection =>
+		    println("Location.create - inside DB.withConnection")
+	      	SQL(
+	      		"""
+	      	    insert into location (geoloc)
+	      	    values (
+	      	        ST_GeographyFromText('SRID=4326;POINT(""" + loc.lat + """ """ + loc.lon + """)')
+	      	    )
+	      	    """
+	      	).executeInsert()
+		} match {
+	        case Some(long) => new Id[Long](long) // The Primary Key
+	        case _          => throw new Exception("SQL Error - Did not insert Location.")
+	    }
+	}
 	
 	// Read - yields single location per id
 	def single(id: Long): Option[Location] = DB.withConnection { implicit c =>

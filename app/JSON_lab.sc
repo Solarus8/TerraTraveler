@@ -16,6 +16,5 @@ object JSON_lab {
                                                   //| ror(error.expected.jsnumber,WrappedArray())))))
 	(dub2 \ "aDouble2").validate[Double]      //> res1: play.api.libs.json.JsResult[Double] = JsSuccess(37.4928,)
 	
-	
 		
 }

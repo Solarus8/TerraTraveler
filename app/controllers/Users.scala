@@ -30,14 +30,15 @@ object Users extends Controller {
 			        println("Users.createUser - password: " + password)
 			        val role 	 	= (json \ "role").validate[String]
 			        println("Users.createUser - role: " + role)
-			        //val primaryLoc 	= (json \ "primaryLoc").validate[Option[Long]]
 			        val latitude	= (json \ "latitude").validate[Double]
 			        println("Users.createUser - latitude: " + latitude)
 			        val longitude	= (json \ "longitude").validate[Double]
 			        println("Users.createUser - longitude: " + longitude)
 			        
 			        val newUserLoc	= Location(NotAssigned, null, null, null, null, null, null, latitude.get, longitude.get, null, null, null)
+			        println("Users.createUser - newUserLoc: " + newUserLoc)
 			        val newLocPK = Location.create(newUserLoc)
+			        println("Users.createUser - newLocPK: " + newLocPK)
 			        			        
 			        val newUser  = User(NotAssigned, null, null, null, userName.get, email.get, password.get, role.get, newLocPK.get)
 			        val newUserPK = User.create(newUser)
