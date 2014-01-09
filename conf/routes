@@ -3,7 +3,8 @@
 # ~~~~
 
 ### Home page ###
-#GET     /                           controllers.Locations.index
+#GET     /                          controllers.Locations.index
+GET     /                          controllers.Application.index
 
 ### Authentication ###
 #GET     /login						controllers.Application.login
@@ -30,6 +31,7 @@ GET		/events/:id					controllers.Events.event(id: Long)
 GET		/events/user/:id			controllers.Events.byUser(id: Long)
 
 ### Locations ###
+POST	/locations/place						controllers.Locations.createPlace
 # This will NOT SCALE - needs pagination, range, or filter by some limiting criteria like location
 GET		/locations					controllers.Locations.allLocations
 GET		/locations:locId			controllers.Locations.location(locId: Long)

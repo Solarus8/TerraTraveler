@@ -63,7 +63,6 @@ CREATE TABLE place (
 	"name" VARCHAR(60) NOT NULL,
 	"desc" VARCHAR(256),
 	cat VARCHAR(14),
-	tag	VARCHAR(32),
 	url VARCHAR(85),
 	PRIMARY KEY(id)
 );
