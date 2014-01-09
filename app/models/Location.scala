@@ -83,9 +83,9 @@ object Location {
 	      	      'addr1		-> loc.addr1,
 	      	      'addr2		-> loc.addr2,
 	      	      'addr3		-> loc.addr3,
+	      	      'postalCode	-> loc.postalCode,
 	      	      'lat			-> loc.lat,
 	      	      'lon			-> loc.lon,
-	      	      'postalCode	-> loc.postalCode,
 	      	      'alt			-> loc.alt,
 	      	      'desc			-> loc.desc,
 	      	      'url			-> loc.url
@@ -100,14 +100,37 @@ object Location {
 	def create(loc: Location): Pk[Long] = {
 		DB.withConnection { implicit connection =>
 		    println("Location.create - inside DB.withConnection")
-	      	SQL(
+	      	val sql = SQL(
 	      		"""
-	      	    insert into location (geoloc)
+	      	    insert into location (
+	      	        city,
+	      	        country,
+	      	        address_1,
+	      	        address_2,
+	      	        address_3,
+	      	        postal_code,
+	      	        geoloc,
+	      	        altitude,
+	      	        "desc",
+	      	        url
+	      	    )
 	      	    values (
-	      	        ST_GeographyFromText('SRID=4326;POINT(""" + loc.lat + """ """ + loc.lon + """)')
+	      	        """ 
+	      	        + loc.city + """, """
+	      	        + loc.country + """, """
+	      	        + loc.addr1 + """, """
+	      	        + loc.addr2 + """, """
+	      	        + loc.addr3 + """, """
+	      	        + loc.postalCode + """, """ 
+	      	        + """ST_GeographyFromText('SRID=4326;POINT(""" + loc.lat + """ """ + loc.lon + """)'),"""
+	      	        + loc.alt + """, """
+	      	        + loc.desc + """, """
+	      	        + loc.url + """
 	      	    )
 	      	    """
-	      	).executeInsert()
+	      	)
+	      	println("Location.create - sql: " + sql)
+	      	sql.executeInsert()
 		} match {
 	        case Some(long) => new Id[Long](long) // The Primary Key
 	        case _          => throw new Exception("SQL Error - Did not insert Location.")
