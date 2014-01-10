@@ -70,7 +70,8 @@ CREATE TABLE place (
 CREATE SEQUENCE event_id_seq;
 CREATE TABLE event (
 	id INTEGER NOT NULL DEFAULT nextval('event_id_seq'),
-	"date" TIMESTAMP,
+	"from" TIMESTAMP,
+	"to" TIMESTAMP,
 	place_id INTEGER NOT NULL REFERENCES place(id) ON DELETE CASCADE, 
 	"desc" VARCHAR(256),
 	min_size INTEGER,

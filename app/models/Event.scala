@@ -10,8 +10,9 @@ import anorm.SqlParser._
 
 case class Event (
     id:				Pk[Long] = NotAssigned,
-    date:			Date,
-    placeId:		Long,
+    from:			Date,
+    to:				Option[Date],
+    placeId:		Option[Long],
     description:	String,
     minSize:		Int,
     maxSize:		Int,
@@ -28,15 +29,16 @@ object Event {
 	 */
 	val simple = {
 		get[Pk[Long]]("event.id") ~
-		get[Date]("event.date") ~
-		get[Long]("event.place_id") ~
+		get[Date]("event.from") ~
+		get[Option[Date]]("event.to") ~
+		get[Option[Long]]("event.place_id") ~
 		get[String]("event.desc") ~
 		get[Int]("event.min_size") ~
 		get[Int]("event.max_size") ~
 		get[Option[Int]]("event.rsvp_tot") ~
 		get[Option[Int]]("event.wait_list_tot") map {
-		    case id ~ date ~ placeId ~ description ~ minSize ~ maxSize ~ rsvpTotal ~ waitListTotal =>
-		        Event(id, date, placeId, description, minSize, maxSize, rsvpTotal, waitListTotal)
+		    case id ~ from ~ to ~ placeId ~ description ~ minSize ~ maxSize ~ rsvpTotal ~ waitListTotal =>
+		        Event(id, from, to , placeId, description, minSize, maxSize, rsvpTotal, waitListTotal)
 		}	
 	}
 	
@@ -87,12 +89,13 @@ object Event {
 	    DB.withConnection { implicit connection =>
 	      	SQL(
 	      		"""
-      			insert into event (date, place_id, desc, min_size, max_size, rsvp_tot, wait_list_tot) values (
-      				{date}, {placeId}, {desc}, {minSize}, {maxSize}, {rsvpTot}, {waitListTot}
+      			insert into event (from, to, place_id, desc, min_size, max_size, rsvp_tot, wait_list_tot) values (
+      				{from}, {to}, {placeId}, {desc}, {minSize}, {maxSize}, {rsvpTot}, {waitListTot}
       			)
 	      		"""
       		).on(
-      			'date   	 -> date,
+      			'from   	 -> date,
+      			'to			 -> date,
       			'placeId 	 -> placeId,
       			'desc   	 -> desc,
       			'minSize     -> minSize,
@@ -108,22 +111,26 @@ object Event {
 	
 	// Create an Event with an Event object
 	def create(event: Event): Pk[Long] = {
+	    println("Event.create - TOP")
 		DB.withConnection { implicit connection =>
-	      	SQL(
+	      	val sql = SQL(
 	      		"""
-      			insert into event (date, place_id, desc, min_size, max_size, rsvp_tot, wait_list_tot) values (
-      				{date}, {placeId}, {desc}, {minSize}, {maxSize}, {rsvpTot}, {waitListTot}
+      			insert into event ("from", "to", place_id, "desc", min_size, max_size, rsvp_tot, wait_list_tot) values (
+      				{from}, {to}, {placeId}, {desc}, {minSize}, {maxSize}, {rsvpTot}, {waitListTot}
       			)
 	      		"""
       		).on(
-      			'date   	 -> event.date,
+      			'from   	 -> event.from,
+      			'to			 -> event.to,
       			'placeId 	 -> event.placeId,
       			'desc   	 -> event.description,
       			'minSize     -> event.minSize,
       			'maxSize	 -> event.maxSize,
       			'rsvpTot	 -> event.rsvpTotal,
       			'waitListTot -> event.waitListTotal
-      		).executeInsert()
+      		)
+      		println("Event.create - sql: " + sql)
+      		sql.executeInsert()
     	} match {
 	        case Some(long) => new Id[Long](long) // The Primary Key
 	        case None       => throw new Exception("SQL Error - Did not insert User.")

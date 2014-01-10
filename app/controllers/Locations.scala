@@ -52,7 +52,7 @@ object Locations extends Controller { // with Secured {
 			        println("Place.createPlace - desc: " + desc)
 			        val cat 	 	= (json \ "cat").validate[String]
 			        println("Place.createPlace - cat: " + cat)
-			        val url 	 	= (json \ "url").validate[String]
+			        val url 	 	= (json \ "url").validate[Option[String]]
 			        println("Place.createPlace - url: " + url)
 			        val latitude	= (json \ "latitude").validate[Double]
 			        println("Place.createPlace - latitude: " + latitude)
@@ -65,7 +65,7 @@ object Locations extends Controller { // with Secured {
 			        val newLocPK = Location.create(newPlaceLoc)
 			        println("Place.createPlace - newLocPK: " + newLocPK)
 			        			        
-			        val newPlace  = Place(NotAssigned, newLocPK.get, name.get, desc.asOpt, cat.asOpt, url.asOpt)
+			        val newPlace  = Place(NotAssigned, newLocPK.get, name.get, desc.asOpt, cat.asOpt, url.get)
 			        val newPlacePK = Place.create(newPlace)
 			        			        
 			        val persistedPlace = Place.findById(newPlacePK.get)

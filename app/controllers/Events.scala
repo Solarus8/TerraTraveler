@@ -16,43 +16,71 @@ import java.util.{Date}
 
 object Events extends Controller {
 
-    def createEventJson = Action { implicit request =>
+    def createEvent = Action { implicit request =>
+        println("Events.createEvent - TOP")
 	    request.body.asJson.map { json =>
-	        val date 		= (json \ "date").as[Date]
-	        val placeId    	= (json \ "placeId").as[Long]
-	        val desc 		= (json \ "desc").as[String]
-	        val minSize	 	= (json \ "minSize").as[Int]
-	        val maxSize 	= (json \ "maxSize").as[Int]
-	        val rsvpTot		= (json \ "rsvpTot").as[Option[Int]]
-	        val waitListTot = (json \ "waitListTot").as[Option[Int]]
+	        val from 		= (json \ "from").validate[Date]
+	        println("Events.createEvent - from: " + from)
+	        val to			= (json \ "to").validate[Option[Date]]
+	        println("Events.createEvent - to: " + to)
+	        val placeId    	= (json \ "placeId").validate[Long]
+	        println("Events.createEvent - placeId: " + placeId)
+	        val desc 		= (json \ "desc").validate[String]
+	        println("Events.createEvent - desc: " + desc)
+	        val minSize	 	= (json \ "minSize").validate[Int]
+	        println("Events.createEvent - minSize: " + minSize)
+	        val maxSize 	= (json \ "maxSize").validate[Int]
+	        println("Events.createEvent - maxSize: " + maxSize)
+	        val rsvpTot		= (json \ "rsvpTot").validate[Option[Int]]
+	        println("Events.createEvent - rsvpTot:" + rsvpTot)
+	        val waitListTot = (json \ "waitListTot").validate[Option[Int]]
+	        println("Events.createEvent - waitListTot: " + waitListTot)
 	        
-	        val newEvent  = Event(NotAssigned, date, placeId, desc, minSize, maxSize, rsvpTot, waitListTot)
-	        Event.create(newEvent)
-			
-			Redirect(routes.Events.allEvents)
+	        val newEvent  = Event(NotAssigned, from.get, to.get, placeId.asOpt, 
+	                desc.get, minSize.get, maxSize.get, rsvpTot.get, waitListTot.get)
+	        println("Events.createEvent - newEvent: " + newEvent)
+	        val eventPK = Event.create(newEvent)
+	        println("Events.createEvent - eventPK: " + eventPK)
+	        val persistedEvent = Event.findById(eventPK.get)
+	        println("Events.createEvent - persistedEvent: " + persistedEvent)
+	        
+	        persistedEvent match {
+	            case Some(persistedEvent) => {
+	                val jsonResp = Json.obj( "event" -> {
+	                    Json.obj(
+		                    "id"			-> persistedEvent.id.get,
+                			"from"			-> persistedEvent.from,
+                			"to"			-> persistedEvent.to,
+                			"placeId"		-> persistedEvent.placeId,
+                			"description"	-> persistedEvent.description,
+                			"minSize"		-> persistedEvent.minSize,
+                			"maxSize"		-> persistedEvent.maxSize,
+                			"rsvpTotal"		-> persistedEvent.rsvpTotal,
+                			"waitListTotal" -> persistedEvent.waitListTotal
+			        	)
+		            })
+		            Ok(jsonResp)
+	            }
+	            case None => BadRequest("User not found")
+	        }
 		}.getOrElse {
 			BadRequest("Expecting Json data")
 		}
 	}
-    
-    def createEvent = Action { implicit request =>
-	    val newEvent:Event = eventForm.bindFromRequest.get
-	    Event.create(newEvent)
-	    Redirect(routes.Events.allEvents)
-	}
 		
 	val eventForm = Form(
 		mapping(
-			"date"   		-> date,
-			"locationId"    -> of[Long],
+			"from"   		-> date,
+			"to"			-> optional(date),
+			"placeId"    	-> optional(of[Long]),
 			"description"  	-> text,
 			"minSize"	   	-> number,
 			"maxSize" 		-> number,
 			"rsvpTotal"		-> optional(of[Int]),
 			"waitListTotal"	-> optional(of[Int])
-		)((date, locationId, description, minSize, maxSize, rsvpTotal, waitListTotal) => 
-		    Event(NotAssigned, date, locationId, description, minSize, maxSize, rsvpTotal, waitListTotal))
-		 ((event: Event) => Some(event.date, event.placeId, event.description, event.minSize, event.maxSize, event.rsvpTotal, event.waitListTotal))
+		)((from, to, placeId, description, minSize, maxSize, rsvpTotal, waitListTotal) => 
+		    Event(NotAssigned, from, to, placeId, description, minSize, maxSize, rsvpTotal, waitListTotal))
+		 ((event: Event) => Some(event.from, event.to, event.placeId, event.description, event.minSize, event.maxSize, event.rsvpTotal, event.waitListTotal))
 	)
 	
 	def byUser(userId: Long) = Action { implicit request =>
@@ -63,7 +91,8 @@ object Events extends Controller {
 	                 "events"	-> {
 	                	 events.map(event 	=> Json.obj(
                 			 "id"			-> event.id.get,
-                			 "date"			-> event.date,
+                			 "from"			-> event.from,
+                			 "to"			-> event.to,
                 			 "placeId"		-> event.placeId,
                 			 "description"	-> event.description,
                 			 "minSize"		-> event.minSize,
@@ -79,17 +108,20 @@ object Events extends Controller {
 	    }	    
 	}
 	
+	// TODO: This should go away. Will not scale...
 	def allEvents = Action {
 	    val events = Event.findAll	    
 	    NotFound // TEMP
 	}
 	
+	// TODO: This should go away. Will not scale...
 	def allEventsJson = Action {
 	    val events = Event.findAll
 	    val eventsJson = Json.obj(
 	    	"events" -> {
   		    	events.map(event  => Json.obj(
-	    	  	    "date" 		  -> event.date,
+	    	  	    "from" 		  -> event.from,
+	    	  	    "to"		  -> event.to,
 	        	    "placeId"     -> event.placeId,
 	        	    "desc"		  -> event.description,
 	        	    "minSize"	  -> event.minSize,
@@ -111,7 +143,8 @@ object Events extends Controller {
 				        val eventJson = Json.obj(
 					         "event" -> Json.obj(
 					         "id"			-> persistedEvent.id.get,
-                			 "date"			-> persistedEvent.date,
+                			 "from"			-> persistedEvent.from,
+                			 "to"			-> persistedEvent.to,
                 			 "placeId"		-> persistedEvent.placeId,
                 			 "description"	-> persistedEvent.description,
                 			 "minSize"		-> persistedEvent.minSize,

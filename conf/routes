@@ -24,6 +24,7 @@ GET		/users/:id/contacts			controllers.Users.contacts(id: Long)
 GET		/users/:id/itinerary		controllers.Users.itinerary(id: Long)
 
 ### Events ###
+POST	/events						controllers.Events.createEvent
 # This will NOT SCALE - needs pagination, range, or filter by some limiting criteria like location
 GET		/events						controllers.Events.allEvents
 GET		/events/:id					controllers.Events.event(id: Long)
