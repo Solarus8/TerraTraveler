@@ -137,6 +137,38 @@ object Event {
     	}
 	} // End - create
 	
+	def byRadius(locId: Long, radius: Int): List[Event] = {
+	    println("Event.byRadius - TOP")
+		DB.withConnection { implicit connection =>
+	      	val sql = SQL(
+	      		"""
+	      	    SELECT * from event
+				where event.place_id in
+				(
+					SELECT id from place
+					where place.loc_id in
+					(
+						SELECT id from location
+						where ST_DWithin(
+			    			geoloc,
+			    			(
+			        			SELECT geoloc
+			        			FROM location
+			        			WHERE id = {locId}
+			    			),
+      	        			{radius}
+						)
+					)
+				)   
+	      	    """
+	      	).on(
+      			"locId"  -> locId,
+      			"radius" -> radius
+	      	)
+	      	sql.as(Event.simple *)
+	    }
+	}
+	
 	def attendies(eventId: Long): List[User] = {
 	    DB.withConnection { implicit connection =>
 	      	SQL(

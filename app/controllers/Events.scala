@@ -83,29 +83,46 @@ object Events extends Controller {
 		 ((event: Event) => Some(event.from, event.to, event.placeId, event.description, event.minSize, event.maxSize, event.rsvpTotal, event.waitListTotal))
 	)
 	
-	def byUser(userId: Long) = Action { implicit request =>
+	def byUser(userId: Long) = Action { 
 	    val events = Event.findByUserId(userId)
-	    render {
-	        case Accepts.Json() => {
-	            val eventsJson = Json.obj(
-	                 "events"	-> {
-	                	 events.map(event 	=> Json.obj(
-                			 "id"			-> event.id.get,
-                			 "from"			-> event.from,
-                			 "to"			-> event.to,
-                			 "placeId"		-> event.placeId,
-                			 "description"	-> event.description,
-                			 "minSize"		-> event.minSize,
-                			 "maxSize"		-> event.maxSize,
-                			 "rsvpTotal"	-> event.rsvpTotal,
-                			 "waitListTotal"-> event.waitListTotal
-            			 ))
-	                 }
-	            )
-	            Json.toJson(eventsJson)
-			    Ok(eventsJson)
-	        }
-	    }	    
+        val eventsJson = Json.obj(
+             "events"	-> {
+            	 events.map(event 	=> Json.obj(
+        			 "id"			-> event.id.get,
+        			 "from"			-> event.from,
+        			 "to"			-> event.to,
+        			 "placeId"		-> event.placeId,
+        			 "description"	-> event.description,
+        			 "minSize"		-> event.minSize,
+        			 "maxSize"		-> event.maxSize,
+        			 "rsvpTotal"	-> event.rsvpTotal,
+        			 "waitListTotal"-> event.waitListTotal
+    			 ))
+             }
+        )
+        Json.toJson(eventsJson)
+	    Ok(eventsJson)
+	}
+	
+	def byRadius(locId: Long, radius: Int) = Action {
+	    val events = Event.byRadius(locId, radius)
+	    val eventsJson = Json.obj(
+             "events"	-> {
+            	 events.map(event 	=> Json.obj(
+        			 "id"			-> event.id.get,
+        			 "from"			-> event.from,
+        			 "to"			-> event.to,
+        			 "placeId"		-> event.placeId,
+        			 "description"	-> event.description,
+        			 "minSize"		-> event.minSize,
+        			 "maxSize"		-> event.maxSize,
+        			 "rsvpTotal"	-> event.rsvpTotal,
+        			 "waitListTotal"-> event.waitListTotal
+    			 ))
+             }
+        )
+        Json.toJson(eventsJson)
+	    Ok(eventsJson)
 	}
 	
 	// TODO: This should go away. Will not scale...
