@@ -5,38 +5,38 @@
 insert into role (role) values ('BIZ');
 insert into role (role) values ('NORM');
 
-insert into location (id, city, geoloc)
-	values (1, 'San Francisco', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
-insert into location (id, city, geoloc)
-	values (2, 'Mountain View', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
-insert into location (id, city, geoloc)
-	values (3, 'Boston', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
-insert into location (id, city, geoloc)
-	values (4, 'Shanghai', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
-insert into location (id, city, geoloc)
-	values (5, 'Warsaw', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
-insert into location (id, city, geoloc)
-	values (6, 'Singapore', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
-insert into location (id, city, geoloc)
-	values (7, 'London', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
-insert into location (id, city, geoloc)
-	values (8, 'Madrid', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
-insert into location (id, city, geoloc)
-	values (9, 'Novosibirsk', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
-insert into location (id, city, geoloc)
-	values (10, 'Tokyo', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
-insert into location (id, city, geoloc)
-	values (11, 'Austin', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
-Insert into location (id, city, geoloc)
-	values (12, 'Guatamala City', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
-Insert into location (id, city, geoloc)
-	values (13, 'San Paulo', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
-Insert into location (id, city, geoloc)
-	values (14, 'Santa Clara', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
-Insert into location (id, city, geoloc)
-	values (15, 'Istanbul', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
-Insert into location (id, city, geoloc)
-	values (16, 'Cork', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
+insert into location (city, geoloc)
+	values ('San Francisco', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
+insert into location (city, geoloc)
+	values ('Mountain View', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
+insert into location (city, geoloc)
+	values ('Boston', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
+insert into location (city, geoloc)
+	values ('Shanghai', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
+insert into location (city, geoloc)
+	values ('Warsaw', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
+insert into location (city, geoloc)
+	values ('Singapore', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
+insert into location (city, geoloc)
+	values ('London', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
+insert into location (city, geoloc)
+	values ('Madrid', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
+insert into location (city, geoloc)
+	values ('Novosibirsk', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
+insert into location (city, geoloc)
+	values ('Tokyo', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
+insert into location (city, geoloc)
+	values ('Austin', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
+Insert into location (city, geoloc)
+	values ('Guatamala City', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
+Insert into location (city, geoloc)
+	values ('San Paulo', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
+Insert into location (city, geoloc)
+	values ('Santa Clara', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
+Insert into location (city, geoloc)
+	values ('Istanbul', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
+Insert into location (city, geoloc)
+	values ('Cork', ST_GeographyFromText('SRID=4326;POINT(37.774929 -122.419416)'));
 
 insert into "user" (user_name, password, role, email, primary_loc) values ('Homer', 'secret', 'BIZ', 'richard@aqume.com', 1);
 insert into "user" (user_name, password, role, email, primary_loc) values ('MJ', 'secret', 'NORM', 'melissa@sample.com', 1);
@@ -76,7 +76,7 @@ insert into user_profile (user_id, first_name, last_name, gender, nationality, p
 insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
 	values (6, 'Carla', 'Smith', 'male', 'Maylay', 'http://www.xtra.com', 'Working to make Earth a warmer place!');
 insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
-	values (7, 'Sam', 'Walker', 'male', 'Merkin', 'http://www.codemonkey.com', 'I yam what I yam');
+	values (7 'Sam', 'Walker', 'male', 'Merkin', 'http://www.codemonkey.com', 'I yam what I yam');
 insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
 	values (8, 'Melissa', 'Morgan', 'female', 'England', 'http://www.melissa.com', 'I am very nice!');
 insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
@@ -112,71 +112,71 @@ insert into user_profile (user_id, first_name, last_name, gender, nationality, p
 insert into user_profile (user_id, first_name, last_name, gender, nationality, portrait_url, bio) 
 	values (24, 'Poochie', 'Smith', 'male', 'Maylay', 'http://www.xtra.com', 'Working to make Earth a warmer place!');
 	
-insert into place (id, loc_id, name) values (1, 2, 'Dairy Queen');
-insert into place (id, loc_id, name) values (2, 1, 'Royal Museum');
-insert into place (id, loc_id, name) values (3, 3, 'Google South');
-insert into place (id, loc_id, name) values (4, 4, 'West Park Fields');
-insert into place (id, loc_id, name) values (5, 5, 'Angel Island Restaurant');
-insert into place (id, loc_id, name) values (6, 6, 'ZZs Pool Hall');
-insert into place (id, loc_id, name) values (7, 6, 'Roy Rogers Museum');
-insert into place (id, loc_id, name) values (8, 7, 'Cryptic Castle');
-insert into place (id, loc_id, name) values (9, 8, 'Downtown Dance Hall');
-insert into place (id, loc_id, name) values (10, 9, 'Eagles Hall');
-insert into place (id, loc_id, name) values (11, 16, 'Berts Beanery');
-insert into place (id, loc_id, name) values (12, 10, 'City Hall');
-insert into place (id, loc_id, name) values (13, 2, 'Rendezvous Lounge');
-insert into place (id, loc_id, name) values (14, 7, 'Hacienda Stables');
-insert into place (id, loc_id, name) values (15, 8, 'Glenwood Park');
-insert into place (id, loc_id, name) values (16, 15, 'Milky Way');
+insert into place (loc_id, name) values (2, 'Dairy Queen');
+insert into place (loc_id, name) values (1, 'Royal Museum');
+insert into place (loc_id, name) values (3, 'Google South');
+insert into place (loc_id, name) values (4, 'West Park Fields');
+insert into place (loc_id, name) values (5, 'Angel Island Restaurant');
+insert into place (loc_id, name) values (6, 'ZZs Pool Hall');
+insert into place (loc_id, name) values (6, 'Roy Rogers Museum');
+insert into place (loc_id, name) values (7, 'Cryptic Castle');
+insert into place (loc_id, name) values (8, 'Downtown Dance Hall');
+insert into place (loc_id, name) values (9, 'Eagles Hall');
+insert into place (loc_id, name) values (16, 'Berts Beanery');
+insert into place (loc_id, name) values (10, 'City Hall');
+insert into place (loc_id, name) values (2, 'Rendezvous Lounge');
+insert into place (loc_id, name) values (7, 'Hacienda Stables');
+insert into place (loc_id, name) values (8, 'Glenwood Park');
+insert into place (loc_id, name) values (15, 'Milky Way');
 	
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (1, '2014-01-14', '1', 'Pub crawl along Danube', '4', '20');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (2, '2014-01-06', '1', 'Sky diving at Lasha Karnak', '8', '30');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (3, '2014-02-01', '1', 'Picnic at Hanging Rock', '6', '40');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (4, '2014-01-14', '2', 'Pub crawl along Danube', '4', '20');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (5, '2014-01-06', '2', 'Sky diving at Lasha Karnak', '8', '30');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (6, '2014-02-01', '2', 'Picnic at Hanging Rock', '6', '40');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (7, '2014-01-14', '3', 'Pub crawl along Danube', '4', '20');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (8, '2014-01-06', '3', 'Sky diving at Lasha Karnak', '8', '30');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (9, '2014-02-01', '4', 'Picnic at Hanging Rock', '6', '40');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (10, '2014-01-14', '3', 'Pub crawl along Danube', '4', '20');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (11, '2014-01-06', '4', 'Sky diving at Lasha Karnak', '8', '30');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (12, '2014-02-01', '4', 'Picnic at Hanging Rock', '6', '40');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (13, '2014-01-14', '5', 'Pub crawl along Danube', '4', '20');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (14, '2014-01-06', '5', 'Sky diving at Lasha Karnak', '8', '30');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (15, '2014-02-01', '5', 'Picnic at Hanging Rock', '6', '40');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (16, '2014-01-14', '6', 'Pub crawl along Danube', '4', '20');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (17, '2014-01-06', '6', 'Sky diving at Lasha Karnak', '8', '30');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (18, '2014-02-01', '6', 'Picnic at Hanging Rock', '6', '40');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (19, '2014-01-14', '7', 'Pub crawl along Danube', '4', '20');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (20, '2014-01-06', '7', 'Sky diving at Lasha Karnak', '8', '30');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (21, '2014-02-01', '7', 'Picnic at Hanging Rock', '6', '40');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (22, '2014-01-14', '8', 'Pub crawl along Danube', '4', '20');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (23, '2014-01-06', '8', 'Sky diving at Lasha Karnak', '8', '30');
-insert into event (id, date, place_id, "desc", min_size, max_size)
-	values (24, '2014-02-01', '8', 'Picnic at Hanging Rock', '6', '40');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-01-14', '1', 'Pub crawl along Danube', '4', '20');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-01-06', '1', 'Sky diving at Lasha Karnak', '8', '30');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-02-01', '1', 'Picnic at Hanging Rock', '6', '40');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-01-14', '2', 'Pub crawl along Danube', '4', '20');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-01-06', '2', 'Sky diving at Lasha Karnak', '8', '30');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-02-01', '2', 'Picnic at Hanging Rock', '6', '40');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-01-14', '3', 'Pub crawl along Danube', '4', '20');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-01-06', '3', 'Sky diving at Lasha Karnak', '8', '30');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-02-01', '4', 'Picnic at Hanging Rock', '6', '40');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-01-14', '3', 'Pub crawl along Danube', '4', '20');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-01-06', '4', 'Sky diving at Lasha Karnak', '8', '30');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-02-01', '4', 'Picnic at Hanging Rock', '6', '40');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-01-14', '5', 'Pub crawl along Danube', '4', '20');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-01-06', '5', 'Sky diving at Lasha Karnak', '8', '30');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-02-01', '5', 'Picnic at Hanging Rock', '6', '40');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-01-14', '6', 'Pub crawl along Danube', '4', '20');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-01-06', '6', 'Sky diving at Lasha Karnak', '8', '30');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-02-01', '6', 'Picnic at Hanging Rock', '6', '40');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-01-14', '7', 'Pub crawl along Danube', '4', '20');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-01-06', '7', 'Sky diving at Lasha Karnak', '8', '30');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-02-01', '7', 'Picnic at Hanging Rock', '6', '40');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-01-14', '8', 'Pub crawl along Danube', '4', '20');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-01-06', '8', 'Sky diving at Lasha Karnak', '8', '30');
+insert into event ("from", place_id, "desc", min_size, max_size)
+	values ('2014-02-01', '8', 'Picnic at Hanging Rock', '6', '40');
 	
 insert into user_event(user_id, event_id) values(1, 1);
 insert into user_event(user_id, event_id) values(1, 2);
