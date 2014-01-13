@@ -19,6 +19,7 @@ GET     /assets/*file               				controllers.Assets.at(path="/public", fi
 GET		/api/v1/users								controllers.Users.allUsers
 POST	/api/v1/users								controllers.Users.createUser
 GET		/api/v1/users/:id							controllers.Users.byId(id: Long)
+POST	/api/v1/users/profile						controllers.Users.createUserProfile
 GET		/api/v1/users/:id/profile					controllers.Users.profile(id: Long)
 GET		/api/v1/users/:id/contacts					controllers.Users.contacts(id: Long)
 GET		/api/v1/users/:id/itinerary					controllers.Users.itinerary(id: Long)

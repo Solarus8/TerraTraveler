@@ -44,6 +44,43 @@ object UserProfile {
 	    }
 	}
 	
+	def create(profile: UserProfile): Pk[Long] = {
+	    println("UserProfile.create - TOP")
+		DB.withConnection { implicit connection =>
+	      	val sql = SQL(
+	      		"""
+      			insert into user_profile(
+	      	        user_id, first_name, last_name, gender, birthdate, nationality, portrait_url, bio, story
+	      	    ) 
+	      	    values (
+	      	        {userId}, {firstName}, {lastName}, {gender}, {birthdate}, 
+	      	        	{nationality}, {portraitUrl}, {bio}, {story}
+	      	    """
+      	    ).on (
+      	        'userId			-> profile.userId,
+      	        'firstName		-> profile.firstName,
+      	        'lastName		-> profile.lastName,
+      	        'gender			-> profile.gender,
+      	        'birthdate		-> profile.birthdate,
+      	        'nationality	-> profile.nationality,
+      	        'portraitUrl	-> profile.portraitUrl,
+      	        'bio			-> profile.bio,
+      	        'story			-> profile.story
+      	    )
+      	    println("UserProfile.create - sql: " + sql)
+      	    sql.executeInsert()
+		} match {
+	        case Some(long) => {
+	            println("UserProfile.create - Some(long): " + long)
+	            new Id[Long](long) // The Primary Key
+	        }
+	        case _       => {
+	            println("UserProfile.create - None")
+	            throw new Exception("SQL Error - Did not insert UserProfile")
+	        }
+    	}
+	}
+	
 	/**
 	 * Retrieve a UserProfile from user_id.
 	 */
@@ -56,4 +93,23 @@ object UserProfile {
 			).as(UserProfile.simple.singleOpt)
 	    }
 	}
+	
+	/**
+	 * Retrieve a UserProfile by id.
+	 */
+	def findById(id: Long): Option[UserProfile] = {
+		DB.withConnection { implicit connection =>
+	      	SQL("""
+	      	    select * from user_profile where id = {id}
+	      	    """).on(
+	  			'id -> id
+			).as(UserProfile.simple.singleOpt)
+	    }
+	}
 }
+
+
+
+
+
+
