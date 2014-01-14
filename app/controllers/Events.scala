@@ -104,8 +104,30 @@ object Events extends Controller {
 	    Ok(eventsJson)
 	}
 	
-	def byRadius(locId: Long, radius: Int) = Action {
-	    val events = Event.byRadius(locId, radius)
+	def byRadiusLocation(locId: Long, radius: Int) = Action {
+	    val events = Event.byRadiuslocation(locId, radius)
+	    val eventsJson = Json.obj(
+             "events"	-> {
+            	 events.map(event 	=> Json.obj(
+        			 "id"			-> event.id.get,
+        			 "from"			-> event.from,
+        			 "to"			-> event.to,
+        			 "placeId"		-> event.placeId,
+        			 "description"	-> event.description,
+        			 "minSize"		-> event.minSize,
+        			 "maxSize"		-> event.maxSize,
+        			 "rsvpTotal"	-> event.rsvpTotal,
+        			 "waitListTotal"-> event.waitListTotal
+    			 ))
+             }
+        )
+        Json.toJson(eventsJson)
+	    Ok(eventsJson)
+	}
+	
+	// TODO: Factor out common code
+	def byRadiusLatLon(lat: Double, lon: Double, radius: Int) = Action {
+	    val events = Event.byRadiusLatLon(lat, lon, radius)
 	    val eventsJson = Json.obj(
              "events"	-> {
             	 events.map(event 	=> Json.obj(
