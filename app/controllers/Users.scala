@@ -185,7 +185,7 @@ object Users extends Controller {
 		up match {
 		    case Some(persistedProfile) => {
 		        val profile = Json.obj(
-			        "profile" -> Json.obj(
+			        "userProfile" -> Json.obj(
 			            "id" 			-> persistedProfile.id.get,
 			            "userId"		-> persistedProfile.userId,
 			            "firstName"		-> persistedProfile.firstName,
@@ -193,6 +193,7 @@ object Users extends Controller {
 			            "gender"		-> persistedProfile.gender,
 			            "birthdate"		-> persistedProfile.birthdate,
 			            "nationality"	-> persistedProfile.portraitUrl,
+			            "portraitUrl" 	-> persistedProfile.portraitUrl,
 			            "bio"			-> persistedProfile.bio,
 			            "story"			-> persistedProfile.story
 			         )
