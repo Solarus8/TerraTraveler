@@ -10,7 +10,7 @@ import anorm.SqlParser._
 
 case class UserProfile (
 	id: 	    	Pk[Long] = NotAssigned,
-	userId:			Long,
+	userId:			Int,
 	firstName:		Option[String],
 	lastName:		Option[String],
 	gender:			Option[String],
@@ -30,7 +30,7 @@ object UserProfile {
 	 */
 	val simple = {
 	    get[Pk[Long]]("user_profile.id") ~
-	    get[Long]("user_profile.user_id") ~
+	    get[Int]("user_profile.user_id") ~
 	    get[Option[String]]("user_profile.first_name") ~
 	    get[Option[String]]("user_profile.last_name") ~
 	    get[Option[String]]("user_profile.gender") ~
@@ -55,6 +55,7 @@ object UserProfile {
 	      	    values (
 	      	        {userId}, {firstName}, {lastName}, {gender}, {birthdate}, 
 	      	        	{nationality}, {portraitUrl}, {bio}, {story}
+	      	    )
 	      	    """
       	    ).on (
       	        'userId			-> profile.userId,

@@ -70,7 +70,7 @@ object Users extends Controller {
 	    request.body.asJson.map { json =>
 	        println("Users.createUserProfile - json: " + json)
 	        
-	        val userId			= (json \ "userId").validate[Long]
+	        val userId			= (json \ "userId").validate[Int]
 	        println("Users.createUserProfile - userId" + userId)
 			val firstName		= (json \ "firstName").validate[Option[String]]
 	        println("Users.createUserProfile - firstName" + firstName)
