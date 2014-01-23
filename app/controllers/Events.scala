@@ -20,23 +20,27 @@ object Events extends Controller {
         println("Events.createEvent - TOP")
 	    request.body.asJson.map { json =>
 	        val from 		= (json \ "from").validate[Date]
-	        println("Events.createEvent - from: " + from)
+	        		println("Events.createEvent - from: " + from)
 	        val to			= (json \ "to").validate[Option[Date]]
-	        println("Events.createEvent - to: " + to)
+	        		println("Events.createEvent - to: " + to)
+	        val title		= (json \ "title").validate[Option[String]]
+	        		println("Events.createEvent - title: " + title)
+	        val activityType		= (json \ "activityType").validate[Int]
+	        		println("Events.createEvent - activityType: " + activityType)
 	        val placeId    	= (json \ "placeId").validate[Long]
-	        println("Events.createEvent - placeId: " + placeId)
+	        		println("Events.createEvent - placeId: " + placeId)
 	        val desc 		= (json \ "desc").validate[String]
-	        println("Events.createEvent - desc: " + desc)
+	        		println("Events.createEvent - desc: " + desc)
 	        val minSize	 	= (json \ "minSize").validate[Int]
-	        println("Events.createEvent - minSize: " + minSize)
+	        		println("Events.createEvent - minSize: " + minSize)
 	        val maxSize 	= (json \ "maxSize").validate[Int]
-	        println("Events.createEvent - maxSize: " + maxSize)
+	        		println("Events.createEvent - maxSize: " + maxSize)
 	        val rsvpTot		= (json \ "rsvpTot").validate[Option[Int]]
-	        println("Events.createEvent - rsvpTot:" + rsvpTot)
+	        		println("Events.createEvent - rsvpTot:" + rsvpTot)
 	        val waitListTot = (json \ "waitListTot").validate[Option[Int]]
-	        println("Events.createEvent - waitListTot: " + waitListTot)
+	        		println("Events.createEvent - waitListTot: " + waitListTot)
 	        
-	        val newEvent  = Event(NotAssigned, from.get, to.get, placeId.asOpt, 
+	        val newEvent  = Event(NotAssigned, from.get, to.get, title.get, activityType.get, placeId.asOpt, 
 	                desc.get, minSize.get, maxSize.get, rsvpTot.get, waitListTot.get)
 	        println("Events.createEvent - newEvent: " + newEvent)
 	        val eventPK = Event.create(newEvent)
@@ -72,15 +76,17 @@ object Events extends Controller {
 		mapping(
 			"from"   		-> date,
 			"to"			-> optional(date),
+			"title"			-> optional(text),
+			"activityType"	-> number,
 			"placeId"    	-> optional(of[Long]),
 			"description"  	-> text,
 			"minSize"	   	-> number,
 			"maxSize" 		-> number,
 			"rsvpTotal"		-> optional(of[Int]),
 			"waitListTotal"	-> optional(of[Int])
-		)((from, to, placeId, description, minSize, maxSize, rsvpTotal, waitListTotal) => 
-		    Event(NotAssigned, from, to, placeId, description, minSize, maxSize, rsvpTotal, waitListTotal))
-		 ((event: Event) => Some(event.from, event.to, event.placeId, event.description, event.minSize, event.maxSize, event.rsvpTotal, event.waitListTotal))
+		)((from, to, title, activityType, placeId, description, minSize, maxSize, rsvpTotal, waitListTotal) => 
+		    Event(NotAssigned, from, to, title, activityType, placeId, description, minSize, maxSize, rsvpTotal, waitListTotal))
+		 ((event: Event) => Some(event.from, event.to, event.title, event.activityType, event.placeId, event.description, event.minSize, event.maxSize, event.rsvpTotal, event.waitListTotal))
 	)
 	
 	def byUser(userId: Long) = Action { 

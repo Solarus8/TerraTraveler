@@ -31,8 +31,8 @@ GET		/api/v1/events								controllers.Events.allEvents
 GET		/api/v1/events/:id							controllers.Events.event(id: Long)
 #GET	/api/v1/events/location/:id					controllers.Events.byLocation(id: Long)
 GET		/api/v1/events/user/:id						controllers.Events.byUser(id: Long)
-GET		/api/v1/events/location/:locId/:radius		controllers.Events.byRadiusLocation(locId: Long, radius: Int)
-GET		/api/v1/events/location/:lat/:lon/:radius	controllers.Events.byRadiusLatLon(lat: Double, lon: Double, radius: Int)
+#GET		/api/v1/events/location/:locId/:radius/:level		controllers.Events.byRadiusLocation(locId: Long, radius: Int, level: String)
+#GET		/api/v1/events/location/:lat/:lon/:radius/:level	controllers.Events.byRadiusLatLon(lat: Double, lon: Double, radius: Int, level: String)
 
 ### Locations ###
 POST	/api/v1/locations/place						controllers.Locations.createPlace

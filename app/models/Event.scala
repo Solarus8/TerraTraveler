@@ -12,6 +12,8 @@ case class Event (
     id:				Pk[Long] = NotAssigned,
     from:			Date,
     to:				Option[Date],
+    title:			Option[String],
+    activityType:	Int,
     placeId:		Option[Long],
     description:	String,
     minSize:		Int,
@@ -31,14 +33,16 @@ object Event {
 		get[Pk[Long]]("event.id") ~
 		get[Date]("event.from") ~
 		get[Option[Date]]("event.to") ~
+		get[Option[String]]("event.title") ~
+		get[Int]("event.activity_type_id") ~
 		get[Option[Long]]("event.place_id") ~
 		get[String]("event.desc") ~
 		get[Int]("event.min_size") ~
 		get[Int]("event.max_size") ~
 		get[Option[Int]]("event.rsvp_tot") ~
 		get[Option[Int]]("event.wait_list_tot") map {
-		    case id ~ from ~ to ~ placeId ~ description ~ minSize ~ maxSize ~ rsvpTotal ~ waitListTotal =>
-		        Event(id, from, to , placeId, description, minSize, maxSize, rsvpTotal, waitListTotal)
+		    case id ~ from ~ to ~ title ~ activityType ~ placeId ~ description ~ minSize ~ maxSize ~ rsvpTotal ~ waitListTotal =>
+		        Event(id, from, to , title, activityType, placeId, description, minSize, maxSize, rsvpTotal, waitListTotal)
 		}	
 	}
 	
