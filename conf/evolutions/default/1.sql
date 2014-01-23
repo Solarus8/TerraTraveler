@@ -67,13 +67,21 @@ CREATE TABLE place (
 	PRIMARY KEY(id)
 );
 
+CREATE TABLE activity_type (
+	id INTEGER NOT NULL,
+	activity VARCHAR(64) UNIQUE,
+	PRIMARY KEY(id)
+);
+
 CREATE SEQUENCE event_id_seq;
 CREATE TABLE event (
 	id INTEGER NOT NULL DEFAULT nextval('event_id_seq'),
 	"from" TIMESTAMP,
 	"to" TIMESTAMP,
+	title VARCHAR(256),
+	activity_type_id INTEGER REFERENCES activity_type(id) ON DELETE CASCADE,
 	place_id INTEGER NOT NULL REFERENCES place(id) ON DELETE CASCADE, 
-	"desc" VARCHAR(256),
+	"desc" VARCHAR(1024),
 	min_size INTEGER,
 	max_size INTEGER,
 	rsvp_tot INTEGER,
@@ -277,9 +285,9 @@ DROP TABLE placecategory CASCADE;
 DROP TABLE promo CASCADE;
 DROP TABLE "user" CASCADE;
 DROP TABLE location CASCADE;
-DROP TABLE business CASCADE;
 DROP TABLE itinerary CASCADE;
 DROP TABLE tag CASCADE;
+DROP TABLE activity_type CASCADE;
 
 DROP SEQUENCE user_prof_id_seq CASCADE;
 DROP SEQUENCE group_id_seq CASCADE;

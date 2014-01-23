@@ -110,7 +110,7 @@
 			</connections>
 			<display>false</display>
 			<creation_date>2014-01-20 15:09:19</creation_date>
-			<updated_date>2014-01-21 00:09:58</updated_date>
+			<updated_date>2014-01-21 12:55:18</updated_date>
 			<model_property>
 				<name>Project Name</name>
 				<value></value>
@@ -3176,8 +3176,8 @@
 			<width>185</width>
 				<font_name>Lucida Grande</font_name>
 				<font_size>16</font_size>
-			<x>2052</x>
-			<y>1032</y>
+			<x>2040</x>
+			<y>1011</y>
 			<color>
 				<r>128</r>
 				<g>128</g>
