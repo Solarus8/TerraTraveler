@@ -126,10 +126,6 @@ object Location {
 			val result = sql.as(Location.simple.singleOpt)
 			println("Location.findById - result: " + result)
 			result
-			
-			/*val row = sql.list()
-			println("Location.findById - row: " + row)
-			row*/
 	    }
 	}
 }

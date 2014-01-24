@@ -188,10 +188,11 @@ object Events extends Controller {
              	 } // end - event =>
     			 ) // end - events.map
              } // end - "events" ->
-        )
+        ) // end - eventsJson
+        println("Events.byRadiusLatLon - BOTTOM - eventsJson: " + eventsJson)
         Json.toJson(eventsJson)
 	    Ok(eventsJson)
-	}
+	} // end - byRadiusLatLon
 	
 	// TODO: This should go away. Will not scale...
 	def allEvents = Action {
