@@ -94,16 +94,15 @@ object Locations extends Controller { // with Secured {
 	}
 	
 	def place(placeId: Long) = Action { implicit request =>
-	    val p = Place.findById(placeId) match {
+	    /*val p = Place.findById(placeId) match {
 	        case Some(p) => { 
-	            p
 			    val l = Location.findById(p.locId) match {
 			        case Some(l) => { l }
 			        case _ => Ok(Json.obj("status" -> "Error: Location not found"))
 			    }
 	        }
 	        case _ => Ok(Json.obj("status" -> "Error: Place not found"))
-	    }
+	    }*/
 	    
 	    NotFound // TEMP
 	}

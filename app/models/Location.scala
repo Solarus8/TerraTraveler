@@ -30,7 +30,8 @@ object Location {
 	/**
 	 * Parse a Location from a ResultSet
 	 */
-	val simple = {
+	def simple = {
+	    println("Location.simple - TOP")
 		get[Pk[Long]]("location.id") ~
 		get[Option[String]]("location.city") ~
 		get[Option[String]]("location.country") ~
@@ -38,15 +39,20 @@ object Location {
 		get[Option[String]]("location.address_2") ~
 		get[Option[String]]("location.address_3") ~
 		get[Option[String]]("location.postal_code") ~
-		get[Double]("location.latitude") ~
-		get[Double]("location.longitude") ~
+		get[Double](".latitude") ~
+		get[Double](".longitude") ~
 		get[Option[Int]]("location.altitude") ~
 		get[Option[String]]("location.desc") ~
 		get[Option[String]]("location.url") map {
-		  	case id ~ city ~ country ~ addr1 ~ addr2 ~ addr3 ~ postalCode ~ lat ~ lon ~ alt ~ desc ~ url =>
-		  	  	Location(id, city, country, addr1, addr2, addr3, postalCode, lat, lon, alt, desc, url)
+		  	case id ~ city ~ country ~ addr1 ~ addr2 ~ addr3 ~ postalCode ~ lat ~ lon ~ alt ~ desc ~ url => {
+		  	    val persistedLocation = Location(id, city, country, addr1, addr2, addr3, postalCode, lat, lon, alt, desc, url)
+		  	    println("Location.simple - persistedLocation: " + persistedLocation)
+		  	    persistedLocation
+		  	}
 		}
 	}
+	
+	
 		
 	def create(loc: Location): Pk[Long] = {
 		DB.withConnection { implicit connection =>
@@ -73,7 +79,7 @@ object Location {
 	      	        + loc.addr2 + """, """
 	      	        + loc.addr3 + """, """
 	      	        + loc.postalCode + """, """ 
-	      	        + """ST_GeographyFromText('SRID=4326;POINT(""" + loc.lat + """ """ + loc.lon + """)'),"""
+	      	        + """ST_GeographyFromText('SRID=4326;POINT(""" + loc.lon + """ """ + loc.lat + """)'),"""
 	      	        + loc.alt + """, """
 	      	        + loc.desc + """, """
 	      	        + loc.url + """
@@ -86,13 +92,6 @@ object Location {
 	        case Some(long) => new Id[Long](long) // The Primary Key
 	        case _          => throw new Exception("SQL Error - Did not insert Location.")
 	    }
-	}
-	
-	// Read - yields single location per id
-	def single(id: Long): Option[Location] = DB.withConnection { implicit c =>
-	    SQL("select * from location where id = {id}").on(
-	        'id -> id
-	    ).as(Location.simple.singleOpt)
 	}
 	
 	/**
@@ -113,12 +112,24 @@ object Location {
 	 * Retrieve a Location by id.
 	 */
 	def findById(id: Long): Option[Location] = {
+	    println("Location.findById - TOP - id: " + id)
 		DB.withConnection { implicit connection =>
-	      	SQL("""
-	      	    select * from Location where id = {id}
+	      	val sql = SQL("""
+	      	    select id, city, country, address_1, address_2, address_3, postal_code,
+	      	    ST_Y(geoloc::geometry) as latitude, ST_X(geoloc::geometry) as longitude,
+	      	    altitude, "desc", url
+	      	    from location where id = {id}
 	      	    """).on(
 	  			'id -> id
-			).as(Location.simple.singleOpt)
+			)
+			println("Location.findById - sql: " + sql)
+			val result = sql.as(Location.simple.singleOpt)
+			println("Location.findById - result: " + result)
+			result
+			
+			/*val row = sql.list()
+			println("Location.findById - row: " + row)
+			row*/
 	    }
 	}
 }

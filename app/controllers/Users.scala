@@ -177,6 +177,7 @@ object Users extends Controller {
 	             )
 	             Ok(userJson)
 	        }
+	        case None => Ok(Json.obj("status" -> "None"))
 	    }
 	}
 	
@@ -200,6 +201,7 @@ object Users extends Controller {
 		         )
 		         Ok(profile)
 		    }
+		    case None => Ok(Json.obj("status" -> "None"))
 		}
 	}
 	

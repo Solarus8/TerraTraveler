@@ -42,7 +42,7 @@ object Event {
 		get[Option[Int]]("event.rsvp_tot") ~
 		get[Option[Int]]("event.wait_list_tot") map {
 		    case id ~ from ~ to ~ title ~ activityType ~ placeId ~ description ~ minSize ~ maxSize ~ rsvpTotal ~ waitListTotal =>
-		        Event(id, from, to , title, activityType, placeId, description, minSize, maxSize, rsvpTotal, waitListTotal)
+		        Event(id, from, to, title, activityType, placeId, description, minSize, maxSize, rsvpTotal, waitListTotal)
 		}	
 	}
 	
@@ -50,6 +50,7 @@ object Event {
 	 * Retrieve an Event by id.
 	 */
 	def findById(id: Long): Option[Event] = {
+	    println("Event.findById - TOP")
 		DB.withConnection { implicit connection =>
 	      	SQL("""
 	      	    select * from event where id = {id}
@@ -89,26 +90,28 @@ object Event {
 	/**
 	 * Create an Event with atomic Event fields.
 	 */
-	def create(date: Date, placeId: Long, desc: String, minSize: Int, maxSize: Int, rsvpTot: Int, waitListTot: Int): Pk[Long] = {
+	def create(from: Date, to: Date, title: String, activityType: Int, placeId: Long, desc: String, minSize: Int, maxSize: Int, rsvpTot: Int, waitListTot: Int): Pk[Long] = {
 	    DB.withConnection { implicit connection =>
 	      	SQL(
 	      		"""
-      			insert into event (from, to, place_id, desc, min_size, max_size, rsvp_tot, wait_list_tot) values (
-      				{from}, {to}, {placeId}, {desc}, {minSize}, {maxSize}, {rsvpTot}, {waitListTot}
+      			insert into event (from, to, title, activity_type_id, place_id, desc, min_size, max_size, rsvp_tot, wait_list_tot) values (
+      				{from}, {to}, {title}, {activityType}, {placeId}, {desc}, {minSize}, {maxSize}, {rsvpTot}, {waitListTot}
       			)
 	      		"""
       		).on(
-      			'from   	 -> date,
-      			'to			 -> date,
-      			'placeId 	 -> placeId,
-      			'desc   	 -> desc,
-      			'minSize     -> minSize,
-      			'maxSize	 -> maxSize,
-      			'rsvpTot	 -> rsvpTot,
-      			'waitListTot -> waitListTot
+      			'from   	 	-> from,
+      			'to			 	-> to,
+      			'title		 	-> title,
+      			'activityType	-> activityType,
+      			'placeId 	 	-> placeId,
+      			'desc   	 	-> desc,
+      			'minSize     	-> minSize,
+      			'maxSize	 	-> maxSize,
+      			'rsvpTot	 	-> rsvpTot,
+      			'waitListTot 	-> waitListTot
       		).executeInsert()
     	} match {
-	        case Some(long) => new Id[Long](long) // The Primary Key
+	        case Some(pk) => new Id[Long](pk) // The Primary Key
 	        case None       => throw new Exception("SQL Error - Did not insert Event.")
     	}
 	}
@@ -119,19 +122,21 @@ object Event {
 		DB.withConnection { implicit connection =>
 	      	val sql = SQL(
 	      		"""
-      			insert into event ("from", "to", place_id, "desc", min_size, max_size, rsvp_tot, wait_list_tot) values (
-      				{from}, {to}, {placeId}, {desc}, {minSize}, {maxSize}, {rsvpTot}, {waitListTot}
+      			insert into event ("from", "to", title, activity_type_id, place_id, "desc", min_size, max_size, rsvp_tot, wait_list_tot) values (
+      				{from}, {to}, {title}, {activityType}, {placeId}, {desc}, {minSize}, {maxSize}, {rsvpTot}, {waitListTot}
       			)
 	      		"""
       		).on(
-      			'from   	 -> event.from,
-      			'to			 -> event.to,
-      			'placeId 	 -> event.placeId,
-      			'desc   	 -> event.description,
-      			'minSize     -> event.minSize,
-      			'maxSize	 -> event.maxSize,
-      			'rsvpTot	 -> event.rsvpTotal,
-      			'waitListTot -> event.waitListTotal
+      			'from   	 	-> event.from,
+      			'to			 	-> event.to,
+      			'title			-> event.title,
+      			'activityType	-> event.activityType,
+      			'placeId 	 	-> event.placeId,
+      			'desc   	 	-> event.description,
+      			'minSize     	-> event.minSize,
+      			'maxSize	 	-> event.maxSize,
+      			'rsvpTot	 	-> event.rsvpTotal,
+      			'waitListTot 	-> event.waitListTotal
       		)
       		println("Event.create - sql: " + sql)
       		sql.executeInsert()
@@ -174,7 +179,7 @@ object Event {
 	}
 	
 	def byRadiusLatLon(lat: Double, lon: Double, radius: Int) : List[Event] = {
-	    println("Event.byRadiusLatLon(lat: Double, lon: Double, radius: Int) - TOP")
+	    println("Event.byRadiusLatLon - TOP - lat: " + lat + " | lon: " + lon + " | radius: " + radius)
 	    
 	    DB.withConnection { implicit connection =>
 	      	val sql = SQL(
@@ -189,7 +194,7 @@ object Event {
 						where ST_DWithin(
 			    			geoloc,
 			    			(
-			        			ST_GeographyFromText('SRID=4326;POINT(""" + lat + """ """ + lon + """)')
+			        			ST_GeographyFromText('SRID=4326;POINT(""" + lon + """ """ + lat + """)')
 			    			),
       	        			{radius}
 						)
@@ -199,7 +204,10 @@ object Event {
 	      	).on(
       			"radius" -> radius
 	      	)
-	      	sql.as(Event.simple *)
+	      	println("Event.byRadiusLatLon - sql: " + sql)
+	      	val result = sql.as(Event.simple *)
+	      	println("Event.byRadiusLatLon - result: " + result)
+	      	result
 	    }
 	}
 	

@@ -42,11 +42,11 @@ object Events extends Controller {
 	        
 	        val newEvent  = Event(NotAssigned, from.get, to.get, title.get, activityType.get, placeId.asOpt, 
 	                desc.get, minSize.get, maxSize.get, rsvpTot.get, waitListTot.get)
-	        println("Events.createEvent - newEvent: " + newEvent)
+	                println("Events.createEvent - newEvent: " + newEvent)
 	        val eventPK = Event.create(newEvent)
-	        println("Events.createEvent - eventPK: " + eventPK)
+	        	println("Events.createEvent - eventPK: " + eventPK)
 	        val persistedEvent = Event.findById(eventPK.get)
-	        println("Events.createEvent - persistedEvent: " + persistedEvent)
+	        	println("Events.createEvent - persistedEvent: " + persistedEvent)
 	        
 	        persistedEvent match {
 	            case Some(persistedEvent) => {
@@ -132,22 +132,62 @@ object Events extends Controller {
 	}
 	
 	// TODO: Factor out common code
+	// TODO: Remove printlns
 	def byRadiusLatLon(lat: Double, lon: Double, radius: Int) = Action {
+	    println("Events.byRadiusLatLon - TOP - lat: " + lat + " | lon: " + lon + " | radius: " + radius)
 	    val events = Event.byRadiusLatLon(lat, lon, radius)
 	    val eventsJson = Json.obj(
-             "events"	-> {
-            	 events.map(event 	=> Json.obj(
-        			 "id"			-> event.id.get,
-        			 "from"			-> event.from,
-        			 "to"			-> event.to,
-        			 "placeId"		-> event.placeId,
-        			 "description"	-> event.description,
-        			 "minSize"		-> event.minSize,
-        			 "maxSize"		-> event.maxSize,
-        			 "rsvpTotal"	-> event.rsvpTotal,
-        			 "waitListTotal"-> event.waitListTotal
-    			 ))
-             }
+             "events" -> {
+            	 events.map(event => {
+            	     val latlon:(Double, Double) = event.placeId match {
+            	         case Some(pId) => {
+            	             println("Events.byRadiusLatLon - inside Some(pId) - pId: " + pId)
+            	             Place.findById(pId) match {
+            	                 case Some(place) => {
+            	                     println("Events.byRadiusLatLon - inside case Some(place) - place.locId: " + place.locId)
+		            	             Location.findById(place.locId) match {
+		            	                 case Some(loc) => {
+		            	                     println("Events.byRadiusLatLon - inside Some(loc) - loc: " + loc)
+		            	                     (loc.lat, loc.lon)
+		            	                 }
+		            	                 case None => {
+		            	                     println("Events.byRadiusLatLon - Location.findById(pId) match = None/null")
+		            	                     null // TODO: Not a good practice!
+		            	                 }
+		            	             }
+            	                 }
+            	                 case None => {
+            	                     println("Events.byRadiusLatLon - Place.findById(pId) match = None/null")
+            	                     null
+            	                 }
+            	             }
+            	         }
+            	         case None => {
+            	             println("Events.byRadiusLatLon - Some(pId) match = None/null")
+            	             null // TODO: Not a good practice!
+            	         }
+            	     } // end - latlon
+            	     
+            	     println("Events.byRadiusLatLon - latlon: " + latlon)
+
+            	     Json.obj(
+	        			 "id"			-> event.id.get,
+	        			 "from"			-> event.from,
+	        			 "to"			-> event.to,
+	        			 "title"		-> event.title,
+	        			 "activityType"	-> event.activityType,
+	        			 "placeId"		-> event.placeId,
+	        			 "lat"			-> latlon._1,
+	        			 "lon"			-> latlon._2,
+	        			 "description"	-> event.description,
+	        			 "minSize"		-> event.minSize,
+	        			 "maxSize"		-> event.maxSize,
+	        			 "rsvpTotal"	-> event.rsvpTotal,
+	        			 "waitListTotal"-> event.waitListTotal
+	    			 ) // end - Json.obj for each event
+             	 } // end - event =>
+    			 ) // end - events.map
+             } // end - "events" ->
         )
         Json.toJson(eventsJson)
 	    Ok(eventsJson)
