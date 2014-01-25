@@ -28,15 +28,14 @@ GET		/api/v1/users/:id/itinerary					controllers.Users.itinerary(id: Long)
 POST	/api/v1/events								controllers.Events.createEvent
 # This will NOT SCALE - needs pagination, range, or filter by some limiting criteria like location
 GET		/api/v1/events								controllers.Events.allEvents
-GET		/api/v1/events/:id							controllers.Events.event(id: Long)
-#GET	/api/v1/events/location/:id					controllers.Events.byLocation(id: Long)
-GET		/api/v1/events/user/:id						controllers.Events.byUser(id: Long)
-GET		/api/v1/events/location/:locId/:radius		controllers.Events.byRadiusLocation(locId: Long, radius: Int)
-GET		/api/v1/events/location/:lat/:lon/:radius	controllers.Events.byRadiusLatLon(lat: Double, lon: Double, radius: Int)
+GET		/api/v1/events/:id							controllers.Events.byId(id: Long)
+GET		/api/v1/events/user/:id						controllers.Events.byUserId(id: Long)
+GET		/api/v1/events/location/:locId/:radius		controllers.Events.byLocationRadius(locId: Long, radius: Int)
+GET		/api/v1/events/location/:lat/:lon/:radius	controllers.Events.byLatLonRadius(lat: Double, lon: Double, radius: Int)
 
 ### Locations ###
 POST	/api/v1/locations/place						controllers.Locations.createPlace
 # This will NOT SCALE - needs pagination, range, or filter by some limiting criteria like location
 GET		/api/v1/locations							controllers.Locations.allLocations
-GET		/api/v1/locations:locId						controllers.Locations.locationById(locId: Long)
+GET		/api/v1/locations:locId						controllers.Locations.byId(locId: Long)
 GET		/api/v1/locations/place/:placeId			controllers.Locations.placeById(placeId: Long)

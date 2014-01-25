@@ -20,7 +20,8 @@ object Locations extends Controller { // with Secured {
 	    NotFound // TEMP
 	}
 	
-	def locationById(locId: Long) = Action { implicit request =>
+	// TODO: implement
+	def byId(locId: Long) = Action { implicit request =>
 	    NotFound // TEMP
 	}
 	

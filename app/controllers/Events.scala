@@ -89,7 +89,7 @@ object Events extends Controller {
 		 ((event: Event) => Some(event.from, event.to, event.title, event.activityType, event.placeId, event.description, event.minSize, event.maxSize, event.rsvpTotal, event.waitListTotal))
 	)
 	
-	def byUser(userId: Long) = Action { 
+	def byUserId(userId: Long) = Action { 
 	    val events = Event.findByUserId(userId)
         val eventsJson = Json.obj(
              "events"	-> {
@@ -110,7 +110,7 @@ object Events extends Controller {
 	    Ok(eventsJson)
 	}
 	
-	def byRadiusLocation(locId: Long, radius: Int) = Action {
+	def byLocationRadius(locId: Long, radius: Int) = Action {
 	    val events = Event.byRadiuslocation(locId, radius)
 	    val eventsJson = Json.obj(
              "events"	-> {
@@ -133,7 +133,7 @@ object Events extends Controller {
 	
 	// TODO: Factor out common code
 	// TODO: Remove printlns
-	def byRadiusLatLon(lat: Double, lon: Double, radius: Int) = Action {
+	def byLatLonRadius(lat: Double, lon: Double, radius: Int) = Action {
 	    println("Events.byRadiusLatLon - TOP - lat: " + lat + " | lon: " + lon + " | radius: " + radius)
 	    val events = Event.byRadiusLatLon(lat, lon, radius)
 	    val eventsJson = Json.obj(
@@ -221,32 +221,25 @@ object Events extends Controller {
 	    Ok(eventsJson)
 	}
 	
-	def event(id: Long) = Action { implicit request =>
+	def byId(id: Long) = Action { implicit request =>
 		Event.findById(id) match { 
 		    case Some(persistedEvent) => {
-		        render {
-		            case Accepts.Json() => {
-				        val eventJson = Json.obj(
-					         "event" -> Json.obj(
-					         "id"			-> persistedEvent.id.get,
-                			 "from"			-> persistedEvent.from,
-                			 "to"			-> persistedEvent.to,
-                			 "placeId"		-> persistedEvent.placeId,
-                			 "description"	-> persistedEvent.description,
-                			 "minSize"		-> persistedEvent.minSize,
-                			 "maxSize"		-> persistedEvent.maxSize,
-                			 "rsvpTotal"	-> persistedEvent.rsvpTotal,
-                			 "waitListTotal"-> persistedEvent.waitListTotal
-					         )
-				         )
-				         Ok(eventJson)
-		            }      
-		        }
+		        val eventJson = Json.obj(
+			         "event" -> Json.obj(
+			         "id"			-> persistedEvent.id.get,
+        			 "from"			-> persistedEvent.from,
+        			 "to"			-> persistedEvent.to,
+        			 "placeId"		-> persistedEvent.placeId,
+        			 "description"	-> persistedEvent.description,
+        			 "minSize"		-> persistedEvent.minSize,
+        			 "maxSize"		-> persistedEvent.maxSize,
+        			 "rsvpTotal"	-> persistedEvent.rsvpTotal,
+        			 "waitListTotal"-> persistedEvent.waitListTotal
+			         )
+		         )
+		         Ok(eventJson)
 		    }
-		    
-		    case _ => render {
-		        case Accepts.Json() => Ok(Json.obj("status" -> "None"))
-		    }
+		    case _ =>  Ok(Json.obj("status" -> "None"))
 		}
 	}
 }
