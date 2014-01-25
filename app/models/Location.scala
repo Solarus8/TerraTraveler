@@ -30,7 +30,7 @@ object Location {
 	/**
 	 * Parse a Location from a ResultSet
 	 */
-	def simple = {
+	val simple = {
 	    println("Location.simple - TOP")
 		get[Pk[Long]]("location.id") ~
 		get[Option[String]]("location.city") ~
@@ -51,8 +51,6 @@ object Location {
 		  	}
 		}
 	}
-	
-	
 		
 	def create(loc: Location): Pk[Long] = {
 		DB.withConnection { implicit connection =>
@@ -92,7 +90,7 @@ object Location {
 	        case Some(long) => new Id[Long](long) // The Primary Key
 	        case _          => throw new Exception("SQL Error - Did not insert Location.")
 	    }
-	}
+	} // end - def create
 	
 	/**
 	 * Retrieve all locations.

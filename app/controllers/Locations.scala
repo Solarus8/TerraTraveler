@@ -13,28 +13,14 @@ import models._
 import views._
 
 object Locations extends Controller { // with Secured {
-  
-	/*def index = IsAuthenticated { username => _ =>
-	    User.findByEmail(username).map { user =>
-	      	user.primaryLoc match {
-	      	  	case Some(locId) => 
-	      	  	  	Ok(html.protoLocation(
-      	  	  			Location.single(locId))(user)
-  	  			)
-	      	  	case _ => 
-	      	  	  	Ok(html.protoLocation(None)(user)
-  	  	  		)
-	      	}
-	    }.getOrElse(Forbidden)
-	}*/
 		
-	// TODO: This is an impractical functions and will NOT SCALE ############
+	// TODO: This will NOT SCALE ############
 	def allLocations = Action {
 	    val locations = Location.findAll	    
 	    NotFound // TEMP
 	}
 	
-	def location(locId: Long) = Action { implicit request =>
+	def locationById(locId: Long) = Action { implicit request =>
 	    NotFound // TEMP
 	}
 	
@@ -47,23 +33,23 @@ object Locations extends Controller { // with Secured {
 	                println("Locations.createPlace - json: " + json)
 	                
 			        val name    	= (json \ "name").validate[String]
-			        println("Place.createPlace - name: " + name)
+			        		println("Place.createPlace - name: " + name)
 			        val desc 	= (json \ "desc").validate[String]
-			        println("Place.createPlace - desc: " + desc)
+			        		println("Place.createPlace - desc: " + desc)
 			        val cat 	 	= (json \ "cat").validate[String]
-			        println("Place.createPlace - cat: " + cat)
+			        		println("Place.createPlace - cat: " + cat)
 			        val url 	 	= (json \ "url").validate[Option[String]]
-			        println("Place.createPlace - url: " + url)
+			        		println("Place.createPlace - url: " + url)
 			        val latitude	= (json \ "latitude").validate[Double]
-			        println("Place.createPlace - latitude: " + latitude)
+			        		println("Place.createPlace - latitude: " + latitude)
 			        val longitude	= (json \ "longitude").validate[Double]
-			        println("Place.createPlace - longitude: " + longitude)
+			        		println("Place.createPlace - longitude: " + longitude)
 			        
 			        val newPlaceLoc	= Location(NotAssigned, null, null, null, null, null, null, 
 			                latitude.get, longitude.get, null, null, null)
-			        println("Place.createPlace - newPlaceLoc: " + newPlaceLoc)
+			                println("Place.createPlace - newPlaceLoc: " + newPlaceLoc)
 			        val newLocPK = Location.create(newPlaceLoc)
-			        println("Place.createPlace - newLocPK: " + newLocPK)
+			        	println("Place.createPlace - newLocPK: " + newLocPK)
 			        			        
 			        val newPlace  = Place(NotAssigned, newLocPK.get, name.get, desc.asOpt, cat.asOpt, url.get)
 			        val newPlacePK = Place.create(newPlace)
@@ -91,21 +77,55 @@ object Locations extends Controller { // with Secured {
 				}
 	        } // End - case Accpts.Json()
 	    }
-	}
+	} // end - def createPlace
 	
-	def place(placeId: Long) = Action { implicit request =>
-	    /*val p = Place.findById(placeId) match {
-	        case Some(p) => { 
-			    val l = Location.findById(p.locId) match {
-			        case Some(l) => { l }
-			        case _ => Ok(Json.obj("status" -> "Error: Location not found"))
-			    }
-	        }
-	        case _ => Ok(Json.obj("status" -> "Error: Place not found"))
-	    }*/
-	    
-	    NotFound // TEMP
-	}
-}
+	def placeById(placeId: Long) = Action { implicit request =>
+	    Place.findById(placeId) match {
+             case Some(persistedPlace) => {
+                 println("Locations.place - inside Some(place) - place.locId: " + persistedPlace.locId)
+                 
+	             Location.findById(persistedPlace.locId) match {
+                     case None => {
+	                     println("Events.byRadiusLatLon - Location.findById(pId) match = None/null")
+	                     
+	                     val jsonResp = Json.obj( "place" -> {
+		                     Json.obj(
+			                    "id"	-> persistedPlace.id.get,
+			                    "name"	-> persistedPlace.name,
+				    	  	    "locId" -> persistedPlace.locId,
+				        	    "desc"  -> persistedPlace.description,
+				        	    "cat" 	-> persistedPlace.category,
+				        	    "url"	-> persistedPlace.url
+				        	 )
+				         })
+				         println("Locations.place - None(loc) - jsonRespLatLon: " + jsonResp)
+				         Ok(jsonResp) // Returning just the Place with no lon/lat
+	                 }
+	                 case Some(loc) => {
+	                     println("Locations.place - inside Some(loc) - loc: " + loc)
+                     	 val jsonRespLatLon = Json.obj( "place" -> {
+                     	     Json.obj(
+		                     	 "id"		-> persistedPlace.id.get,
+				                 "name"		-> persistedPlace.name,
+				                 "lat"		-> loc.lat,
+				                 "lon"		-> loc.lon,
+					    	  	 "locId" 	-> persistedPlace.locId,
+					        	 "desc"  	-> persistedPlace.description,
+					        	 "cat" 		-> persistedPlace.category,
+					        	 "url"		-> persistedPlace.url
+					         )
+                     	 })
+			             println("Locations.place - Some(loc) - jsonRespLatLon: " + jsonRespLatLon)
+				         Ok(jsonRespLatLon)
+	                 }
+	             }
+             } // end - Some(persistedPlace)
+             case None => {
+                 println("Events.byRadiusLatLon - Place.findById(pId) match = None/null")
+                 Ok(Json.obj("status" -> "None"))
+             }
+         } // end - Place.findById(placeId)
+	} // end - def place
+} // end - object Locations
 
 

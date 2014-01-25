@@ -38,5 +38,5 @@ GET		/api/v1/events/location/:lat/:lon/:radius	controllers.Events.byRadiusLatLon
 POST	/api/v1/locations/place						controllers.Locations.createPlace
 # This will NOT SCALE - needs pagination, range, or filter by some limiting criteria like location
 GET		/api/v1/locations							controllers.Locations.allLocations
-GET		/api/v1/locations:locId						controllers.Locations.location(locId: Long)
-GET		/api/v1/locations/place/:placeId			controllers.Locations.place(placeId: Long)
+GET		/api/v1/locations:locId						controllers.Locations.locationById(locId: Long)
+GET		/api/v1/locations/place/:placeId			controllers.Locations.placeById(placeId: Long)
