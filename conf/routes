@@ -30,6 +30,7 @@ POST	/api/v1/events								controllers.Events.createEvent
 GET		/api/v1/events								controllers.Events.allEvents
 GET		/api/v1/events/:id							controllers.Events.byId(id: Long)
 GET		/api/v1/events/user/:id						controllers.Events.byUserId(id: Long)
+GET		/api/v1/events/:eventId/users				controllers.Events.usersByEventId(eventId: Long)
 POST	/api/v1/events/:eventId/user/:userId		controllers.Events.associateEventUser(eventId: Long, userId: Long)
 GET		/api/v1/events/location/:locId/:radius		controllers.Events.byLocationRadius(locId: Long, radius: Int)
 GET		/api/v1/events/location/:lat/:lon/:radius	controllers.Events.byLatLonRadius(lat: Double, lon: Double, radius: Int)

@@ -71,23 +71,23 @@ object Users extends Controller {
 	        println("Users.createUserProfile - json: " + json)
 	        
 	        val userId			= (json \ "userId").validate[Int]
-	        println("Users.createUserProfile - userId" + userId)
+	        		println("Users.createUserProfile - userId" + userId)
 			val firstName		= (json \ "firstName").validate[Option[String]]
-	        println("Users.createUserProfile - firstName" + firstName)
+					println("Users.createUserProfile - firstName" + firstName)
 			val lastName		= (json \ "lastName").validate[Option[String]]
-	        println("Users.createUserProfile - lastName" + lastName)
+					println("Users.createUserProfile - lastName" + lastName)
 			val gender			= (json \ "gender").validate[Option[String]]
-	        println("Users.createUserProfile - gender" + gender)
+					println("Users.createUserProfile - gender" + gender)
 			val birthdate		= (json \ "birthdate").validate[Option[Date]]
-	        println("Users.createUserProfile - birthdate" + birthdate)
+					println("Users.createUserProfile - birthdate" + birthdate)
 			val nationality		= (json \ "nationality").validate[Option[String]]
-	        println("Users.createUserProfile - nationality" + nationality)
+					println("Users.createUserProfile - nationality" + nationality)
 			val portraitUrl		= (json \ "portraitUrl").validate[Option[String]]
-	        println("Users.createUserProfile - portraitUrl" + portraitUrl)
+					println("Users.createUserProfile - portraitUrl" + portraitUrl)
 			val bio				= (json \ "bio").validate[Option[String]]
-	        println("Users.createUserProfile - bio" + bio)
+					println("Users.createUserProfile - bio" + bio)
 			val story			= (json \ "story").validate[Option[String]]
-	        println("Users.createUserProfile - story" + story)
+					println("Users.createUserProfile - story" + story)
 	        
 	        val newProfile = UserProfile(
                 NotAssigned, 
@@ -130,25 +130,21 @@ object Users extends Controller {
 		
 	def allUsers = Action { implicit request =>
 	    val users = User.findAll
-	    render {
-	        case Accepts.Json() => {
-	            val usersJson = Json.obj(
-            		"users"	-> {
-            			users.map(user   => Json.obj(
-            			    "id"		 -> user.id.get,
-			    	  	    "userName"   -> user.userName,
-			        	    "email"      -> user.email,
-			        	    "password" 	 -> user.password,
-			        	    "role"	     -> user.role,
-			        	    "primaryLoc" -> user.primaryLoc
-            			))
-            		}
-        		)
-	    
-			    Json.toJson(usersJson)
-			    Ok(usersJson)
-	        }
-	    }   
+        val usersJson = Json.obj(
+    		"users"	-> {
+    			users.map(user   => Json.obj(
+    			    "id"		 -> user.id.get,
+	    	  	    "userName"   -> user.userName,
+	        	    "email"      -> user.email,
+	        	    "password" 	 -> user.password,
+	        	    "role"	     -> user.role,
+	        	    "primaryLoc" -> user.primaryLoc
+    			))
+    		}
+		)
+
+	    Json.toJson(usersJson)
+	    Ok(usersJson)
 	}
 	
 	/*def byEmail(email: String) = Action { implicit request =>

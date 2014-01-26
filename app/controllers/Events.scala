@@ -101,9 +101,9 @@ object Events extends Controller {
 	
 	def eventToJson(event: Event): JsObject = {
 		 val latlon:(Double, Double) = event.placeId match {
-		     case Some(pId) => {
-		         println("Events.eventToJson - inside Some(pId) - pId: " + pId)
-		         Place.byId(pId) match {
+		     case Some(placeId) => {
+		         println("Events.eventToJson - inside Some(pId) - placeId: " + placeId)
+		         Place.byId(placeId) match {
 		             case Some(place) => {
 		                 println("Events.eventToJson - inside case Some(place) - place.locId: " + place.locId)
 			             Location.byId(place.locId) match {
@@ -216,6 +216,34 @@ object Events extends Controller {
 	        }
 	        case None => NotFound(Json.obj("status" -> "User not found.")) // TODO: Change all Ok(status -> None) to NotFound(status -> Not found)
 	    }
+	}
+	
+	// val loc = Location.byId(user.primaryLoc)
+	def usersByEventId(eventId: Long) = Action {
+	    val attendies = Event.attendies(eventId)
+	    val usersJson = Json.obj(
+	        "users"	-> {
+	            attendies.map(user 	=> {
+	                val latlon: (Double, Double) = Location.byId(user.primaryLoc) match {
+	                    case Some(loc) => (loc.lat, loc.lon)
+	                    case None => (0,0)
+	                }
+	                Json.obj(
+	    			    "id"			-> user.id.get,
+		    	  	    "userName"		-> user.userName,
+		        	    "email"			-> user.email,
+		        	    "password"		-> user.password,
+		        	    "role"			-> user.role,
+		        	    "primaryLoc"   	-> user.primaryLoc,
+		        	    "lat"   		-> latlon._1,
+		        	    "lon"			-> latlon._2
+	    			)
+	            })
+	        }
+	    ) // end - usersJson
+
+		Json.toJson(usersJson)
+		Ok(usersJson)
 	}
 }
 
