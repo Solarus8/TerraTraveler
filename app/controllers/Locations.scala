@@ -55,7 +55,7 @@ object Locations extends Controller { // with Secured {
 			        val newPlace  = Place(NotAssigned, newLocPK.get, name.get, desc.asOpt, cat.asOpt, url.get)
 			        val newPlacePK = Place.create(newPlace)
 			        			        
-			        val persistedPlace = Place.findById(newPlacePK.get)
+			        val persistedPlace = Place.byId(newPlacePK.get)
 			        			        
 			        persistedPlace match {
 			            case Some(persistedPlace) => {
@@ -114,7 +114,7 @@ object Locations extends Controller { // with Secured {
 	} // end - def placeByLatLonRadius
 	
 	def placeById(placeId: Long) = Action { implicit request =>
-	    Place.findById(placeId) match {
+	    Place.byId(placeId) match {
              case Some(persistedPlace) => {
                  println("Locations.place - inside Some(place) - place.locId: " + persistedPlace.locId)
                  

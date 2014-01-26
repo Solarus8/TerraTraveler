@@ -142,7 +142,7 @@ object Events extends Controller {
             	     val latlon:(Double, Double) = event.placeId match {
             	         case Some(pId) => {
             	             println("Events.byRadiusLatLon - inside Some(pId) - pId: " + pId)
-            	             Place.findById(pId) match {
+            	             Place.byId(pId) match {
             	                 case Some(place) => {
             	                     println("Events.byRadiusLatLon - inside case Some(place) - place.locId: " + place.locId)
 		            	             Location.byId(place.locId) match {

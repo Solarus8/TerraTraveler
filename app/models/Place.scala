@@ -58,7 +58,7 @@ object Place {
 	/**
 	 * Retrieve an Place by id.
 	 */
-	def findById(id: Long): Option[Place] = {
+	def byId(id: Long): Option[Place] = {
 		DB.withConnection { implicit connection =>
 	      	SQL("""
 	      	    select * from place where id = {id}
