@@ -50,19 +50,7 @@ object Events extends Controller {
 	        
 	        persistedEvent match {
 	            case Some(persistedEvent) => {
-	                val jsonResp = Json.obj( "event" -> {
-	                    Json.obj(
-		                    "id"			-> persistedEvent.id.get,
-                			"from"			-> persistedEvent.from,
-                			"to"			-> persistedEvent.to,
-                			"placeId"		-> persistedEvent.placeId,
-                			"description"	-> persistedEvent.description,
-                			"minSize"		-> persistedEvent.minSize,
-                			"maxSize"		-> persistedEvent.maxSize,
-                			"rsvpTotal"		-> persistedEvent.rsvpTotal,
-                			"waitListTotal" -> persistedEvent.waitListTotal
-			        	)
-		            })
+	                val jsonResp = Json.obj( "event" -> eventToJson(persistedEvent))
 		            Ok(jsonResp)
 	            }
 	            case None => BadRequest("User not found")
@@ -93,17 +81,7 @@ object Events extends Controller {
 	    val events = Event.byUserId(userId)
         val eventsJson = Json.obj(
              "events"	-> {
-            	 events.map(event 	=> Json.obj(
-        			 "id"			-> event.id.get,
-        			 "from"			-> event.from,
-        			 "to"			-> event.to,
-        			 "placeId"		-> event.placeId,
-        			 "description"	-> event.description,
-        			 "minSize"		-> event.minSize,
-        			 "maxSize"		-> event.maxSize,
-        			 "rsvpTotal"	-> event.rsvpTotal,
-        			 "waitListTotal"-> event.waitListTotal
-    			 ))
+            	 events.map(event => eventToJson(event))
              }
         )
         Json.toJson(eventsJson)
@@ -114,17 +92,7 @@ object Events extends Controller {
 	    val events = Event.byLocationRadius(locId, radius)
 	    val eventsJson = Json.obj(
              "events"	-> {
-            	 events.map(event 	=> Json.obj(
-        			 "id"			-> event.id.get,
-        			 "from"			-> event.from,
-        			 "to"			-> event.to,
-        			 "placeId"		-> event.placeId,
-        			 "description"	-> event.description,
-        			 "minSize"		-> event.minSize,
-        			 "maxSize"		-> event.maxSize,
-        			 "rsvpTotal"	-> event.rsvpTotal,
-        			 "waitListTotal"-> event.waitListTotal
-    			 ))
+            	 events.map(event 	=> eventToJson(event))
              }
         )
         Json.toJson(eventsJson)
@@ -206,16 +174,8 @@ object Events extends Controller {
 	    val events = Event.all
 	    val eventsJson = Json.obj(
 	    	"events" -> {
-  		    	events.map(event  => Json.obj(
-	    	  	    "from" 		  -> event.from,
-	    	  	    "to"		  -> event.to,
-	        	    "placeId"     -> event.placeId,
-	        	    "desc"		  -> event.description,
-	        	    "minSize"	  -> event.minSize,
-	        	    "maxSize" 	  -> event.maxSize,
-	        	    "rsvpTot" 	  -> event.rsvpTotal,
-	        	    "waitListTot" -> event.waitListTotal
-  		    ))}
+  		    	events.map(event  => eventToJson(event))
+	    	}
 	    )
 	    
 	    Json.toJson(eventsJson)
@@ -225,20 +185,8 @@ object Events extends Controller {
 	def byId(id: Long) = Action {
 		Event.byId(id) match { 
 		    case Some(persistedEvent) => {
-		        val eventJson = Json.obj(
-			         "event" -> Json.obj(
-			         "id"			-> persistedEvent.id.get,
-        			 "from"			-> persistedEvent.from,
-        			 "to"			-> persistedEvent.to,
-        			 "placeId"		-> persistedEvent.placeId,
-        			 "description"	-> persistedEvent.description,
-        			 "minSize"		-> persistedEvent.minSize,
-        			 "maxSize"		-> persistedEvent.maxSize,
-        			 "rsvpTotal"	-> persistedEvent.rsvpTotal,
-        			 "waitListTotal"-> persistedEvent.waitListTotal
-			         )
-		         )
-		         Ok(eventJson)
+		        val eventJson = Json.obj("event" -> eventToJson(persistedEvent))
+		        Ok(eventJson)
 		    }
 		    case _ =>  Ok(Json.obj("status" -> "None"))
 		}
