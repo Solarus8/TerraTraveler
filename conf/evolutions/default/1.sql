@@ -153,10 +153,14 @@ CREATE TABLE user_loc (
 	PRIMARY KEY(user_id, loc_id)
 );
 
+CREATE SEQUENCE user_group_id_seq;
 CREATE TABLE user_group (
+	id INTEGER NOT NULL DEFAULT nextval('user_group_id_seq'),
 	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
 	group_id INTEGER NOT NULL REFERENCES "group"(id) ON DELETE CASCADE,
-	PRIMARY KEY(user_id, group_id)
+	UNIQUE (user_id, group_id),
+	status INTEGER,
+	PRIMARY KEY(id)
 );
 
 CREATE SEQUENCE user_event_id_seq;
@@ -164,29 +168,37 @@ CREATE TABLE user_event (
 	id INTEGER NOT NULL DEFAULT nextval('user_event_id_seq'),
 	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
 	event_id INTEGER NOT NULL REFERENCES event(id) ON DELETE CASCADE,
+	UNIQUE (user_id, event_id),
 	status INTEGER,
 	PRIMARY KEY(id)
 );
 
+CREATE SEQUENCE group_event_id_seq;
 CREATE TABLE group_event (
+	id INTEGER NOT NULL DEFAULT nextval('group_event_id_seq'),
 	group_id INTEGER NOT NULL REFERENCES "group"(id) ON DELETE CASCADE,
 	event_id INTEGER NOT NULL REFERENCES event(id) ON DELETE CASCADE,
-	PRIMARY KEY(group_id, event_id)
+	status INTEGER,
+	PRIMARY KEY(id)
 );
 
 CREATE SEQUENCE photo_id_seq;
 CREATE TABLE photo (
 	id INTEGER NOT NULL DEFAULT nextval('photo_id_seq'),
 	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
-	url VARCHAR(80),
+	url VARCHAR(80) NOT NULL,
+	UNIQUE (user_id, url),
 	"desc" VARCHAR(80),
 	index INTEGER,
 	PRIMARY KEY(id)
 );
 
+CREATE SEQUENCE photo_place_id_seq;
 CREATE TABLE photo_place (
+	id INTEGER NOT NULL DEFAULT nextval('photo_place_id_seq'),
 	photo_id INTEGER NOT NULL REFERENCES photo(id) ON DELETE CASCADE,
 	biz_id INTEGER NOT NULL REFERENCES place(id) ON DELETE CASCADE,
+	UNIQUE (photo_id, biz_id),
 	PRIMARY KEY(photo_id, biz_id)
 );
 
@@ -211,8 +223,8 @@ CREATE TABLE photo_event (
 CREATE SEQUENCE disp_id_seq;
 CREATE TABLE dispatch (
 	id INTEGER NOT NULL DEFAULT nextval('disp_id_seq'),
-	disp VARCHAR(256),
-	index INTEGER,
+	disp VARCHAR(256) NOT NULL,
+	index INTEGER NOT NULL,
 	PRIMARY KEY(id)
 );
 
@@ -232,7 +244,7 @@ CREATE TABLE user_interest (
 CREATE SEQUENCE placecat_id_seq;
 CREATE TABLE placecategory (
 	id INTEGER NOT NULL DEFAULT nextval('placecat_id_seq'),
-	category VARCHAR(45),
+	category VARCHAR(45) NOT NULL,
 	PRIMARY KEY(id)
 );
 
@@ -254,6 +266,12 @@ CREATE TABLE promo (
 	active BOOL,
 	start_time TIMESTAMP,
 	end_time TIMESTAMP,
+	PRIMARY KEY(id)
+);
+
+CREATE TABLE status (
+	id INTEGER NOT NULL,
+	status VARCHAR(16) NOT NULL,
 	PRIMARY KEY(id)
 );
 
@@ -288,6 +306,7 @@ DROP TABLE location CASCADE;
 DROP TABLE itinerary CASCADE;
 DROP TABLE tag CASCADE;
 DROP TABLE activity_type CASCADE;
+DROP TABLE status CASCADE;
 
 DROP SEQUENCE user_prof_id_seq CASCADE;
 DROP SEQUENCE group_id_seq CASCADE;
@@ -307,5 +326,8 @@ DROP SEQUENCE itin_item_id_seq CASCADE;
 DROP SEQUENCE itin_id_seq CASCADE;
 DROP SEQUENCE user_cont_id_seq CASCADE;
 DROP SEQUENCE tag_id_seq CASCADE;
+DROP SEQUENCE user_group_id_seq CASCADE;
+DROP SEQUENCE photo_place_id_seq CASCADE;
+DROP SEQUENCE group_event_id_seq CASCADE;
 
 DROP TABLE play_evolutions;

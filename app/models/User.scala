@@ -47,7 +47,7 @@ object User {
 	/**
 	 * Retrieve a User from email.
 	 */
-	def findByEmail(email: String): Option[User] = {
+	def byEmail(email: String): Option[User] = {
 	    DB.withConnection { implicit connection =>
 	      	SQL("""
 	      	    select * from "user" where email = {email}
@@ -60,7 +60,7 @@ object User {
 	/**
 	 * Retrieve a User by id.
 	 */
-	def findById(id: Long): Option[User] = {
+	def byId(id: Long): Option[User] = {
 		DB.withConnection { implicit connection =>
 	      	SQL("""
 	      	    select * from "user" where id = {id}
@@ -86,6 +86,7 @@ object User {
   
 	/**
 	 * Authenticate a User.
+	 * TODO: WHAT IS THE STATUS OF THIS METHOD?
 	 */
 	def authenticate(email: String, password: String): Option[User] = {
 		println("User - authenticate")

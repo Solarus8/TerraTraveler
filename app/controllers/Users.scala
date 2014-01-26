@@ -42,7 +42,7 @@ object Users extends Controller {
 	        val newUser  = User(NotAssigned, null, null, null, userName.get, email.get, password.get, role.get, newLocPK.get)
 	        val newUserPK = User.create(newUser)
 	        			        
-	        val persistedUser = User.findById(newUserPK.get)
+	        val persistedUser = User.byId(newUserPK.get)
 	        			        
 	        persistedUser match {
 	            case Some(persistedUser) => {
@@ -163,16 +163,16 @@ object Users extends Controller {
 	}*/
 	
 	def byId(id: Long) = Action { implicit request =>
-	    User.findById(id) match { 
+	    User.byId(id) match { 
 	        case Some(user) => {
 	             val userJson = Json.obj(
 	                 "user" -> Json.obj(
-	                      "id"		 -> user.id.get,
-			    	  	  "userName"   -> user.userName,
-			        	  "email"      -> user.email,
-			        	  "password" 	 -> user.password,
-			        	  "role"	     -> user.role,
-			        	  "primaryLoc" -> user.primaryLoc
+	                      "id"		 	-> user.id.get,
+			    	  	  "userName"   	-> user.userName,
+			        	  "email"      	-> user.email,
+			        	  "password" 	-> user.password,
+			        	  "role"	    -> user.role,
+			        	  "primaryLoc" 	-> user.primaryLoc
 	                 )   
 	             )
 	             Ok(userJson)

@@ -49,7 +49,7 @@ object Event {
 	/**
 	 * Retrieve an Event by id.
 	 */
-	def findById(id: Long): Option[Event] = {
+	def byId(id: Long): Option[Event] = {
 	    println("Event.findById - TOP")
 		DB.withConnection { implicit connection =>
 	      	SQL("""
@@ -63,7 +63,7 @@ object Event {
 	/**
 	 * Retrieve all events.
 	 */
-	def findAll: List[Event] = {
+	def all: List[Event] = {
 	    DB.withConnection { implicit connection =>
 	      	SQL(
 	      	    """
@@ -73,7 +73,7 @@ object Event {
 	    }
 	}
 	
-	def findByUserId(userId: Long): List[Event] = {
+	def byUserId(userId: Long): List[Event] = {
 	    DB.withConnection { implicit connection =>
 	      	SQL(
 	      	    """
@@ -112,7 +112,7 @@ object Event {
       		).executeInsert()
     	} match {
 	        case Some(pk) => new Id[Long](pk) // The Primary Key
-	        case None       => throw new Exception("SQL Error - Did not insert Event.")
+	        case None     => throw new Exception("SQL Error - Did not insert Event.")
     	}
 	}
 	
@@ -209,6 +209,43 @@ object Event {
 	      	println("Event.byRadiusLatLon - result: " + result)
 	      	result
 	    }
+	}
+	
+	/**
+	 * TODO: Checks against max number of attendies
+	 */ 
+	def associateEventUser(eventId: Long, userId: Long): Pk[Long] = {
+	    println("Event.associateUserEvent - TOP - userId: " + userId + " | eventId: " + eventId)
+		
+	    /*val max_size: Option[Int] = DB.withConnection { implicit connection =>
+		    SQL(
+		        """
+		        select max_size from event where id = {eventId}    
+		        """
+		    ).on (
+		    	'eventId -> eventId
+		    ).as(scalar[Int].singleOpt)
+	    }
+	    max_size match {
+	        case _ : Some[Int] => {
+	            
+	        }
+	    }*/
+		    
+		DB.withConnection { implicit connection =>
+	      	SQL(
+	      		"""
+      			insert into user_event ("user_id", "event_id") 
+	      	    values ({userId}, {eventId})
+	      	    """
+	      	).on(
+      			'userId		-> userId,
+      			'eventId	-> eventId
+      		).executeInsert()
+	    } match {
+	        case Some(pk) => new Id[Long](pk) // The Primary Key
+	        case None     => throw new Exception("SQL Error - Did not insert user_event.")
+    	}
 	}
 	
 	def attendies(eventId: Long): List[User] = {
