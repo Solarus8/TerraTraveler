@@ -80,12 +80,45 @@ object Locations extends Controller { // with Secured {
 	    }
 	} // end - def createPlace
 	
+	def placesByLatLonRadius(lat: Double, lon: Double, radius: Int) = Action {
+	    println("Locations.placeByLatLonRadius - TOP - lat: " + lat + " | lon: " + lon + " | radius: " + radius)
+	    val places = Place.byLatLonRadius(lat, lon, radius)
+	    val placesJson = Json.obj(
+             "places" -> {
+            	 places.map(persistedPlace => {
+            	     Location.byId(persistedPlace.locId) match {
+    	                 case Some(loc) => {
+    	                     println("Locations.placeByLatLonRadius - inside Some(loc) - loc: " + loc)
+    	                     Json.obj(
+		                     	 "id"		-> persistedPlace.id.get,
+				                 "name"		-> persistedPlace.name,
+				                 "lat"		-> loc.lat,
+				                 "lon"		-> loc.lon,
+					    	  	 "locId" 	-> persistedPlace.locId,
+					        	 "desc"  	-> persistedPlace.description,
+					        	 "cat" 		-> persistedPlace.category,
+					        	 "url"		-> persistedPlace.url
+					         )
+    	                 }
+    	                 case None => {
+    	                     println("Locations.placeByLatLonRadius - Location.byId(pId) match = None/null")
+    	                     Json.obj() // TODO: I would rather just continue than return an empty json object
+    	                 }
+    	             } // end - Location.byId(place.locId)
+            	 }) // - end - places.map(persistedPlace)
+             } // end - places
+         ) // end - placesJson
+         println("Locations.byRadiusLatLon - BOTTOM - eventsJson: " + placesJson)
+         Json.toJson(placesJson)
+         Ok(placesJson)
+	} // end - def placeByLatLonRadius
+	
 	def placeById(placeId: Long) = Action { implicit request =>
 	    Place.findById(placeId) match {
              case Some(persistedPlace) => {
                  println("Locations.place - inside Some(place) - place.locId: " + persistedPlace.locId)
                  
-	             Location.findById(persistedPlace.locId) match {
+	             Location.byId(persistedPlace.locId) match {
                      case None => {
 	                     println("Events.byRadiusLatLon - Location.findById(pId) match = None/null")
 	                     

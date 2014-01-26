@@ -67,4 +67,33 @@ object Place {
 			).as(Place.simple.singleOpt)
 	    }
 	}
+	
+	def byLatLonRadius(lat: Double, lon: Double, radius: Int) : List[Place] = {
+	    println("Place.byLatLonRadius - TOP - lat: " + lat + " | lon: " + lon + " | radius: " + radius)
+	    
+	    DB.withConnection { implicit connection =>
+	      	val sql = SQL(
+	      		"""
+				SELECT * from place
+				where place.loc_id in
+				(
+					SELECT id from location
+					where ST_DWithin(
+		    			geoloc,
+		    			(
+		        			ST_GeographyFromText('SRID=4326;POINT(""" + lon + """ """ + lat + """)')
+		    			),
+  	        			{radius}
+					)
+				)   
+	      	    """
+	      	).on(
+      			"radius" -> radius
+	      	)
+	      	println("Place.byLatLonRadius - sql: " + sql)
+	      	val result = sql.as(Place.simple *)
+	      	println("Place.byLatLonRadius - result: " + result)
+	      	result
+	    }
+	}
 }

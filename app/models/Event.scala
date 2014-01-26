@@ -146,7 +146,7 @@ object Event {
     	}
 	} // End - create
 	
-	def byRadiuslocation(locId: Long, radius: Int): List[Event] = {
+	def byLocationRadius(locId: Long, radius: Int): List[Event] = {
 	    println("Event.byRadiuslocation(locId: Long, radius: Int) - TOP")
 		DB.withConnection { implicit connection =>
 	      	val sql = SQL(
@@ -178,7 +178,7 @@ object Event {
 	    }
 	}
 	
-	def byRadiusLatLon(lat: Double, lon: Double, radius: Int) : List[Event] = {
+	def byLatLonRadius(lat: Double, lon: Double, radius: Int) : List[Event] = {
 	    println("Event.byRadiusLatLon - TOP - lat: " + lat + " | lon: " + lon + " | radius: " + radius)
 	    
 	    DB.withConnection { implicit connection =>

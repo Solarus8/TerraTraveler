@@ -39,3 +39,4 @@ POST	/api/v1/locations/place						controllers.Locations.createPlace
 GET		/api/v1/locations							controllers.Locations.allLocations
 GET		/api/v1/locations:locId						controllers.Locations.byId(locId: Long)
 GET		/api/v1/locations/place/:placeId			controllers.Locations.placeById(placeId: Long)
+GET		/api/v1/locations/place/:lat/:lon/:radius	controllers.Locations.placesByLatLonRadius(lat: Double, lon: Double, radius: Int)

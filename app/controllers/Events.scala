@@ -111,7 +111,7 @@ object Events extends Controller {
 	}
 	
 	def byLocationRadius(locId: Long, radius: Int) = Action {
-	    val events = Event.byRadiuslocation(locId, radius)
+	    val events = Event.byLocationRadius(locId, radius)
 	    val eventsJson = Json.obj(
              "events"	-> {
             	 events.map(event 	=> Json.obj(
@@ -135,7 +135,7 @@ object Events extends Controller {
 	// TODO: Remove printlns
 	def byLatLonRadius(lat: Double, lon: Double, radius: Int) = Action {
 	    println("Events.byRadiusLatLon - TOP - lat: " + lat + " | lon: " + lon + " | radius: " + radius)
-	    val events = Event.byRadiusLatLon(lat, lon, radius)
+	    val events = Event.byLatLonRadius(lat, lon, radius)
 	    val eventsJson = Json.obj(
              "events" -> {
             	 events.map(event => {
@@ -145,7 +145,7 @@ object Events extends Controller {
             	             Place.findById(pId) match {
             	                 case Some(place) => {
             	                     println("Events.byRadiusLatLon - inside case Some(place) - place.locId: " + place.locId)
-		            	             Location.findById(place.locId) match {
+		            	             Location.byId(place.locId) match {
 		            	                 case Some(loc) => {
 		            	                     println("Events.byRadiusLatLon - inside Some(loc) - loc: " + loc)
 		            	                     (loc.lat, loc.lon)

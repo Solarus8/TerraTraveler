@@ -109,7 +109,7 @@ object Location {
 	/**
 	 * Retrieve a Location by id.
 	 */
-	def findById(id: Long): Option[Location] = {
+	def byId(id: Long): Option[Location] = {
 	    println("Location.findById - TOP - id: " + id)
 		DB.withConnection { implicit connection =>
 	      	val sql = SQL("""
