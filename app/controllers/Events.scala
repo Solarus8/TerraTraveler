@@ -165,12 +165,6 @@ object Events extends Controller {
 	
 	// TODO: This should go away. Will not scale...
 	def allEvents = Action {
-	    val events = Event.all	    
-	    NotFound // TEMP
-	}
-	
-	// TODO: This should go away. Will not scale...
-	def allEventsJson = Action {
 	    val events = Event.all
 	    val eventsJson = Json.obj(
 	    	"events" -> {
@@ -223,7 +217,7 @@ object Events extends Controller {
 	    val attendies = Event.attendies(eventId)
 	    val usersJson = Json.obj(
 	        "users"	-> {
-	            attendies.map(user 	=> {
+	            attendies.map( user => {
 	                val latlon: (Double, Double) = Location.byId(user.primaryLoc) match {
 	                    case Some(loc) => (loc.lat, loc.lon)
 	                    case None => (0,0)
@@ -244,6 +238,26 @@ object Events extends Controller {
 
 		Json.toJson(usersJson)
 		Ok(usersJson)
+	}
+	
+	def allActivityTypes() = Action {
+	    println("Events.allActivityTypes - TOP")
+	    val activityTypes = ActivityType.all
+	    println("Events.allActivityTypes - activityTypes: " + activityTypes)
+	    val activityTypesJson = Json.obj(
+    		"activityTypes" -> {
+    		    activityTypes.map( actype => {
+    		        Json.obj(
+		        		"id"		-> actype.id.get,
+    		            "activity"	-> actype.activity,
+    		            "category"	-> actype.category
+    		        )
+    		    })
+    		}
+	    )
+	    Json.toJson(activityTypesJson)
+	    println("Events.allActivityTypes - activityTypesJson: " + activityTypesJson)
+		Ok(activityTypesJson)
 	}
 }
 

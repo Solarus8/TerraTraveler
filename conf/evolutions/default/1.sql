@@ -67,10 +67,22 @@ CREATE TABLE place (
 	PRIMARY KEY(id)
 );
 
-CREATE TABLE activity_type (
-	id INTEGER NOT NULL,
-	activity VARCHAR(64) UNIQUE,
+CREATE TABLE activity_category (
+	id INTEGER NOT NULL UNIQUE,
+	category VARCHAR(64) UNIQUE,
 	PRIMARY KEY(id)
+);
+
+CREATE TABLE activity_type (
+	id INTEGER NOT NULL UNIQUE,
+	type VARCHAR(64) UNIQUE,
+	PRIMARY KEY(id)
+);
+
+CREATE TABLE activity_type_category (
+	type_id INTEGER NOT NULL REFERENCES activity_type(id) ON DELETE CASCADE,
+	cat_id INTEGER NOT NULL REFERENCES activity_category(id) ON DELETE CASCADE,
+	PRIMARY KEY(type_id, cat_id)
 );
 
 CREATE SEQUENCE event_id_seq;
@@ -307,6 +319,8 @@ DROP TABLE itinerary CASCADE;
 DROP TABLE tag CASCADE;
 DROP TABLE activity_type CASCADE;
 DROP TABLE status CASCADE;
+DROP TABLE activity_category CASCADE;
+DROP TABLE activity_type_category CASCADE;
 
 DROP SEQUENCE user_prof_id_seq CASCADE;
 DROP SEQUENCE group_id_seq CASCADE;
