@@ -243,7 +243,20 @@ object Events extends Controller {
 	def allActivityTypes() = Action {
 	    println("Events.allActivityTypes - TOP")
 	    val activityTypes = ActivityType.all
-	    println("Events.allActivityTypes - activityTypes: " + activityTypes)
+	    
+	    val categories = activityTypes groupBy (_.category)
+	    //println("Events.allActivityTypes - categories: " + categories)
+	    categories.foreach{
+	        case (category, activities) => {
+	        	println("---------- category: " + category + "----------")
+	            activities map { actype => {
+	                println("activity.id: " + actype.id)
+	                println("activity: " + actype.activity)
+	            }}
+	        }
+	    } // end - case (category, activities)
+	    
+	    //println("Events.allActivityTypes - activityTypes: " + activityTypes)
 	    val activityTypesJson = Json.obj(
     		"activityTypes" -> {
     		    activityTypes.map( actype => {
@@ -256,7 +269,7 @@ object Events extends Controller {
     		}
 	    )
 	    Json.toJson(activityTypesJson)
-	    println("Events.allActivityTypes - activityTypesJson: " + activityTypesJson)
+	    //println("Events.allActivityTypes - activityTypesJson: " + activityTypesJson)
 		Ok(activityTypesJson)
 	}
 }
