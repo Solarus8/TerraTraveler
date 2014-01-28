@@ -31,7 +31,6 @@ object ActivityType {
 	
 	/**
 	 * Retrieve all events.
-	 * SELECT table1.column1, table2.column2 FROM table1, table2 WHERE table1.column1 = table2.column1;
 	 */
 	def all: List[ActivityType] = {
 	    println("ActivityType.all - TOP")
@@ -52,3 +51,7 @@ object ActivityType {
 	    actypes
 	}
 }
+
+
+
+

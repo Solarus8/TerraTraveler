@@ -248,32 +248,17 @@ object Events extends Controller {
 	    val activityTypesJson = Json.obj( "activityCategories" -> {
 		    categories.map{
 		        case (category, activities) => {
-		            //Json.obj(
-			        	category -> {
-				            activities map { actype => {
-				                Json.obj(
-					                "id"	-> actype.id.get,
-					                "activity"	-> actype.activity
-					            )
-				            }}
-			        	}
-		        	//) // end "category"
+		        	category -> {
+			            activities map { actype => {
+			                Json.obj(
+				                "id"		-> actype.id.get,
+				                "activity"	-> actype.activity
+				            )
+			            }}
+		        	}
 		        } // end - case (category, activities)
-		    } // categories.map
+		    } // end - categories.map
 	    }) // end - activityTypesJson
-	    
-	    //println("Events.allActivityTypes - activityTypes: " + activityTypes)
-	    /*val activityTypesJson = Json.obj(
-    		"activityTypes" -> {
-    		    activityTypes.map( actype => {
-    		        Json.obj(
-		        		"id"		-> actype.id.get,
-    		            "activity"	-> actype.activity,
-    		            "category"	-> actype.category
-    		        )
-    		    })
-    		} // end - "activityTypes"
-	    )*/
 	    
 	    Json.toJson(activityTypesJson)
 	    //println("Events.allActivityTypes - activityTypesJson: " + activityTypesJson)
