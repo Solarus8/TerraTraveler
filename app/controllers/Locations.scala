@@ -25,59 +25,89 @@ object Locations extends Controller { // with Secured {
 	    NotFound // TEMP
 	}
 	
+	def createPlaceSynd = Action { implicit request =>
+	    println("Locations.createPlaceSyn - TOP")
+        request.body.asJson.map { json =>
+            println("Locations.createPlaceSyn - json: " + json)
+            
+            val placeId = (json \ "placeId").validate[Option[Long]]
+            val thirdPartyId = (json \ "thirdPartyID").validate[Long]
+            val thirdPartyPlaceId = (json \ "thirdPartyPlaceId").validate[String]
+            val thirdPartyRef = (json \ "thirdPartyPlaceId").validate[Option[String]]
+            
+            val newPlaceThirdParty  = PlaceThirdParty(NotAssigned, placeId.get, thirdPartyId.get, thirdPartyPlaceId.get, thirdPartyRef.get)
+	        val newPlaceThirdPartyPK = PlaceThirdParty.create(newPlaceThirdParty)
+	        
+	        val persistedPlaceThirdParty = PlaceThirdParty.byId(newPlaceThirdPartyPK.get)
+	        
+	        persistedPlaceThirdParty match {
+	            case Some(persistedPlaceThirdParty) => {
+	                val jsonResp = Json.obj( "placeThirdParty" -> {
+	                    Json.obj(
+		                    "id"				-> persistedPlaceThirdParty.id.get,
+		                    "placeId"			-> persistedPlaceThirdParty.placeId,
+			    	  	    "thirdPartyID" 		-> persistedPlaceThirdParty.thirdPartyID,
+			        	    "thirdPartyPlaceId" -> persistedPlaceThirdParty.thirdPartyPlaceId,
+			        	    "thirdPartyRef" 	-> persistedPlaceThirdParty.thirdPartyRef
+			        	)
+		            })
+		            Ok(jsonResp)
+	            }
+	            case _ => BadRequest("Place not found")
+	        }
+	    }.getOrElse {
+			BadRequest("Locations.createPlaceSynd - Expecting Json data")
+		}
+	}
+	
 	def createPlace = Action { implicit request =>
 	    println("Locations.createPlace - TOP")
-	    render {
-	        case Accepts.Json() => {
-	            request.body.asJson.map { json =>
-	                
-	                println("Locations.createPlace - json: " + json)
-	                
-			        val name    	= (json \ "name").validate[String]
-			        		println("Place.createPlace - name: " + name)
-			        val desc 	= (json \ "desc").validate[String]
-			        		println("Place.createPlace - desc: " + desc)
-			        val cat 	 	= (json \ "cat").validate[String]
-			        		println("Place.createPlace - cat: " + cat)
-			        val url 	 	= (json \ "url").validate[Option[String]]
-			        		println("Place.createPlace - url: " + url)
-			        val latitude	= (json \ "latitude").validate[Double]
-			        		println("Place.createPlace - latitude: " + latitude)
-			        val longitude	= (json \ "longitude").validate[Double]
-			        		println("Place.createPlace - longitude: " + longitude)
-			        
-			        val newPlaceLoc	= Location(NotAssigned, null, null, null, null, null, null, 
-			                latitude.get, longitude.get, null, null, null)
-			                println("Place.createPlace - newPlaceLoc: " + newPlaceLoc)
-			        val newLocPK = Location.create(newPlaceLoc)
-			        	println("Place.createPlace - newLocPK: " + newLocPK)
-			        			        
-			        val newPlace  = Place(NotAssigned, newLocPK.get, name.get, desc.asOpt, cat.asOpt, url.get)
-			        val newPlacePK = Place.create(newPlace)
-			        			        
-			        val persistedPlace = Place.byId(newPlacePK.get)
-			        			        
-			        persistedPlace match {
-			            case Some(persistedPlace) => {
-			                val jsonResp = Json.obj( "place" -> {
-			                    Json.obj(
-				                    "id"	-> persistedPlace.id.get,
-				                    "name"	-> persistedPlace.name,
-					    	  	    "locId" -> persistedPlace.locId,
-					        	    "desc"  -> persistedPlace.description,
-					        	    "cat" 	-> persistedPlace.category,
-					        	    "url"	-> persistedPlace.url
-					        	)
-				            })
-				            Ok(jsonResp)
-			            }
-			            case _ => BadRequest("Place not found")
-			        }
-				}.getOrElse {
-					BadRequest("Expecting Json data")
-				}
-	        } // End - case Accpts.Json()
-	    }
+        request.body.asJson.map { json =>
+            println("Locations.createPlace - json: " + json)
+            
+	        val name = (json \ "name").validate[String]
+	        		println("Place.createPlace - name: " + name)
+	        val desc = (json \ "desc").validate[String]
+	        		println("Place.createPlace - desc: " + desc)
+	        val cat = (json \ "cat").validate[String]
+	        		println("Place.createPlace - cat: " + cat)
+	        val url = (json \ "url").validate[Option[String]]
+	        		println("Place.createPlace - url: " + url)
+	        val latitude = (json \ "latitude").validate[Double]
+	        		println("Place.createPlace - latitude: " + latitude)
+	        val longitude = (json \ "longitude").validate[Double]
+	        		println("Place.createPlace - longitude: " + longitude)
+	        
+	        val newPlaceLoc	= Location(NotAssigned, null, null, null, null, null, null, 
+	                latitude.get, longitude.get, null, null, null)
+	                println("Place.createPlace - newPlaceLoc: " + newPlaceLoc)
+	        val newLocPK = Location.create(newPlaceLoc)
+	        	println("Place.createPlace - newLocPK: " + newLocPK)
+	        			        
+	        val newPlace  = Place(NotAssigned, newLocPK.get, name.get, desc.asOpt, cat.asOpt, url.get)
+	        val newPlacePK = Place.create(newPlace)
+	        			        
+	        val persistedPlace = Place.byId(newPlacePK.get)
+	        			        
+	        persistedPlace match {
+	            case Some(persistedPlace) => {
+	                val jsonResp = Json.obj( "place" -> {
+	                    Json.obj(
+		                    "id"	-> persistedPlace.id.get,
+		                    "name"	-> persistedPlace.name,
+			    	  	    "locId" -> persistedPlace.locId,
+			        	    "desc"  -> persistedPlace.description,
+			        	    "cat" 	-> persistedPlace.category,
+			        	    "url"	-> persistedPlace.url
+			        	)
+		            })
+		            Ok(jsonResp)
+	            }
+	            case _ => BadRequest("Place not found")
+	        }
+		}.getOrElse {
+			BadRequest("Locations.createPlace - Expecting Json data")
+		}
 	} // end - def createPlace
 	
 	def placesByLatLonRadius(lat: Double, lon: Double, radius: Int) = Action {

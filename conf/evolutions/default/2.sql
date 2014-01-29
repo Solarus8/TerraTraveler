@@ -5,6 +5,9 @@
 insert into role (role) values ('BIZ');
 insert into role (role) values ('NORM');
 
+insert into third_party (id, name) values (1, 'Google');
+insert into third_party (id, name) values (2, 'FourSquare');
+
 insert into activity_category(id, category) values(1, 'Fitness');
 insert into activity_category(id, category) values(2, 'Outdoors');
 insert into activity_category(id, category) values(3, 'Nightlife');

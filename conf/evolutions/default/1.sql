@@ -67,6 +67,22 @@ CREATE TABLE place (
 	PRIMARY KEY(id)
 );
 
+CREATE TABLE third_party (
+	id INTEGER NOT NULL UNIQUE,
+	name VARCHAR(32),
+	PRIMARY KEY(id) 
+);
+
+CREATE SEQUENCE place_thirdparty_id_seq;
+CREATE TABLE place_thirdparty (
+	id INTEGER NOT NULL DEFAULT nextval('place_thirdparty_id_seq'),
+	place_id INTEGER REFERENCES place(id) ON DELETE CASCADE,
+	third_party_id INTEGER NOT NULL REFERENCES third_party(id) ON DELETE CASCADE,
+	third_party_place_id VARCHAR(256) NOT NULL,
+	third_party_place_ref VarChar(256),
+	PRIMARY KEY(id)
+);
+
 CREATE TABLE activity_category (
 	id INTEGER NOT NULL UNIQUE,
 	category VARCHAR(64) UNIQUE,
@@ -321,6 +337,8 @@ DROP TABLE activity_type CASCADE;
 DROP TABLE status CASCADE;
 DROP TABLE activity_category CASCADE;
 DROP TABLE activity_type_category CASCADE;
+DROP TABLE third_party CASCADE;
+DROP TABLE place_thirdparty CASCADE;
 
 DROP SEQUENCE user_prof_id_seq CASCADE;
 DROP SEQUENCE group_id_seq CASCADE;
@@ -343,5 +361,6 @@ DROP SEQUENCE tag_id_seq CASCADE;
 DROP SEQUENCE user_group_id_seq CASCADE;
 DROP SEQUENCE photo_place_id_seq CASCADE;
 DROP SEQUENCE group_event_id_seq CASCADE;
+DROP SEQUENCE place_thirdparty_id_seq CASCADE;
 
 DROP TABLE play_evolutions;
