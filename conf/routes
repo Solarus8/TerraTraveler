@@ -38,9 +38,11 @@ GET		/api/v1/activity-types/all					controllers.Events.allActivityTypes
 ### Locations ###
 POST	/api/v1/locations/place						controllers.Locations.createPlace
 POST	/api/v1/locations/place-synd				controllers.Locations.createPlaceSynd
+GET		/api/v1/locations/place-synd/:id			controllers.Locations.placeThirdPartyById(id: Long)
+GET		/api/v1/locations/place/:id/place-synd		controllers.Locations.placeThirdPartyByTTPlaceId(id: Long)
 # This will NOT SCALE - needs pagination, range, or filter by some limiting criteria like location
 GET		/api/v1/locations							controllers.Locations.allLocations
-GET		/api/v1/locations:locId						controllers.Locations.byId(locId: Long)
+GET		/api/v1/locations/:locId					controllers.Locations.byId(locId: Long)
 GET		/api/v1/locations/place/:placeId			controllers.Locations.placeById(placeId: Long)
 GET		/api/v1/locations/place/:lat/:lon/:radius	controllers.Locations.placesByLatLonRadius(lat: Double, lon: Double, radius: Int)
 

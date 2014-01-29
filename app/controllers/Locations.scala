@@ -24,21 +24,27 @@ object Locations extends Controller { // with Secured {
 	def byId(locId: Long) = Action { implicit request =>
 	    NotFound // TEMP
 	}
-	
+		
 	def createPlaceSynd = Action { implicit request =>
 	    println("Locations.createPlaceSyn - TOP")
         request.body.asJson.map { json =>
             println("Locations.createPlaceSyn - json: " + json)
             
             val placeId = (json \ "placeId").validate[Option[Long]]
-            val thirdPartyId = (json \ "thirdPartyID").validate[Long]
+            		println("Locations.createPlaceSynd - placeId: " + placeId)
+            val thirdPartyId = (json \ "thirdPartyId").validate[Long]
+            		println("Locations.createPlaceSynd - thirdPartyId: " + thirdPartyId)
             val thirdPartyPlaceId = (json \ "thirdPartyPlaceId").validate[String]
-            val thirdPartyRef = (json \ "thirdPartyPlaceId").validate[Option[String]]
+            		println("Locations.createPlaceSynd - thirdPartyPlaceId: " + thirdPartyPlaceId)
+            val thirdPartyRef = (json \ "thirdPartyRef").validate[Option[String]]
+            		println("Locations.createPlaceSynd - thirdPartyRef: " + thirdPartyRef)
             
             val newPlaceThirdParty  = PlaceThirdParty(NotAssigned, placeId.get, thirdPartyId.get, thirdPartyPlaceId.get, thirdPartyRef.get)
 	        val newPlaceThirdPartyPK = PlaceThirdParty.create(newPlaceThirdParty)
+	        	println("Locations.createPlaceSynd - newPlaceThirdPartyPK: " + newPlaceThirdPartyPK)
 	        
 	        val persistedPlaceThirdParty = PlaceThirdParty.byId(newPlaceThirdPartyPK.get)
+	        	println("Locations.createPlaceSynd - persistedPlaceThirdParty: " + persistedPlaceThirdParty)
 	        
 	        persistedPlaceThirdParty match {
 	            case Some(persistedPlaceThirdParty) => {
@@ -66,23 +72,23 @@ object Locations extends Controller { // with Secured {
             println("Locations.createPlace - json: " + json)
             
 	        val name = (json \ "name").validate[String]
-	        		println("Place.createPlace - name: " + name)
+	        		println("Locations.createPlace - name: " + name)
 	        val desc = (json \ "desc").validate[String]
-	        		println("Place.createPlace - desc: " + desc)
+	        		println("Locations.createPlace - desc: " + desc)
 	        val cat = (json \ "cat").validate[String]
-	        		println("Place.createPlace - cat: " + cat)
+	        		println("Locations.createPlace - cat: " + cat)
 	        val url = (json \ "url").validate[Option[String]]
-	        		println("Place.createPlace - url: " + url)
+	        		println("Locations.createPlace - url: " + url)
 	        val latitude = (json \ "latitude").validate[Double]
-	        		println("Place.createPlace - latitude: " + latitude)
+	        		println("Locations.createPlace - latitude: " + latitude)
 	        val longitude = (json \ "longitude").validate[Double]
-	        		println("Place.createPlace - longitude: " + longitude)
+	        		println("Locations.createPlace - longitude: " + longitude)
 	        
 	        val newPlaceLoc	= Location(NotAssigned, null, null, null, null, null, null, 
 	                latitude.get, longitude.get, null, null, null)
-	                println("Place.createPlace - newPlaceLoc: " + newPlaceLoc)
+	                println("Locations.createPlace - newPlaceLoc: " + newPlaceLoc)
 	        val newLocPK = Location.create(newPlaceLoc)
-	        	println("Place.createPlace - newLocPK: " + newLocPK)
+	        	println("Locations.createPlace - newLocPK: " + newLocPK)
 	        			        
 	        val newPlace  = Place(NotAssigned, newLocPK.get, name.get, desc.asOpt, cat.asOpt, url.get)
 	        val newPlacePK = Place.create(newPlace)
@@ -143,7 +149,28 @@ object Locations extends Controller { // with Secured {
          Ok(placesJson)
 	} // end - def placeByLatLonRadius
 	
-	def placeById(placeId: Long) = Action { implicit request =>
+	def placeThirdPartyById(placeThirdPartyId: Long) = Action {
+	    val persistedPlaceThirdParty = PlaceThirdParty.byId(placeThirdPartyId)
+	        	println("Locations.placeThirdPartyById - persistedPlaceThirdParty: " + persistedPlaceThirdParty)
+	    
+	    persistedPlaceThirdParty match {
+            case Some(persistedPlaceThirdParty) => {
+                val jsonResp = Json.obj( "placeThirdParty" -> {
+                    Json.obj(
+	                    "id"				-> persistedPlaceThirdParty.id.get,
+	                    "placeId"			-> persistedPlaceThirdParty.placeId,
+		    	  	    "thirdPartyID" 		-> persistedPlaceThirdParty.thirdPartyID,
+		        	    "thirdPartyPlaceId" -> persistedPlaceThirdParty.thirdPartyPlaceId,
+		        	    "thirdPartyRef" 	-> persistedPlaceThirdParty.thirdPartyRef
+		        	)
+	            })
+	            Ok(jsonResp)
+            }
+            case _ => BadRequest("Place not found")
+        }
+	}
+	
+	def placeById(placeId: Long) = Action {
 	    Place.byId(placeId) match {
              case Some(persistedPlace) => {
                  println("Locations.place - inside Some(place) - place.locId: " + persistedPlace.locId)
@@ -188,8 +215,27 @@ object Locations extends Controller { // with Secured {
                  println("Events.byRadiusLatLon - Place.findById(pId) match = None/null")
                  Ok(Json.obj("status" -> "None"))
              }
-         } // end - Place.findById(placeId)
-	} // end - def place
+         } // end - Place.byId(placeId)
+	} // end - def placeById
+	
+	def placeThirdPartyByTTPlaceId(ttPlaceId: Long) = Action {
+	    val placesThirdPartyRefs = PlaceThirdParty.byTTPlaceId(ttPlaceId) // returns List 3rd party refs
+	    
+	    val placesThirdPartyRefsJson = Json.obj(
+    		"placesThirdPartyRefs"	-> {
+    			placesThirdPartyRefs.map(p3pr => Json.obj(
+    			    "id"				-> p3pr.id.get,
+                    "placeId"			-> p3pr.placeId,
+	    	  	    "thirdPartyID" 		-> p3pr.thirdPartyID,
+	        	    "thirdPartyPlaceId" -> p3pr.thirdPartyPlaceId,
+	        	    "thirdPartyRef" 	-> p3pr.thirdPartyRef
+    			))
+    		}
+		)
+
+	    Json.toJson(placesThirdPartyRefsJson)
+	    Ok(placesThirdPartyRefsJson)
+	}
 } // end - object Locations
 
 

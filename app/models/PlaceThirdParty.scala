@@ -32,7 +32,9 @@ object PlaceThirdParty {
 		}	
 	}
 	
-		// Create a Place with a Place object
+	/**
+	 * Create a PlaceThirdParty with a PlaceThirdParty object
+	 */
 	def create(place: PlaceThirdParty): Pk[Long] = {
 		DB.withConnection { implicit connection =>
 	      	SQL(
@@ -54,7 +56,7 @@ object PlaceThirdParty {
 	} // End - create
 	
 	/**
-	 * Retrieve an Place by id.
+	 * Retrieve a PlaceThirdParty by id.
 	 */
 	def byId(id: Long): Option[PlaceThirdParty] = {
 		DB.withConnection { implicit connection =>
@@ -64,6 +66,16 @@ object PlaceThirdParty {
 	  			'id -> id
 			).as(PlaceThirdParty.simple.singleOpt)
 	    }
+	}
+	
+	def byTTPlaceId(ttPlaceId: Long): List[PlaceThirdParty] = {
+		DB.withConnection { implicit connection =>
+	      	SQL("""
+	      	    select * from place_thirdparty where place_id = {ttPlaceId}
+	      	    """).on(
+	      	    'ttPlaceId -> ttPlaceId       
+	      	).as(PlaceThirdParty.simple *)
+		}
 	}
 }
 
