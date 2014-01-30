@@ -27,7 +27,7 @@ object Events extends Controller {
 	        		println("Events.createEvent - title: " + title)
 	        val activityType		= (json \ "activityType").validate[Int]
 	        		println("Events.createEvent - activityType: " + activityType)
-	        val placeId    	= (json \ "placeId").validate[Long]
+	        val placeId    	= (json \ "placeId").validate[Option[Long]]
 	        		println("Events.createEvent - placeId: " + placeId)
 	        val desc 		= (json \ "desc").validate[String]
 	        		println("Events.createEvent - desc: " + desc)
@@ -40,7 +40,7 @@ object Events extends Controller {
 	        val waitListTot = (json \ "waitListTot").validate[Option[Int]]
 	        		println("Events.createEvent - waitListTot: " + waitListTot)
 	        
-	        val newEvent  = Event(NotAssigned, from.get, to.get, title.get, activityType.get, placeId.asOpt, 
+	        val newEvent  = Event(NotAssigned, from.get, to.get, title.get, activityType.get, placeId.get, 
 	                desc.get, minSize.get, maxSize.get, rsvpTot.get, waitListTot.get)
 	                println("Events.createEvent - newEvent: " + newEvent)
 	        val eventPK = Event.create(newEvent)
