@@ -132,12 +132,19 @@ object Users extends Controller {
 	}
 	
 	def userToJson(user: User): JsObject = {
+	    val loclat:(Double, Double) = Location.byId(user.primaryLoc) match {
+	        case Some(loc) => (loc.lat, loc.lon)
+	        case None => (0, 0)
+	    }
+	    
 	    Json.obj(
 			"id"		 	-> user.id.get,
 			"userName"   	-> user.userName,
 			"email"      	-> user.email,
 			"password" 		-> user.password,
 			"role"	    	-> user.role,
+			"loc"			-> loclat._1,
+			"lat"			-> loclat._2,
 			"primaryLoc" 	-> user.primaryLoc
 		)
 	}
@@ -216,12 +223,12 @@ object Users extends Controller {
                     		Json.obj(
                 		        "status" 		-> "success", 
                 		        "userContactPK" -> userContactPK.get,
-                		        "event" 		-> userToJson(persistedContact),
+                		        "contact" 		-> userToJson(persistedContact),
                 		        "userId"		-> userId
                 		    )
 	                    ) // end - Ok result
 	                }
-	                case None => NotFound(Json.obj("status" -> "Event not found.")) // TODO: Change all Ok(status -> None) to NotFound(status -> Not found)
+	                case None => NotFound(Json.obj("status" -> "User not found.")) // TODO: Change all Ok(status -> None) to NotFound(status -> Not found)
 	            }
 	        }
 	        case None => {
