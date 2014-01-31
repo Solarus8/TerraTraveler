@@ -150,7 +150,26 @@ object User {
     	}
 	} // End - create
 	
-	def contacts(userId: Long): List[User] = {
+	def associateUserContact(userId: Long, contactId: Long): Pk[Long] = {
+	    println("User.associateUserContact - TOP - userId: " + userId + " | contactId: " + contactId)
+		    
+		DB.withConnection { implicit connection =>
+	      	SQL(
+	      		"""
+      			insert into user_contact ("user_id", "contact_id") 
+	      	    values ({userId}, {contactId})
+	      	    """
+	      	).on(
+      			'userId		-> userId,
+      			'contactId	-> contactId
+      		).executeInsert()
+	    } match {
+	        case Some(pk) => new Id[Long](pk) // The Primary Key
+	        case None     => throw new Exception("SQL Error - Did not insert user_contact.")
+    	}
+	}
+	
+	def contactsByUserId(userId: Long): List[User] = {
 	    DB.withConnection { implicit connection =>
 	      	SQL(
 	      	    """
