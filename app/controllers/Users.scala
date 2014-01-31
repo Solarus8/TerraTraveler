@@ -46,16 +46,7 @@ object Users extends Controller {
 	        			        
 	        persistedUser match {
 	            case Some(persistedUser) => {
-	                val jsonResp = Json.obj( "user" -> {
-	                    Json.obj(
-		                    "id"		 -> persistedUser.id.get,
-			    	  	    "userName"   -> persistedUser.userName,
-			        	    "email"      -> persistedUser.email,
-			        	    "password" 	 -> persistedUser.password,
-			        	    "role"	     -> persistedUser.role,
-			        	    "primaryLoc" -> persistedUser.primaryLoc
-			        	)
-		            })
+	                val jsonResp = Json.obj( "user" -> userToJson(persistedUser))
 		            Ok(jsonResp)
 	            }
 	            case None => BadRequest("User not found")
@@ -132,19 +123,23 @@ object Users extends Controller {
 	    val users = User.findAll
         val usersJson = Json.obj(
     		"users"	-> {
-    			users.map(user   => Json.obj(
-    			    "id"		 -> user.id.get,
-	    	  	    "userName"   -> user.userName,
-	        	    "email"      -> user.email,
-	        	    "password" 	 -> user.password,
-	        	    "role"	     -> user.role,
-	        	    "primaryLoc" -> user.primaryLoc
-    			))
+    			users.map(user => userToJson(user))
     		}
 		)
 
 	    Json.toJson(usersJson)
 	    Ok(usersJson)
+	}
+	
+	def userToJson(user: User): JsObject = {
+	    Json.obj(
+			"id"		 	-> user.id.get,
+			"userName"   	-> user.userName,
+			"email"      	-> user.email,
+			"password" 		-> user.password,
+			"role"	    	-> user.role,
+			"primaryLoc" 	-> user.primaryLoc
+		)
 	}
 	
 	/*def byEmail(email: String) = Action { implicit request =>
@@ -162,14 +157,7 @@ object Users extends Controller {
 	    User.byId(id) match { 
 	        case Some(user) => {
 	             val userJson = Json.obj(
-	                 "user" -> Json.obj(
-	                      "id"		 	-> user.id.get,
-			    	  	  "userName"   	-> user.userName,
-			        	  "email"      	-> user.email,
-			        	  "password" 	-> user.password,
-			        	  "role"	    -> user.role,
-			        	  "primaryLoc" 	-> user.primaryLoc
-	                 )   
+	                 "user" -> userToJson(user)   
 	             )
 	             Ok(userJson)
 	        }
@@ -202,9 +190,48 @@ object Users extends Controller {
 	}
 	
 	def contacts(userId: Long) = Action { implicit request =>
-	    val users = User.contacts(userId)
-	    NotFound // TEMP
+	    val users = User.contactsByUserId(userId)
+	    val usersJson = Json.obj(
+    		"users"	-> {
+    			users.map(user => userToJson(user))
+    		}
+		)
+		Json.toJson(usersJson)
+	    Ok(usersJson)
 	}
+	
+	/**
+	 * Makes sure that User and Contact both exist first.
+	 */
+	// TODO: NEEDS AUTHENTICATION AND AUTHORIZATION
+	def associateUserContact(userId: Long, contactId: Long) = Action {
+	    println("Users.associateUserContact - userId: " + userId + " | contactId: " + contactId)
+	    User.byId(userId) match {
+	        case Some(persistedUser) => {
+	            println("Users.associateUserContact - Some(persistedUser): " + persistedUser)
+	            User.byId(contactId) match {
+	                case Some(persistedContact) => {
+	                    val userContactPK = User.associateUserContact(userId, contactId)
+	                    Ok(
+                    		Json.obj(
+                		        "status" 		-> "success", 
+                		        "userContactPK" -> userContactPK.get,
+                		        "event" 		-> userToJson(persistedContact),
+                		        "userId"		-> userId
+                		    )
+	                    ) // end - Ok result
+	                }
+	                case None => NotFound(Json.obj("status" -> "Event not found.")) // TODO: Change all Ok(status -> None) to NotFound(status -> Not found)
+	            }
+	        }
+	        case None => {
+	            println("Users.associateUserContact - NotFound userId: " + userId)
+	        	NotFound(Json.obj("status" -> "User not found.")) // TODO: Change all Ok(status -> None) to NotFound(status -> Not found)
+	        }
+	    }
+	}
+	
+	
 	
 	def itinerary(userId: Long) = Action { implicit request =>
 	    val itineraries = Itinerary.findByUserId(userId).map { itinerary =>
