@@ -5,6 +5,12 @@
 insert into role (role) values ('BIZ');
 insert into role (role) values ('NORM');
 
+insert into status(id, status) values (1, 'DEFAULT');
+insert into status(id, status) values (2, 'UNSUBSCRIBE');
+insert into status(id, status) values (3, 'INVITED');
+insert into status(id, status) values (4, 'NO_RESPONSE');
+insert into status(id, status) values (5, 'CONVERSION');
+
 insert into third_party (id, name) values (1, 'Google');
 insert into third_party (id, name) values (2, 'FourSquare');
 
@@ -143,4 +149,5 @@ delete from "role";
 delete from activity_type_category;
 delete from activity_type;
 delete from activity_category;
+delete from status;
 

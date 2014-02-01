@@ -23,7 +23,6 @@ GET		/api/v1/users/:id/profile					controllers.Users.profile(id: Long)
 GET		/api/v1/users/:id/contacts					controllers.Users.contacts(id: Long)
 GET		/api/v1/users/:id/itinerary					controllers.Users.itinerary(id: Long)
 POST	/api/v1/users/:userId/contact/:contactId	controllers.Users.associateUserContact(userId: Long, contactId: Long)
-GET		/api/v1/users/contacts/:userId				controllers.Users.contacts(userId: Long)		
 
 ### Events ###
 POST	/api/v1/events								controllers.Events.createEvent

@@ -221,13 +221,10 @@ CREATE TABLE photo (
 	PRIMARY KEY(id)
 );
 
-CREATE SEQUENCE photo_place_id_seq;
 CREATE TABLE photo_place (
-	id INTEGER NOT NULL DEFAULT nextval('photo_place_id_seq'),
 	photo_id INTEGER NOT NULL REFERENCES photo(id) ON DELETE CASCADE,
-	biz_id INTEGER NOT NULL REFERENCES place(id) ON DELETE CASCADE,
-	UNIQUE (photo_id, biz_id),
-	PRIMARY KEY(photo_id, biz_id)
+	place_id INTEGER NOT NULL REFERENCES place(id) ON DELETE CASCADE,
+	PRIMARY KEY(photo_id, place_id)
 );
 
 CREATE TABLE photo_location (
@@ -251,9 +248,17 @@ CREATE TABLE photo_event (
 CREATE SEQUENCE disp_id_seq;
 CREATE TABLE dispatch (
 	id INTEGER NOT NULL DEFAULT nextval('disp_id_seq'),
-	disp VARCHAR(256) NOT NULL,
+	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+	content VARCHAR(256) NOT NULL,
+	date_post TIMESTAMP,
 	index INTEGER NOT NULL,
 	PRIMARY KEY(id)
+);
+
+CREATE TABLE photo_dispatch (
+	photo_id INTEGER NOT NULL REFERENCES photo(id) ON DELETE CASCADE,
+	dispatch_id INTEGER NOT NULL REFERENCES dispatch(id) ON DELETE CASCADE,
+	PRIMARY KEY(photo_id, dispatch_id)
 );
 
 CREATE SEQUENCE int_id_seq;
@@ -318,6 +323,7 @@ DROP TABLE user_interest CASCADE;
 DROP TABLE place_category CASCADE;
 DROP TABLE user_event CASCADE;
 DROP TABLE itinerary_item CASCADE;
+DROP TABLE photo_dispatch CASCADE;
 
 DROP TABLE role CASCADE;
 DROP TABLE "group" CASCADE;
