@@ -42,6 +42,7 @@ CREATE TABLE "user" (
 CREATE TABLE user_contact (
 	user_id INTEGER NOT NULL REFERENCES "user"(id),
 	contact_id INTEGER NOT NULL REFERENCES "user"(id),
+	status INTEGER NOT NULL REFERENCES status(id),
 	CONSTRAINT use_cont_pkey PRIMARY KEY (user_id, contact_id)
 );
 
@@ -125,14 +126,15 @@ CREATE TABLE preferences (
 	PRIMARY KEY(id)
 );
 
-CREATE SEQUENCE itin_id_seq;
-CREATE TABLE itinerary (
-	id INTEGER NOT NULL DEFAULT nextval('itin_id_seq'),
+CREATE SEQUENCE trip_id_seq;
+CREATE TABLE trip (
+	id INTEGER NOT NULL DEFAULT nextval('trip_id_seq'),
 	name VARCHAR(80),
 	"desc" VARCHAR(256),
 	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
 	date_from TIMESTAMP,
 	date_to TIMESTAMP,
+	status INTEGER,
 	PRIMARY KEY(id)
 );
 
@@ -158,10 +160,10 @@ CREATE TABLE tag (
 	PRIMARY KEY(id)
 );
 
-CREATE SEQUENCE itin_item_id_seq;
-CREATE TABLE itinerary_item (
-	id INTEGER NOT NULL DEFAULT nextval('itin_item_id_seq'),
-	itinerary_id INTEGER NOT NULL REFERENCES itinerary(id) ON DELETE CASCADE,
+CREATE SEQUENCE trip_item_id_seq;
+CREATE TABLE trip_item (
+	id INTEGER NOT NULL DEFAULT nextval('trip_item_id_seq'),
+	trip_id INTEGER NOT NULL REFERENCES trip(id) ON DELETE CASCADE,
 	loc_id INTEGER REFERENCES location(id) ON DELETE CASCADE,
 	place_id INTEGER REFERENCES place(id) ON DELETE CASCADE,
 	contact_id INTEGER REFERENCES "user"(id) ON DELETE CASCADE,
@@ -322,7 +324,7 @@ DROP TABLE user_loc CASCADE;
 DROP TABLE user_interest CASCADE;
 DROP TABLE place_category CASCADE;
 DROP TABLE user_event CASCADE;
-DROP TABLE itinerary_item CASCADE;
+DROP TABLE trip_item CASCADE;
 DROP TABLE photo_dispatch CASCADE;
 
 DROP TABLE role CASCADE;
@@ -337,7 +339,7 @@ DROP TABLE placecategory CASCADE;
 DROP TABLE promo CASCADE;
 DROP TABLE "user" CASCADE;
 DROP TABLE location CASCADE;
-DROP TABLE itinerary CASCADE;
+DROP TABLE trip CASCADE;
 DROP TABLE tag CASCADE;
 DROP TABLE activity_type CASCADE;
 DROP TABLE status CASCADE;
@@ -360,8 +362,8 @@ DROP SEQUENCE role_id_seq CASCADE;
 DROP SEQUENCE user_id_seq CASCADE;
 DROP SEQUENCE user_event_id_seq CASCADE;
 DROP SEQUENCE role_id_seq CASCADE;
-DROP SEQUENCE itin_item_id_seq CASCADE;
-DROP SEQUENCE itin_id_seq CASCADE;
+DROP SEQUENCE trip_item_id_seq CASCADE;
+DROP SEQUENCE trip_id_seq CASCADE;
 DROP SEQUENCE user_cont_id_seq CASCADE;
 DROP SEQUENCE tag_id_seq CASCADE;
 DROP SEQUENCE user_group_id_seq CASCADE;

@@ -4,12 +4,13 @@
 
 insert into role (role) values ('BIZ');
 insert into role (role) values ('NORM');
+insert into role (role) values ('INVITEE');
 
 insert into status(id, status) values (1, 'DEFAULT');
-insert into status(id, status) values (2, 'UNSUBSCRIBE');
+insert into status(id, status) values (2, 'NO_CONTACT');
 insert into status(id, status) values (3, 'INVITED');
-insert into status(id, status) values (4, 'NO_RESPONSE');
-insert into status(id, status) values (5, 'CONVERSION');
+insert into status(id, status) values (4, 'VISITOR');
+insert into status(id, status) values (6, 'CONVERSION');
 
 insert into third_party (id, name) values (1, 'Google');
 insert into third_party (id, name) values (2, 'FourSquare');
