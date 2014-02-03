@@ -8,8 +8,7 @@ import anorm.SqlParser._
 
 case class ActivityType (
 	id:			Pk[Long],
-	activity:	String,
-	category:	String
+	activity:	String
 )
 
 object ActivityType {
@@ -22,28 +21,21 @@ object ActivityType {
 	val simple = {
 	    println("ActivityType.simple - TOP")
 		get[Pk[Long]]("activity_type.id") ~
-		get[String]("activity_type.type") ~
-		get[String]("activity_category.category") map {
-		    case id ~ activity ~ category =>
-		        ActivityType(id, activity, category)
+		get[String]("activity_type.type") map {
+		    case id ~ activity =>
+		        ActivityType(id, activity)
 		}
 	}
 	
 	/**
-	 * Retrieve all events.
+	 * Retrieve all ActivityTypes.
 	 */
 	def all: List[ActivityType] = {
 	    println("ActivityType.all - TOP")
 	    val actypes = DB.withConnection { implicit connection =>
 	      	SQL(
 	      	    """
-	      	    SELECT activity_type.id, activity_type.type, activity_category.category FROM
-		        activity_type LEFT JOIN
-		        (
-		        activity_type_category JOIN activity_category
-		             ON activity_type_category.cat_id = activity_category.id
-		        )
-		        ON activity_type.id = activity_type_category.type_id;
+	      	    SELECT * from activity_type;
       			"""
 	      	).as(ActivityType.simple *)
 	    }

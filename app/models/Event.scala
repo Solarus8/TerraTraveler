@@ -9,17 +9,17 @@ import anorm._
 import anorm.SqlParser._
 
 case class Event (
-    id:				Pk[Long] = NotAssigned,
-    from:			Date,
-    to:				Option[Date],
-    title:			Option[String],
-    activityType:	Int,
-    placeId:		Option[Long],
-    description:	String,
-    minSize:		Int,
-    maxSize:		Int,
-    rsvpTotal:		Option[Int],
-    waitListTotal:	Option[Int]   
+    id:					Pk[Long] = NotAssigned,
+    from:				Date,
+    to:					Option[Date],
+    title:				Option[String],
+    activityType:		Int,
+    placeId:			Option[Long],
+    description:		String,
+    minSize:			Int,
+    maxSize:			Int,
+    rsvpTotal:			Option[Int],
+    waitListTotal:		Option[Int]   
 )
 
 object Event {
@@ -246,6 +246,28 @@ object Event {
 	        case Some(pk) => new Id[Long](pk) // The Primary Key
 	        case None     => throw new Exception("SQL Error - Did not insert user_event.")
     	}
+	}
+	
+	def associateEventCategory(eventId: Long, activityCategoryIds: List[Int]): List[Pk[Long]] = {
+	    println("Event.associateEventCategory - TOP - eventId: " + eventId + " | cats.length: " + activityCategoryIds.length)
+	    val pkList = activityCategoryIds.map(
+	        catId => DB.withConnection { implicit connection =>
+	            SQL(
+	      		"""
+      			insert into event_assoc_category("event_id", "activity_cat_id")
+                values ({eventId}, {catId})
+                """
+	            ).on(
+            		'eventId	-> eventId,
+            		'catId		-> catId
+                ).executeInsert()
+	        } match {
+		        case Some(pk) => new Id[Long](pk) // The Primary Key
+		        case None     => throw new Exception("SQL Error - Did not insert event_assoc_category.")
+	    	}
+	    )
+	    println("Event.associateEventCategory - BOTTOM - pkList: " + pkList)
+	    pkList
 	}
 	
 	def attendies(eventId: Long): List[User] = {

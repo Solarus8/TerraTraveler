@@ -2,6 +2,12 @@
 
 # --- !Ups
 
+CREATE TABLE status (
+	id INTEGER NOT NULL,
+	status VARCHAR(16) NOT NULL,
+	PRIMARY KEY(id)
+);
+
 CREATE SEQUENCE role_id_seq;
 CREATE TABLE role (
     id integer NOT NULL DEFAULT nextval('role_id_seq'),
@@ -96,12 +102,6 @@ CREATE TABLE activity_type (
 	PRIMARY KEY(id)
 );
 
-CREATE TABLE activity_type_category (
-	type_id INTEGER NOT NULL REFERENCES activity_type(id) ON DELETE CASCADE,
-	cat_id INTEGER NOT NULL REFERENCES activity_category(id) ON DELETE CASCADE,
-	PRIMARY KEY(type_id, cat_id)
-);
-
 CREATE SEQUENCE event_id_seq;
 CREATE TABLE event (
 	id INTEGER NOT NULL DEFAULT nextval('event_id_seq'),
@@ -116,6 +116,12 @@ CREATE TABLE event (
 	rsvp_tot INTEGER,
 	wait_list_tot INTEGER,
 	PRIMARY KEY(id)
+);
+
+CREATE TABLE event_assoc_category (
+	event_id INTEGER NOT NULL REFERENCES event(id) ON DELETE CASCADE,
+	activity_cat_id INTEGER NOT NULL REFERENCES activity_category(id) ON DELETE CASCADE,
+	PRIMARY KEY(event_id, activity_cat_id)
 );
 
 CREATE TABLE preferences (
@@ -304,12 +310,6 @@ CREATE TABLE promo (
 	PRIMARY KEY(id)
 );
 
-CREATE TABLE status (
-	id INTEGER NOT NULL,
-	status VARCHAR(16) NOT NULL,
-	PRIMARY KEY(id)
-);
-
 # --- !Downs
 
 DROP TABLE user_contact CASCADE;
@@ -344,7 +344,7 @@ DROP TABLE tag CASCADE;
 DROP TABLE activity_type CASCADE;
 DROP TABLE status CASCADE;
 DROP TABLE activity_category CASCADE;
-DROP TABLE activity_type_category CASCADE;
+DROP TABLE activity_assoc_category CASCADE;
 DROP TABLE third_party CASCADE;
 DROP TABLE place_thirdparty CASCADE;
 
