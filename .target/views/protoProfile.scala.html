@@ -1,0 +1,37 @@
+@(user: User, profile: Option[UserProfile])
+
+@main("Terra Traveler - Data Model Proto"){
+	
+	<h1>User Profile</h1>
+	
+	<h3>@user.userName</h3>
+	
+	<dl>
+		<dt>Email</dt>
+		<dd>@user.email</dd>
+		
+		<dt>First Name</dt>
+		<dd>@profile?=firstName?</dd>
+		
+		<dt>Last Name</dt>
+		<dd>$(@profile?.lastName?)</dd>
+		
+		<dt>Gender</dt>
+		<dd>@profile?.gender?</dd>
+		
+		<dt>Birthdate</dt>
+		<dd>@profile?.birthdate?</dd>
+		
+		<dt>Nationality</dt>
+		<dd>@profile?.nationality?</dd>
+		
+		<dt>Portrait URL</dt>
+		<dd>@profile?.portraitUrl?</dd>
+		
+		<dt>Bio</dt>
+		<dd>@profile?.bio?</dd>
+		
+		<dt>Story</dt>
+		<dd>@profile?.story?</dd>
+	</dl>
+}
