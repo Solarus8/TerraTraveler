@@ -4,6 +4,13 @@
 
 insert into role (role) values ('BIZ');
 insert into role (role) values ('NORM');
+insert into role (role) values ('INVITEE');
+
+insert into status(id, status) values (1, 'DEFAULT');
+insert into status(id, status) values (2, 'NO_CONTACT');
+insert into status(id, status) values (3, 'INVITED');
+insert into status(id, status) values (4, 'VISITOR');
+insert into status(id, status) values (6, 'CONVERSION');
 
 insert into third_party (id, name) values (1, 'Google');
 insert into third_party (id, name) values (2, 'FourSquare');
@@ -69,78 +76,10 @@ insert into activity_type (id, type) values (39, 'Live music');
 insert into activity_type (id, type) values (40, 'Demonstration');
 insert into activity_type (id, type) values (41, 'Rally');
 
-insert into activity_type_category (type_id, cat_id) values (1, 1);
-insert into activity_type_category (type_id, cat_id) values (1, 2);
-insert into activity_type_category (type_id, cat_id) values (2, 1);
-insert into activity_type_category (type_id, cat_id) values (3, 2);
-insert into activity_type_category (type_id, cat_id) values (4, 3);
-insert into activity_type_category (type_id, cat_id) values (5, 14);
-insert into activity_type_category (type_id, cat_id) values (6, 2);
-insert into activity_type_category (type_id, cat_id) values (6, 5);
-insert into activity_type_category (type_id, cat_id) values (7, 2);
-insert into activity_type_category (type_id, cat_id) values (7, 5);
-insert into activity_type_category (type_id, cat_id) values (8, 2);
-insert into activity_type_category (type_id, cat_id) values (8, 6);
-insert into activity_type_category (type_id, cat_id) values (9, 2);
-insert into activity_type_category (type_id, cat_id) values (9, 15);
-insert into activity_type_category (type_id, cat_id) values (9, 16);
-insert into activity_type_category (type_id, cat_id) values (10, 3);
-insert into activity_type_category (type_id, cat_id) values (10, 4);
-insert into activity_type_category (type_id, cat_id) values (10, 14);
-insert into activity_type_category (type_id, cat_id) values (10, 16);
-insert into activity_type_category (type_id, cat_id) values (11, 4);
-insert into activity_type_category (type_id, cat_id) values (12, 4);
-insert into activity_type_category (type_id, cat_id) values (13, 4);
-insert into activity_type_category (type_id, cat_id) values (14, 3);
-insert into activity_type_category (type_id, cat_id) values (14, 8);
-insert into activity_type_category (type_id, cat_id) values (14, 13);
-insert into activity_type_category (type_id, cat_id) values (14, 15);
-insert into activity_type_category (type_id, cat_id) values (15, 7);
-insert into activity_type_category (type_id, cat_id) values (16, 7);
-insert into activity_type_category (type_id, cat_id) values (17, 15);
-insert into activity_type_category (type_id, cat_id) values (17, 16);
-insert into activity_type_category (type_id, cat_id) values (18, 18);
-insert into activity_type_category (type_id, cat_id) values (19, 1);
-insert into activity_type_category (type_id, cat_id) values (19, 2);
-insert into activity_type_category (type_id, cat_id) values (20, 3);
-insert into activity_type_category (type_id, cat_id) values (21, 6);
-insert into activity_type_category (type_id, cat_id) values (21, 8);
-insert into activity_type_category (type_id, cat_id) values (22, 8);
-insert into activity_type_category (type_id, cat_id) values (22, 13);
-insert into activity_type_category (type_id, cat_id) values (22, 15);
-insert into activity_type_category (type_id, cat_id) values (23, 8);
-insert into activity_type_category (type_id, cat_id) values (23, 9);
-insert into activity_type_category (type_id, cat_id) values (23, 19);
-insert into activity_type_category (type_id, cat_id) values (24, 10);
-insert into activity_type_category (type_id, cat_id) values (24, 16);
-insert into activity_type_category (type_id, cat_id) values (26, 2);
-insert into activity_type_category (type_id, cat_id) values (27, 2);
-insert into activity_type_category (type_id, cat_id) values (27, 6);
-insert into activity_type_category (type_id, cat_id) values (28, 2);
-insert into activity_type_category (type_id, cat_id) values (28, 6);
-insert into activity_type_category (type_id, cat_id) values (29, 2);
-insert into activity_type_category (type_id, cat_id) values (30, 8);
-insert into activity_type_category (type_id, cat_id) values (30, 14);
-insert into activity_type_category (type_id, cat_id) values (31, 9);
-insert into activity_type_category (type_id, cat_id) values (32, 3);
-insert into activity_type_category (type_id, cat_id) values (32, 8);
-insert into activity_type_category (type_id, cat_id) values (33, 11);
-insert into activity_type_category (type_id, cat_id) values (34, 15);
-insert into activity_type_category (type_id, cat_id) values (34, 20);
-insert into activity_type_category (type_id, cat_id) values (35, 14);
-insert into activity_type_category (type_id, cat_id) values (35, 18);
-insert into activity_type_category (type_id, cat_id) values (37, 2);
-insert into activity_type_category (type_id, cat_id) values (37, 6);
-insert into activity_type_category (type_id, cat_id) values (37, 14);
-insert into activity_type_category (type_id, cat_id) values (39, 3);
-insert into activity_type_category (type_id, cat_id) values (39, 13);
-insert into activity_type_category (type_id, cat_id) values (40, 17);
-insert into activity_type_category (type_id, cat_id) values (41, 17);
-
 # --- !Downs
 
 delete from "role";
-delete from activity_type_category;
 delete from activity_type;
 delete from activity_category;
+delete from status;
 

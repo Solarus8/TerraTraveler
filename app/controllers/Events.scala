@@ -27,6 +27,8 @@ object Events extends Controller {
 	        		println("Events.createEvent - title: " + title)
 	        val activityType		= (json \ "activityType").validate[Int]
 	        		println("Events.createEvent - activityType: " + activityType)
+	        val activityCategories	= (json \ "activityCategories").validate[List[Int]]
+	        		println("Events.createEvent - activityType: " + activityType)
 	        val placeId    	= (json \ "placeId").validate[Option[Long]]
 	        		println("Events.createEvent - placeId: " + placeId)
 	        val desc 		= (json \ "desc").validate[String]
@@ -45,6 +47,9 @@ object Events extends Controller {
 	                println("Events.createEvent - newEvent: " + newEvent)
 	        val eventPK = Event.create(newEvent)
 	        	println("Events.createEvent - eventPK: " + eventPK)
+	        
+	        val assocEventCatPKs = Event.associateEventCategory(eventPK.get, activityCategories.get)
+	        
 	        val persistedEvent = Event.byId(eventPK.get)
 	        	println("Events.createEvent - persistedEvent: " + persistedEvent)
 	        
@@ -130,37 +135,51 @@ object Events extends Controller {
 		 } // end - latlon
 		 
 		 println("Events.eventToJson - latlon: " + latlon)
+		 
+		 val actCats = ActivityCategory.findAssocActivityCatByEventId(event.id.get)
 		
 		 Json.obj(
-			 "id"			-> event.id.get,
-			 "from"			-> event.from,
-			 "to"			-> event.to,
-			 "title"		-> event.title,
-			 "activityType"	-> event.activityType,
-			 "placeId"		-> event.placeId,
-			 "lat"			-> latlon._1,
-			 "lon"			-> latlon._2,
-			 "description"	-> event.description,
-			 "minSize"		-> event.minSize,
-			 "maxSize"		-> event.maxSize,
-			 "rsvpTotal"	-> event.rsvpTotal,
-			 "waitListTotal"-> event.waitListTotal
+			 "id"					-> event.id.get,
+			 "from"					-> event.from,
+			 "to"					-> event.to,
+			 "title"				-> event.title,
+			 "activityType"			-> event.activityType,
+			 "activityCategories"	-> Json.arr(actCats.map{ cat => cat.id.get }),
+			 "placeId"				-> event.placeId,
+			 "lat"					-> latlon._1,
+			 "lon"					-> latlon._2,
+			 "description"			-> event.description,
+			 "minSize"				-> event.minSize,
+			 "maxSize"				-> event.maxSize,
+			 "rsvpTotal"			-> event.rsvpTotal,
+			 "waitListTotal"		-> event.waitListTotal
 		 ) // end - Json.obj for each event
 	} // end - eventToJson
 	
-	// TODO: Factor out common code
 	// TODO: Remove printlns
-	def byLatLonRadius(lat: Double, lon: Double, radius: Int) = Action {
-	    println("Events.byRadiusLatLon - TOP - lat: " + lat + " | lon: " + lon + " | radius: " + radius)
-	    val events = Event.byLatLonRadius(lat, lon, radius)
-	    val eventsJson = Json.obj(
-             "events" -> {
-            	 events.map(event => eventToJson(event))
-             }
-        )
-        println("Events.byRadiusLatLon - BOTTOM - eventsJson: " + eventsJson)
-        Json.toJson(eventsJson)
-	    Ok(eventsJson)
+	/**
+	 * This function takes 5 parameters: 3 in the URL and 2 in the JSON data
+	 * TODO: This function needs to be OPTIMIZED! Scalability issues...
+	 */
+	def byLatLonRadiusTypeCat(lat: Double, lon: Double, radius: Int) = Action { implicit request =>
+	    println("Events.byLatLonRadiusTypeCat - TOP - lat: " + lat + " | lon: " + lon + " | radius: " + radius)
+	    
+	    request.body.asJson.map { json =>
+	        val activityType = (json \ "activityType").validate[Int]
+	        val activityCategory = (json \ "activityCategory").validate[Int]
+	    
+		    val events = Event.byLatLonRadiusTypeCat(lat, lon, radius, activityType.get, activityCategory.get)
+		    val eventsJson = Json.obj(
+	             "events" -> {
+	            	 events.map(event => eventToJson(event))
+	             }
+	        )
+	        println("Events.byRadiusLatLon - BOTTOM - eventsJson: " + eventsJson)
+	        Json.toJson(eventsJson)
+		    Ok(eventsJson)
+	    }.getOrElse {
+			BadRequest("Expecting Json data")
+		}
 	} // end - byRadiusLatLon
 	
 	// TODO: This should go away. Will not scale...
@@ -240,29 +259,30 @@ object Events extends Controller {
 		Ok(usersJson)
 	}
 	
-	def allActivityTypes() = Action {
-	    println("Events.allActivityTypes - TOP")
+	def allActivityTypesAndCats() = Action {
+	    println("Events.allActivityTypesAndCats - TOP")
 	    val activityTypes = ActivityType.all
-	    val categories = activityTypes groupBy (_.category)
+	    val activityCategories = ActivityCategory.allActivityCategories
 	    
-	    val activityTypesJson = Json.obj( "activityCategories" -> {
-		    categories.map{
-		        case (category, activities) => {
-		        	category -> {
-			            activities map { actype => {
-			                Json.obj(
-				                "id"		-> actype.id.get,
-				                "activity"	-> actype.activity
-				            )
-			            }}
-		        	}
-		        } // end - case (category, activities)
-		    } // end - categories.map
-	    }) // end - activityTypesJson
+	    val activityTypesAndCatsJson = Json.obj( 
+	        "activityTypes"   -> activityTypes.map{ 
+	            actype 		  => Json.obj(
+            		"id"	  -> actype.id.get,
+            		"activity"-> actype.activity
+        		)
+		    }, // end - activityTypes.map
 	    
-	    Json.toJson(activityTypesJson)
-	    //println("Events.allActivityTypes - activityTypesJson: " + activityTypesJson)
-		Ok(activityTypesJson)
+	        "activityCategories" -> activityCategories.map{ 
+	            actcat => Json.obj(
+            		"id" -> actcat.id.get,
+            		"category" -> actcat.category
+        		)
+		    } // end - activityCategories.map
+	    ) // end - activityTypesAndCatsJson
+	    
+	    Json.toJson(activityTypesAndCatsJson)
+	    //println("Events.allActivityTypesAndCats - activityTypesJson: " + activityTypesJson)
+		Ok(activityTypesAndCatsJson)
 	}
 }
 

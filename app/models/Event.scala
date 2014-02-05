@@ -9,17 +9,17 @@ import anorm._
 import anorm.SqlParser._
 
 case class Event (
-    id:				Pk[Long] = NotAssigned,
-    from:			Date,
-    to:				Option[Date],
-    title:			Option[String],
-    activityType:	Int,
-    placeId:		Option[Long],
-    description:	String,
-    minSize:		Int,
-    maxSize:		Int,
-    rsvpTotal:		Option[Int],
-    waitListTotal:	Option[Int]   
+    id:					Pk[Long] = NotAssigned,
+    from:				Date,
+    to:					Option[Date],
+    title:				Option[String],
+    activityType:		Int,
+    placeId:			Option[Long],
+    description:		String,
+    minSize:			Int,
+    maxSize:			Int,
+    rsvpTotal:			Option[Int],
+    waitListTotal:		Option[Int]   
 )
 
 object Event {
@@ -90,7 +90,9 @@ object Event {
 	/**
 	 * Create an Event with atomic Event fields.
 	 */
-	def create(from: Date, to: Date, title: String, activityType: Int, placeId: Long, desc: String, minSize: Int, maxSize: Int, rsvpTot: Int, waitListTot: Int): Pk[Long] = {
+	def create(from: Date, to: Date, title: String, activityType: Int, placeId: Long, 
+	    desc: String, minSize: Int, maxSize: Int, rsvpTot: Int, waitListTot: Int): Pk[Long] = {
+	    
 	    DB.withConnection { implicit connection =>
 	      	SQL(
 	      		"""
@@ -122,8 +124,10 @@ object Event {
 		DB.withConnection { implicit connection =>
 	      	val sql = SQL(
 	      		"""
-      			insert into event ("from", "to", title, activity_type_id, place_id, "desc", min_size, max_size, rsvp_tot, wait_list_tot) values (
-      				{from}, {to}, {title}, {activityType}, {placeId}, {desc}, {minSize}, {maxSize}, {rsvpTot}, {waitListTot}
+      			insert into event ("from", "to", title, activity_type_id, place_id, 
+	      	        "desc", min_size, max_size, rsvp_tot, wait_list_tot) values (
+      				{from}, {to}, {title}, {activityType}, {placeId}, 
+	      	        {desc}, {minSize}, {maxSize}, {rsvpTot}, {waitListTot}
       			)
 	      		"""
       		).on(
@@ -168,7 +172,7 @@ object Event {
       	        			{radius}
 						)
 					)
-				)   
+				)  
 	      	    """
 	      	).on(
       			"locId"  -> locId,
@@ -178,20 +182,22 @@ object Event {
 	    }
 	}
 	
-	def byLatLonRadius(lat: Double, lon: Double, radius: Int) : List[Event] = {
-	    println("Event.byRadiusLatLon - TOP - lat: " + lat + " | lon: " + lon + " | radius: " + radius)
+	def byLatLonRadiusTypeCat(lat: Double, lon: Double, radius: Int, 
+	    activityType: Int, activityCategory: Int): List[Event] = {
 	    
+	    println("Event.byLatLonRadiusTypeCat - TOP - lat: " + lat + " | lon: " + lon + " | radius: " + radius)
+	    	    
 	    DB.withConnection { implicit connection =>
 	      	val sql = SQL(
 	      		"""
-	      	    SELECT * from event
-				where event.place_id in
+	      	    SELECT * FROM event
+				WHERE event.place_id in
 				(
-					SELECT id from place
-					where place.loc_id in
+					SELECT id FROM place
+					WHERE place.loc_id in
 					(
-						SELECT id from location
-						where ST_DWithin(
+						SELECT id FROM location
+						WHERE ST_DWithin(
 			    			geoloc,
 			    			(
 			        			ST_GeographyFromText('SRID=4326;POINT(""" + lon + """ """ + lat + """)')
@@ -199,12 +205,18 @@ object Event {
       	        			{radius}
 						)
 					)
-				)   
+				) 
+			    AND event.activity_type_id = {activityType}
+			    AND event.id IN (
+			        SELECT event_id FROM event_assoc_category WHERE activity_cat_id = {activityCategory}
+			    )
 	      	    """
 	      	).on(
-      			"radius" -> radius
+      			"radius" 			-> radius,
+      			"activityType" 		-> activityType,
+      			"activityCategory" 	-> activityCategory 
 	      	)
-	      	println("Event.byRadiusLatLon - sql: " + sql)
+	      	//println("Event.byRadiusLatLon - sql: " + sql)
 	      	val result = sql.as(Event.simple *)
 	      	println("Event.byRadiusLatLon - result: " + result)
 	      	result
@@ -246,6 +258,28 @@ object Event {
 	        case Some(pk) => new Id[Long](pk) // The Primary Key
 	        case None     => throw new Exception("SQL Error - Did not insert user_event.")
     	}
+	}
+	
+	def associateEventCategory(eventId: Long, activityCategoryIds: List[Int]): List[Pk[Long]] = {
+	    println("Event.associateEventCategory - TOP - eventId: " + eventId + " | cats.length: " + activityCategoryIds.length)
+	    val pkList = activityCategoryIds.map(
+	        catId => DB.withConnection { implicit connection =>
+	            SQL(
+	      		"""
+      			insert into event_assoc_category("event_id", "activity_cat_id")
+                values ({eventId}, {catId})
+                """
+	            ).on(
+            		'eventId	-> eventId,
+            		'catId		-> catId
+                ).executeInsert()
+	        } match {
+		        case Some(pk) => new Id[Long](pk) // The Primary Key
+		        case None     => throw new Exception("SQL Error - Did not insert event_assoc_category.")
+	    	}
+	    )
+	    println("Event.associateEventCategory - BOTTOM - pkList: " + pkList)
+	    pkList
 	}
 	
 	def attendies(eventId: Long): List[User] = {

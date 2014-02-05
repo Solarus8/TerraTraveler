@@ -23,7 +23,6 @@ GET		/api/v1/users/:id/profile					controllers.Users.profile(id: Long)
 GET		/api/v1/users/:id/contacts					controllers.Users.contacts(id: Long)
 GET		/api/v1/users/:id/itinerary					controllers.Users.itinerary(id: Long)
 POST	/api/v1/users/:userId/contact/:contactId	controllers.Users.associateUserContact(userId: Long, contactId: Long)
-GET		/api/v1/users/contacts/:userId				controllers.Users.contacts(userId: Long)		
 
 ### Events ###
 POST	/api/v1/events								controllers.Events.createEvent
@@ -34,8 +33,8 @@ GET		/api/v1/events/user/:id						controllers.Events.byUserId(id: Long)
 GET		/api/v1/events/:eventId/users				controllers.Events.usersByEventId(eventId: Long)
 POST	/api/v1/events/:eventId/user/:userId		controllers.Events.associateEventUser(eventId: Long, userId: Long)
 GET		/api/v1/events/location/:locId/:radius		controllers.Events.byLocationRadius(locId: Long, radius: Int)
-GET		/api/v1/events/location/:lat/:lon/:radius	controllers.Events.byLatLonRadius(lat: Double, lon: Double, radius: Int)
-GET		/api/v1/activity-types/all					controllers.Events.allActivityTypes
+POST	/api/v1/events/location/:lat/:lon/:radius	controllers.Events.byLatLonRadiusTypeCat(lat: Double, lon: Double, radius: Int)
+GET		/api/v1/activity-types-cats/all				controllers.Events.allActivityTypesAndCats
 
 ### Locations ###
 POST	/api/v1/locations/place						controllers.Locations.createPlace
