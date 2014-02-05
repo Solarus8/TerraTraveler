@@ -15,3 +15,7 @@ dist
 /.settings
 .class
 .cache
+.bin
+/bin
+.target
+/target

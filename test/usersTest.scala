@@ -19,31 +19,22 @@ import controllers._
 
 // =================
 //
-//  NOTE: tests run twice when functions are put in this file.
+//  NOTE: Users tests will be moved to this file
 //
 // ==================
 
-
-
-//object usersTest extends ApplicationSpec {   // Tests run twice
-object usersTest {  // Matcher errors
+class usersTests {
   
-    val serverLocation = "http://localhost:9998"
-      
-    
-/*  
-
-	def testGetUserById(id: Long): String = {
-	    println("Start - getUserById" + id)
-  	  
-  		var temp = Helpers.await(WS.url(serverLocation + "/api/v1/users/" + id.toString.trim()).get()).body
-  		temp must contain(""""id":""" + id.toString.trim() )  
-	    
-	    println("ID: " + temp)
-	    
-	    temp    
-  	}
-*/  
+  	def test1 {
+		println("Users - Made it to test1")
+	  
+	}
+	
+	def test2(test: String): String = {
+		println("Users - Test2 should return: " + test)
+			return test
+	}
+  
 
 }
 
