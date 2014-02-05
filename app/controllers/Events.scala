@@ -156,19 +156,30 @@ object Events extends Controller {
 		 ) // end - Json.obj for each event
 	} // end - eventToJson
 	
-	// TODO: Factor out common code
 	// TODO: Remove printlns
-	def byLatLonRadius(lat: Double, lon: Double, radius: Int) = Action {
-	    println("Events.byRadiusLatLon - TOP - lat: " + lat + " | lon: " + lon + " | radius: " + radius)
-	    val events = Event.byLatLonRadius(lat, lon, radius)
-	    val eventsJson = Json.obj(
-             "events" -> {
-            	 events.map(event => eventToJson(event))
-             }
-        )
-        println("Events.byRadiusLatLon - BOTTOM - eventsJson: " + eventsJson)
-        Json.toJson(eventsJson)
-	    Ok(eventsJson)
+	/**
+	 * This function takes 5 parameters: 3 in the URL and 2 in the JSON data
+	 * TODO: This function needs to be OPTIMIZED! Scalability issues...
+	 */
+	def byLatLonRadiusTypeCat(lat: Double, lon: Double, radius: Int) = Action { implicit request =>
+	    println("Events.byLatLonRadiusTypeCat - TOP - lat: " + lat + " | lon: " + lon + " | radius: " + radius)
+	    
+	    request.body.asJson.map { json =>
+	        val activityType = (json \ "activityType").validate[Int]
+	        val activityCategory = (json \ "activityCategory").validate[Int]
+	    
+		    val events = Event.byLatLonRadiusTypeCat(lat, lon, radius, activityType.get, activityCategory.get)
+		    val eventsJson = Json.obj(
+	             "events" -> {
+	            	 events.map(event => eventToJson(event))
+	             }
+	        )
+	        println("Events.byRadiusLatLon - BOTTOM - eventsJson: " + eventsJson)
+	        Json.toJson(eventsJson)
+		    Ok(eventsJson)
+	    }.getOrElse {
+			BadRequest("Expecting Json data")
+		}
 	} // end - byRadiusLatLon
 	
 	// TODO: This should go away. Will not scale...
