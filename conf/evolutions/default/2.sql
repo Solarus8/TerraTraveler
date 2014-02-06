@@ -12,6 +12,9 @@ insert into status(id, status) values (2, 'NO_CONTACT');
 insert into status(id, status) values (3, 'INVITED');
 insert into status(id, status) values (4, 'VISITOR');
 insert into status(id, status) values (6, 'CONVERSION');
+insert into status(id, status) values (7, 'PLANNING');
+insert into status(id, status) values (7, 'ONGOING');
+insert into status(id, status) values (7, 'ENDED');
 
 insert into third_party (id, name) values (1, 'Google');
 insert into third_party (id, name) values (2, 'FourSquare');

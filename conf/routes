@@ -47,6 +47,11 @@ GET		/api/v1/locations/:locId					controllers.Locations.byId(locId: Long)
 GET		/api/v1/locations/place/:placeId			controllers.Locations.placeById(placeId: Long)
 GET		/api/v1/locations/place/:lat/:lon/:radius	controllers.Locations.placesByLatLonRadius(lat: Double, lon: Double, radius: Int)
 
+### Trips ###
+POST	/api/v1/trips								controllers.Trips.createTrip
+GET		/api/v1/trips/:id							controllers.Trips.byId(id: Long)
 
+### Journals
+POST	/api/v1/journals							controllers.Journals.createJournal
 
 
