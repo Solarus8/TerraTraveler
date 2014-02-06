@@ -170,16 +170,51 @@ CREATE SEQUENCE trip_item_id_seq;
 CREATE TABLE trip_item (
 	id INTEGER NOT NULL DEFAULT nextval('trip_item_id_seq'),
 	trip_id INTEGER NOT NULL REFERENCES trip(id) ON DELETE CASCADE,
-	loc_id INTEGER REFERENCES location(id) ON DELETE CASCADE,
-	place_id INTEGER REFERENCES place(id) ON DELETE CASCADE,
-	contact_id INTEGER REFERENCES "user"(id) ON DELETE CASCADE,
-	group_id INTEGER REFERENCES "group"(id) ON DELETE CASCADE,
-	event_id INTEGER REFERENCES event(id) ON DELETE CASCADE,
-	tag_id INTEGER REFERENCES tag(id) ON DELETE CASCADE,
 	date_from TIMESTAMP,
 	date_to TIMESTAMP,
 	index INTEGER,
 	PRIMARY KEY(id)
+);
+
+CREATE TABLE trip_location (
+	trip_item_id INTEGER NOT NULL REFERENCES trip_item(id) ON DELETE CASCADE,
+	loc_id INTEGER REFERENCES location(id) ON DELETE CASCADE,
+	index INTEGER,
+	PRIMARY KEY(trip_item_id, loc_id)
+);
+
+CREATE TABLE trip_place (
+	trip_item_id INTEGER NOT NULL REFERENCES trip_item(id) ON DELETE CASCADE,
+	place_id INTEGER REFERENCES place(id) ON DELETE CASCADE,
+	index INTEGER,
+	PRIMARY KEY(trip_item_id, place_id)
+);
+
+CREATE TABLE trip_contact (
+	trip_item_id INTEGER NOT NULL REFERENCES trip_item(id) ON DELETE CASCADE,
+	contact_id INTEGER REFERENCES "user"(id) ON DELETE CASCADE,
+	index INTEGER,
+	PRIMARY KEY(trip_item_id, contact_id)
+);
+
+CREATE TABLE trip_group (
+	trip_item_id INTEGER NOT NULL REFERENCES trip_item(id) ON DELETE CASCADE,
+	group_id INTEGER REFERENCES "group"(id) ON DELETE CASCADE,
+	index INTEGER,	
+	PRIMARY KEY(trip_item_id, group_id)
+);
+
+CREATE TABLE trip_event (
+	trip_item_id INTEGER NOT NULL REFERENCES trip_item(id) ON DELETE CASCADE,
+	event_id INTEGER REFERENCES event(id) ON DELETE CASCADE,
+	index INTEGER,
+	PRIMARY KEY(trip_item_id, event_id)
+);
+
+CREATE TABLE trip_tag (
+	trip_item_id INTEGER NOT NULL REFERENCES trip_item(id) ON DELETE CASCADE,
+	tag_id INTEGER REFERENCES tag(id) ON DELETE CASCADE,
+	PRIMARY KEY(trip_item_id, tag_id)
 );
 
 CREATE TABLE user_loc (
@@ -196,6 +231,7 @@ CREATE TABLE user_group (
 	group_id INTEGER NOT NULL REFERENCES "group"(id) ON DELETE CASCADE,
 	UNIQUE (user_id, group_id),
 	status INTEGER,
+	index INTEGER,
 	PRIMARY KEY(id)
 );
 
@@ -206,6 +242,7 @@ CREATE TABLE user_event (
 	event_id INTEGER NOT NULL REFERENCES event(id) ON DELETE CASCADE,
 	UNIQUE (user_id, event_id),
 	status INTEGER,
+	index INTEGER,
 	PRIMARY KEY(id)
 );
 
@@ -215,7 +252,61 @@ CREATE TABLE group_event (
 	group_id INTEGER NOT NULL REFERENCES "group"(id) ON DELETE CASCADE,
 	event_id INTEGER NOT NULL REFERENCES event(id) ON DELETE CASCADE,
 	status INTEGER,
+	index INTEGER,
 	PRIMARY KEY(id)
+);
+
+CREATE SEQUENCE journal_id_seq;
+CREATE TABLE journal (
+	id INTEGER NOT NULL DEFAULT nextval('journal_id_seq'),
+	trip_id INTEGER NOT NULL REFERENCES trip(id) ON DELETE CASCADE,
+	title VARCHAR(80),
+	"desc" VARCHAR(512),
+	index INTEGER,
+	PRIMARY KEY(id)
+);
+
+CREATE SEQUENCE journal_entry_id_seq;
+CREATE TABLE journal_entry (
+	id INTEGER NOT NULL DEFAULT nextval('journal_entry_id_seq'),
+	journal_id INTEGER NOT NULL REFERENCES journal(id) ON DELETE CASCADE,
+	title VARCHAR(128),
+	entry_date TIMESTAMP,
+	index INTEGER,
+	PRIMARY KEY(id)
+);
+
+CREATE SEQUENCE journ_assoc_trip_item_id_seq;
+CREATE TABLE journal_entry_assoc_trip_item (
+	id INTEGER NOT NULL DEFAULT nextval('journ_assoc_trip_item_id_seq'),
+	journal_entry_id INTEGER NOT NULL REFERENCES journal_entry(id) ON DELETE CASCADE,
+	trip_item_id INTEGER NOT NULL REFERENCES trip_item(id) ON DELETE CASCADE,
+	index INTEGER,
+	PRIMARY KEY(id)
+);
+
+CREATE SEQUENCE disp_id_seq;
+CREATE TABLE dispatch (
+	id INTEGER NOT NULL DEFAULT nextval('disp_id_seq'),
+	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+	content VARCHAR(256) NOT NULL,
+	date_post TIMESTAMP,
+	index INTEGER NOT NULL,
+	PRIMARY KEY(id)
+);
+
+CREATE TABLE dispatch_assoc_journal_entry (
+	dispatch_id INTEGER NOT NULL REFERENCES dispatch(id) ON DELETE CASCADE,
+	journ_ent_id INTEGER NOT NULL REFERENCES journal_entry(id) ON DELETE CASCADE,
+	index INTEGER,
+	PRIMARY KEY(dispatch_id, journ_ent_id)
+);
+
+CREATE TABLE dispatch_assoc_trip_item (
+	dispatch_id INTEGER NOT NULL REFERENCES dispatch(id) ON DELETE CASCADE,
+	trip_item_id INTEGER NOT NULL REFERENCES trip_item(id) ON DELETE CASCADE,
+	index INTEGER,
+	PRIMARY KEY(dispatch_id, trip_item_id)
 );
 
 CREATE SEQUENCE photo_id_seq;
@@ -227,6 +318,20 @@ CREATE TABLE photo (
 	"desc" VARCHAR(80),
 	index INTEGER,
 	PRIMARY KEY(id)
+);
+
+CREATE TABLE photo_assoc_journal_entry (
+	photo_id INTEGER NOT NULL REFERENCES photo(id) ON DELETE CASCADE,
+	journ_ent_id INTEGER NOT NULL REFERENCES journal_entry(id) ON DELETE CASCADE,
+	index INTEGER,
+	PRIMARY KEY(photo_id, journ_ent_id)
+);
+
+CREATE TABLE photo_assoc_trip_item (
+	photo_id INTEGER NOT NULL REFERENCES photo(id) ON DELETE CASCADE,
+	trip_item_id INTEGER NOT NULL REFERENCES trip_item(id) ON DELETE CASCADE,
+	index INTEGER,
+	PRIMARY KEY(photo_id, trip_item_id)
 );
 
 CREATE TABLE photo_place (
@@ -251,16 +356,6 @@ CREATE TABLE photo_event (
 	photo_id INTEGER NOT NULL REFERENCES photo(id) ON DELETE CASCADE,
 	event_id INTEGER NOT NULL REFERENCES event(id) ON DELETE CASCADE,
 	PRIMARY KEY(photo_id, event_id)
-);
-
-CREATE SEQUENCE disp_id_seq;
-CREATE TABLE dispatch (
-	id INTEGER NOT NULL DEFAULT nextval('disp_id_seq'),
-	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
-	content VARCHAR(256) NOT NULL,
-	date_post TIMESTAMP,
-	index INTEGER NOT NULL,
-	PRIMARY KEY(id)
 );
 
 CREATE TABLE photo_dispatch (
@@ -324,8 +419,14 @@ DROP TABLE user_loc CASCADE;
 DROP TABLE user_interest CASCADE;
 DROP TABLE place_category CASCADE;
 DROP TABLE user_event CASCADE;
-DROP TABLE trip_item CASCADE;
 DROP TABLE photo_dispatch CASCADE;
+DROP TABLE trip_location CASCADE;
+DROP TABLE trip_place CASCADE;
+DROP TABLE trip_contact CASCADE;
+DROP TABLE trip_group CASCADE;
+DROP TABLE trip_event CASCADE;
+DROP TABLE trip_tag CASCADE;
+DROP TABLE event_assoc_category CASCADE;
 
 DROP TABLE role CASCADE;
 DROP TABLE "group" CASCADE;
@@ -347,6 +448,15 @@ DROP TABLE activity_category CASCADE;
 DROP TABLE activity_assoc_category CASCADE;
 DROP TABLE third_party CASCADE;
 DROP TABLE place_thirdparty CASCADE;
+DROP TABLE trip_item CASCADE;
+DROP TABLE journal CASCADE;
+DROP TABLE journal_entry CASCADE;
+DROP TABLE journal_entry_assoc_trip_item CASCADE;
+DROP TABLE dispatch_assoc_journal_entry CASCADE;
+DROP TABLE dispatch_assoc_trip_item CASCADE;
+DROP TABLE photo_assoc_journal_entry CASCADE;
+DROP TABLE photo_assoc_trip_item CASCADE;
+
 
 DROP SEQUENCE user_prof_id_seq CASCADE;
 DROP SEQUENCE group_id_seq CASCADE;
@@ -362,7 +472,6 @@ DROP SEQUENCE role_id_seq CASCADE;
 DROP SEQUENCE user_id_seq CASCADE;
 DROP SEQUENCE user_event_id_seq CASCADE;
 DROP SEQUENCE role_id_seq CASCADE;
-DROP SEQUENCE trip_item_id_seq CASCADE;
 DROP SEQUENCE trip_id_seq CASCADE;
 DROP SEQUENCE user_cont_id_seq CASCADE;
 DROP SEQUENCE tag_id_seq CASCADE;
@@ -370,5 +479,9 @@ DROP SEQUENCE user_group_id_seq CASCADE;
 DROP SEQUENCE photo_place_id_seq CASCADE;
 DROP SEQUENCE group_event_id_seq CASCADE;
 DROP SEQUENCE place_thirdparty_id_seq CASCADE;
+DROP SEQUENCE trip_item_id_seq CASCADE;
+DROP SEQUENCE journal_id_seq CASCADE;
+DROP SEQUENCE journal_entry_id_seq CASCADE;
+DROP SEQUENCE journ_assoc_trip_item_id_seq CASCADE;
 
 DROP TABLE play_evolutions;

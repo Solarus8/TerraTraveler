@@ -2,6 +2,7 @@
  
 # --- !Ups
 
+insert into role (role) values ('ORG');
 insert into role (role) values ('BIZ');
 insert into role (role) values ('NORM');
 insert into role (role) values ('INVITEE');
