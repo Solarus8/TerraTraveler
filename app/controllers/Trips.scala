@@ -22,11 +22,17 @@ object Trips extends Controller {
 	        println("Trips.createTrip - json: " + json)
 	        
 	        val name 		= (json \ "name").validate[String]
+	        		println("Trips.createTrip - name: " + name)
 	        val desc 		= (json \ "desc").validate[String]
+	        		println("Trips.createTrip - desc: " + desc)
 	        val userId 		= (json \ "userId").validate[Long]
+	        		println("Trips.createTrip - userId: " + userId)
 	        val dateFrom 	= (json \ "dateFrom").validate[Date]
+	        		println("Trips.createTrip - dateFrom: " + dateFrom)
 	        val dateTo 		= (json \ "dateTo").validate[Date]
+	        		println("Trips.createTrip - dateTo: " + dateTo)
 	        val status 		= (json \ "status").validate[String]
+	        		println("Trips.createTrip - status: " + status)
 	        
 	        val newTrip  = Trip(NotAssigned, name.get, desc.asOpt, userId.get, dateFrom.asOpt, dateTo.asOpt, status.asOpt)
 	        val newTripPK = Trip.create(newTrip)

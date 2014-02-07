@@ -42,7 +42,7 @@ object Trip {
 		DB.withConnection { implicit connection =>
 	      	SQL(
 	      		"""
-      			insert into trip (name, desc, user_id, date_from, date_to, status) values (
+      			insert into trip (name, "desc", user_id, date_from, date_to, status) values (
       				{name}, {desc}, {userId}, {dateFrom}, {dateTo}, {status}
       			)
 	      		"""

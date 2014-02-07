@@ -144,7 +144,7 @@ object Events extends Controller {
 			 "to"					-> event.to,
 			 "title"				-> event.title,
 			 "activityType"			-> event.activityType,
-			 "activityCategories"	-> Json.arr(actCats.map{ cat => cat.id.get }),
+			 "activityCategories"	-> actCats.map{ cat => cat.id.get },
 			 "placeId"				-> event.placeId,
 			 "lat"					-> latlon._1,
 			 "lon"					-> latlon._2,

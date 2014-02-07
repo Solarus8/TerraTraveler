@@ -39,7 +39,7 @@ object Journal {
 		DB.withConnection { implicit connection =>
 	      	SQL(
 	      		"""
-      			insert into journal (tripId, title, desc, index) values (
+      			insert into journal (tripId, title, "desc", index) values (
       				{tripId}, {title}, {desc}, {index}
       			)
 	      		"""
