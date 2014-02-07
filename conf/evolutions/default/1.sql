@@ -48,7 +48,7 @@ CREATE TABLE "user" (
 CREATE TABLE user_contact (
 	user_id INTEGER NOT NULL REFERENCES "user"(id),
 	contact_id INTEGER NOT NULL REFERENCES "user"(id),
-	status VARCHAR(16) NOT NULL REFERENCES status(status),
+	status VARCHAR(16) REFERENCES status(status),
 	CONSTRAINT use_cont_pkey PRIMARY KEY (user_id, contact_id)
 );
 
@@ -140,7 +140,7 @@ CREATE TABLE trip (
 	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
 	date_from TIMESTAMP,
 	date_to TIMESTAMP,
-	status VARCHAR(16) NOT NULL REFERENCES status(status),
+	status VARCHAR(16) REFERENCES status(status),
 	PRIMARY KEY(id)
 );
 
@@ -230,7 +230,7 @@ CREATE TABLE user_group (
 	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
 	group_id INTEGER NOT NULL REFERENCES "group"(id) ON DELETE CASCADE,
 	UNIQUE (user_id, group_id),
-	status VARCHAR(16) NOT NULL REFERENCES status(status),
+	status VARCHAR(16) REFERENCES status(status),
 	index INTEGER,
 	PRIMARY KEY(id)
 );
@@ -241,7 +241,7 @@ CREATE TABLE user_event (
 	user_id INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
 	event_id INTEGER NOT NULL REFERENCES event(id) ON DELETE CASCADE,
 	UNIQUE (user_id, event_id),
-	status VARCHAR(16) NOT NULL REFERENCES status(status),
+	status VARCHAR(16) REFERENCES status(status),
 	index INTEGER,
 	PRIMARY KEY(id)
 );
@@ -251,7 +251,7 @@ CREATE TABLE group_event (
 	id INTEGER NOT NULL DEFAULT nextval('group_event_id_seq'),
 	group_id INTEGER NOT NULL REFERENCES "group"(id) ON DELETE CASCADE,
 	event_id INTEGER NOT NULL REFERENCES event(id) ON DELETE CASCADE,
-	status VARCHAR(16) NOT NULL REFERENCES status(status),
+	status VARCHAR(16) REFERENCES status(status),
 	index INTEGER,
 	PRIMARY KEY(id)
 );

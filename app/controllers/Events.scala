@@ -105,8 +105,9 @@ object Events extends Controller {
 	}
 	
 	def eventToJson(event: Event): JsObject = {
-		 val latlon:(Double, Double) = event.placeId match {
-		     case Some(placeId) => {
+	    println("Events.eventToJson - TOP - event: " + event)
+		val latlon:(Double, Double) = event.placeId match {
+		    case Some(placeId) => {
 		         println("Events.eventToJson - inside Some(pId) - placeId: " + placeId)
 		         Place.byId(placeId) match {
 		             case Some(place) => {
@@ -210,11 +211,13 @@ object Events extends Controller {
 	 */
 	// TODO: NEEDS AUTHENTICATION AND AUTHORIZATION
 	def associateEventUser(eventId: Long, userId: Long) = Action {
+	    println("Events.associateEventUser - TOP - eventId: " + eventId + " | userId: " + userId)
 	    User.byId(userId) match {
 	        case Some(persistedUser) => {
 	            Event.byId(eventId) match {
 	                case Some(persistedEvent) => {
 	                    val userEventPK = Event.associateEventUser(eventId, userId)
+	                    println("Events.associateEventUser - userEventPK: " + userEventPK)
 	                    Ok(
                     		Json.obj(
                 		        "status" 		-> "success", 

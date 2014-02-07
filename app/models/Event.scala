@@ -255,7 +255,10 @@ object Event {
       			'eventId	-> eventId
       		).executeInsert()
 	    } match {
-	        case Some(pk) => new Id[Long](pk) // The Primary Key
+	        case Some(pk) => {
+	            println("Event.associateUserEvent - Some(pk): " + pk)
+	            new Id[Long](pk) // The Primary Key
+	        }
 	        case None     => throw new Exception("SQL Error - Did not insert user_event.")
     	}
 	}
