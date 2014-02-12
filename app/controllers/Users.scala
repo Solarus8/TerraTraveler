@@ -143,8 +143,8 @@ object Users extends Controller {
 			"email"      	-> user.email,
 			"password" 		-> user.password,
 			"role"	    	-> user.role,
-			"loc"			-> loclat._1,
-			"lat"			-> loclat._2,
+			"lat"			-> loclat._1,
+			"lon"			-> loclat._2,
 			"primaryLoc" 	-> user.primaryLoc
 		)
 	}
