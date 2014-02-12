@@ -19,3 +19,4 @@ dist
 /bin
 .target
 /target
+.DS_Store

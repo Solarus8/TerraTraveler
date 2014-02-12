@@ -3,9 +3,10 @@ name := "terratraveler"
 version := "1.0-SNAPSHOT"
 
 libraryDependencies ++= Seq(
-  jdbc,
-  anorm,
-  cache
+	"org.specs2" %% "specs2" % "2.3.7" % "test",
+  	jdbc,
+  	anorm,
+  	cache
 )     
 
 play.Project.playScalaSettings

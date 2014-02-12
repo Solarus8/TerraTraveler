@@ -1,5 +1,6 @@
 import org.specs2.mutable._
 import org.specs2.mutable.Specification
+import org.specs2.matcher.JsonMatchers
 import org.specs2.runner._
 import org.junit.runner._
 
@@ -22,10 +23,11 @@ import java.text.SimpleDateFormat
 import java.io._
 import java.io.PrintWriter
 import java.io.File
-
+import scala.util.matching
+import scala.util.matching.Regex
 
 // To run this test 
-//     1. Start the oostgresql server
+//     1. Start the postgresql server
 //     2. Open two terminal windows and go to the Terra Traveler directory    
 //        a. On one window type "play" and wait until you get the $ prompt the type 
 //           $ start -Dhttp.port=9998
@@ -40,25 +42,23 @@ import java.io.File
  * 
  */
 @RunWith(classOf[JUnitRunner])
-class ApplicationSpec extends Specification {
-  
+class ApplicationSpec extends Specification with JsonMatchers {
 
+  
+	// TODO - add test to verify server is running or nothing works
 	val serverLocation = "http://localhost:9998"
-	  
+	
 
 	"Terra Traveler Test" should {
-  
-	
-		println("\n\n\n\n==================== Test Started " + Calendar.getInstance().getTime() + " =======================")
-		var temp = ""
-		
-		
-		println("--- Web Page - check for 404 error condition")
+  	
+		//println("\n\n\n\n==================== Test Started " + Calendar.getInstance().getTime() + " =======================")
+				
+//		println("--- Web Page - check for 404 error condition")
 		"send 404 on a bad request" in new WithApplication{
 			  route(FakeRequest(GET, "/boum")) must beNone
 		}
 		
-		println("--- Web Page - check for application ready on web page")
+//		println("--- Web Page - check for application ready on web page")
 		"render the index page" in new WithApplication{
 			val home = route(FakeRequest(GET, "/")).get
 			
@@ -67,81 +67,68 @@ class ApplicationSpec extends Specification {
 			contentAsString(home) must contain ("Terra Traveler app is ready.")
 		}
 		
-
 	
 		"Users API test" should
 		{
+		  
 			"Create new user and verify user was created" should {
-			  			
-				// Gernerate user object	
-				var user =  ttt_generateUserObject(37.774932, -122.419420, 1000, true)
-	 			
+			  
+		  
+				// Generate user object	
+				var user = TestHelperFunctions.ttt_generateUserObject(37.774932, -122.419420, 1000, true)
+
 				// Create new user 
 				var newUser = ttt_testCreateUser(user, false)
 		
 				// Duplicate users 
 				ttt_testCreateUser(user, true) // Check duplicate name	
+						
+				// Use user id from previous step to get user by Id	
+				// var id = (user \ "id")
+				// var id: JsValue = user \ "id"
+				var id = ttt_getValue(newUser, "id")	
+				var userFromId =  ttt_getUserById(id.toString, "Get user from this id ", "")
 				
-				// Get user Id value from newUser
-				var id = ttt_getUserIdValue(newUser)  
-				
-				// Use user id from previous step to get user by Id
-				var userFromId =  ttt_getUserById(id)
-				
-				// Verify 
+				// Verify user, newUser and userFromId match
 				ttt_verifyNewUserHasCorrectData(user, newUser, userFromId)
 				
 			
+				// At least on test must be inside of "should {}" for test results to work properly
+				// Tests inside a function don't count here but still work
 				"End of users test" in {			
 					"End of users test" must contain("End")
 				}
 							
 				  
 			} // End of Users API test
-		
-
-		
+			
 			"Edge Tests - Create New User /api/v1/users" should {
+			  
+				ttt_EdgeTests_CreateUser
+			  			  
 				
-				"Create User - send commands with missing data" in {
-					"TODO write tests" must beEqualTo( "Not done yet")
-				}
-				  
-				"Create User - Use latitude and longitude greater than 360" in {
-					"TODO write tests" must beEqualTo( "Not done yet")
-				}
-				
-				"Create User - Send too many parameters" in {
-					 "TODO write tests" must beEqualTo( "Not done yet")
-			  	}
-				
-				"Create User - Send too few parameters" in {
-					 "TODO write tests" must beEqualTo( "Not done yet")
-				}
-				
-				"Create User - Send badly formed JSON" in  {
-					 "TODO write tests" must beEqualTo( "Not done yet")
+				"End of Edge Tests for Create User" in {
+				  "End" must beEqualTo("End")				  
 				}
 			
 			} // End of Create User edge tests
-		
+
+
 			"Edge Tests - Get User By Id /api/v1/users/1:" should {
 			  
-				"Get User By Id - Send negative number" in {
-					// "status": "None")
-					"TODO write tests" must contain( "Not done yet")			  
-				}
-				
-				"Get User By Id - Send text" in {
-					// No JSON object could be decoded
-					"TODO write tests" must contain( "Not done yet")
-				}
+				// Run Get User By Id edge tests
+				ttt_EdgeTests_getUserById
+			  				
+				"End of Edge Tests for Get User By Id" in {
+					"End" must beEqualTo("End")
+				}					
 			}
-
-		
+			
+			
+			
 			"This is where the user profile tests will be created" should {
 				"User profile test will be created here" in {
-					"TODO - Write user profile tests" must contain("test")
+					pending
 			}
 				
 				
@@ -154,44 +141,15 @@ class ApplicationSpec extends Specification {
 
 // TODO - Move these functions to another file
 // TODO - Move these functions to another file
+// TODO - Move these functions to another file	
+//    and figure out while test results don't print correctly from other files
+//    but work inside this class.
 // TODO - Move these functions to another file
-	def ttt_generateUserObject(latitude: Double, longitude: Double, radius: Int, randomLocation: Boolean): JsObject = {
- 		// parameters
- 	    // latitude
- 	    // longitude
- 	    // radius:  For creating random location based on the radius form the longitude
- 	    //          and latitude. Radius in meters
- 	    // randomLocation: true - creates a random location based on latitude and longitude
- 	    //                 false - no change is latitude and longitude
- 
-	  
-		// userName uses the format name plus a unique number	 	  
- 		var userName = "User" + ApplicationSpec.currentCount.toString.trim()
+// TODO - Move these functions to another file	
 
- 	  //  var userName = "User142" // TODO add the ability automatically create unique user names
- 	    var email = userName + "@gmail.com"
- 	    var password = userName + "secret"
- 	    var role = "NORM"
- 	      
- 	    if (randomLocation == true) {
- 	    	// TODO - add code for random location within radius
- 	    }
-  			   	  
-		var user = Json.obj(
-    		"userName" -> userName, 
-    		"email" -> email, 
-    		"password" -> password, 
-    		"role" -> role, 
-    		"latitude" -> latitude,  
-    		"longitude" -> longitude
-    	)
-	    	
-	    user
-  	}
-	
-	
- 	def ttt_getUserById(id: String): String = {
-	    println("ttt_getUserById, id = " + id )
+ 	def ttt_getUserById(id: String, title: String,expectedErrorMessage: String): String = {	    
+	    // expectedFailure - Blank if you expect test to pass
+	    //                 - or error message you expect to receive
 	    
 	  /*
 		curl \
@@ -213,21 +171,27 @@ class ApplicationSpec extends Specification {
 		    }
  	   */
 	    
-	    var temp = ""
+    	var temp = Helpers.await(WS.url(serverLocation + "/api/v1/users/" + id).get()).body	 
 	    
-	    "ttt_getUserById - Get user from this id: " + id in {
-	      
-	    	temp = Helpers.await(WS.url(serverLocation + "/api/v1/users/" + id.trim()).get()).body
+	    title + "(" + "id= " +id +")" in {
+          	
+	    	if (expectedErrorMessage.length() > 0) {  // Expecting a failure to occur
   		
-			temp must contain(""""id":""" + id.trim() )  
+	    		temp must not contain("userName")
+	    		temp must contain(expectedErrorMessage)
+
+	    	}
+	    	else  // Expecting a correct user name
+	    	{	    	  
+  	    		temp must contain(""""id":""" + id.trim() )  // ID is on left side of string
+	    		temp must contain("primaryLoc")              // Check other end of string
+	    		
+	    	}
 	    }
-	    
-	    println("######## " + temp)
-	       
-	    temp    
+
+ 		temp
   	}
- 	
- 	
+
  	def ttt_testCreateUser(user: JsObject, checkDuplicateUserName: Boolean): String = {
  	  
  		/*
@@ -254,8 +218,6 @@ class ApplicationSpec extends Specification {
  	  		
 		var temp = Helpers.await(WS.url(serverLocation + "/api/v1/users")
 		      .post(user)).body 
-		      
-	     println("^^^^^^^^" + temp + "^^^^^^^^^")
 	    
 		// Duplicate userName returns an error message web page      
 		if (checkDuplicateUserName == true)  {
@@ -268,8 +230,6 @@ class ApplicationSpec extends Specification {
 		  
 			"ttt_testCreateUser - Create new user" in {
 	
-			  println("***********" + temp)
-			  
 				temp must contain("userName")
 			      	      
 				//Check for duplicate user name
@@ -278,61 +238,218 @@ class ApplicationSpec extends Specification {
 			  
 			}
 		}  
-	
-		
-		
-		println("((((((((((((" + temp)
-	    temp
- 	}
- 	
- 	
 
- 	
- 	def ttt_getUserIdValue(result: String): String = {
- 	    // Return the value of the user Id
- 	  
-		var x =  result.indexOf(""""id":""")		
-		var id = result.substring(x + 5, result.indexOf(",", x + 1))
-		return id
- 	 }
- 	
+	    temp
+ 	} 	
+	 	
  	def ttt_verifyNewUserHasCorrectData (user: JsObject, newUser: String, userFromId: String) {
- 		println("ttt_verifyNewUserHasCorrectData")
  		
- 		//println("\n====== user =====\n" + user + "\n==== newUser ======\n" + newUser + "\n===== userFromId ====\n" + userFromId)
+		// In the previous tests 
+		//    1) A user JSON object was created "user"
+	    //    2) A new user was created "newUser"
+	    //    3) The ID from was used to obtain "userFromId"
+ 	    // This test checks for correct data in "user", "newUser", "userFromId"
+ 	  
+  		println("\n====== user =====\n" + user + "\n==== newUser ======\n" + newUser + "\n===== userFromId ====\n" + userFromId + "\n==================================")
  
+   		// Get values from the JSON "user" object - this was sent with Create User /api/v1/users
+ 		val userName = (user \ "userName")
+ 		val email = (user \ "email")
+ 		val password = (user \ "password")
+ 		val role = (user \ "role")
+  		val latitude = (user \ "latitude")
+ 		val longitude = (user \ "longitude") 	
  		
- 		
- 		val tempUser = user.toString
- 		
- 		"ttt_verifyNewUserHasCorrectData - Verify the user that was just created has the correct data" in {
- 			newUser must contain (userFromId)
+ 		println("UserName  = " + userName)
+ 		println("Email     = " + email)
+ 		println("Password  = " + password)
+ 		println("Role      = " + role)
+ 		println("Latitude  = " + latitude)
+ 		println("Longitude = " + longitude)
+ 
+  
+ 		"Verify that user that was just created has the correct data" in {
+ 		  
+	  		  	  
+ 			// Verify "user" has data
+ 		    userName must not be empty
+ 		    email must not be empty
+ 		    password must not be empty // Password will be removed form API return value
+ 		    role must not be empty
+ 		    latitude must not be empty
+ 		    longitude must not be empty
+ 		    		    
+ 		    // Verify the values from "User" match "newUser"
+ 		    userFromId must contain(""""userName":""" + userName)
+ 		    userFromId must contain(""""email":""" + email)
+ 		    userFromId must contain(""""password":""" + password)
+ 		    userFromId must contain(""""role":""" + role)
+  		    userFromId must contain(""""lat":""" + latitude)
+  		    userFromId must contain(""""lon":""" + longitude)
+ 		    		    
+ 		    // Verify the values from the "user" match "userFromId"
+ 		    userFromId must contain(""""userName":""" + userName)
+ 		    userFromId must contain(""""email":""" + email)
+ 		    userFromId must contain(""""password":""" + password)
+ 		    userFromId must contain(""""role":""" + role)
+  		    userFromId must contain(""""lat":""" + latitude)
+  		    userFromId must contain(""""lon":""" + longitude)
+  		     		     		    		    		  
+ 			newUser must beEqualTo (userFromId)		    
+ 		    newUser must contain("primaryLoc")
+ 		    userFromId must contain("primaryLoc")
  		  
  		}
+		
+ 	} // End of def ttt_verifyNewUserHasCorrectData
+ 	
+	
+ 	def ttt_EdgeTests_getUserById {
+ 	  
+		ttt_getUserById("dsfddf", "Get User By Id - Send text instead of a number", "Cannot parse parameter id as Long:")
+		
+		// Send negative number
+		ttt_getUserById("-1", "Get User By Id - Send a negative number", """{"status":"None"}""")
+		
+		// Very large and very small integer sizes for ID
+		ttt_getUserById("0", "Get User By Id - Check user id zerro", """{"status":"None"}""")
+		ttt_getUserById("9223372036854775807", "Get User By Id - Send largest 'long' size available", """{"status":"None"}""")
+		ttt_getUserById("9223372036854775807", "Get User By Id - Send greater than largest 'long' size ", """{"status":"None"}""")
+		ttt_getUserById("-9223372036854775808", "Get User By Id - Send the smallest 'long available", """{"status":"None"}""")
+		ttt_getUserById("-9223372036854775809", "Get User By Id - Send the smallest 'long available", "Cannot parse parameter id as Long:")	  
+ 	}
  		
- 		// Compare User that was created with the data from Get User by ID
+ 	def ttt_EdgeTests_CreateUser {
+		
+ 	    var userName = TestHelperFunctions.ttt_generateUserName
+ 	    var email = userName + "@aol.com"
+ 	    var password = "password"
+ 	    var role = "NORM"
+ 	    var latitude = 37.1234
+ 	    var longitude = 127.5678
+ 	    var apiPath = "users"
+
+
+ // TODO - Matchers not working with user names with colon, semicolon, single
+ // TODO     double quote and $%$#% The user names are being created in the database. 
+
+      
+		"Create User - Missing user name" in {
+ 	       	 var temp = ttt_sendUserApiCommand (apiPath, "", email, password, role, latitude, longitude)
+  	       	 temp must not contain("password")   		
+			 temp must contain("This exception has been logged with id")
+		}
+		
+		// Single quote could cause database errors or database crash
+		"Create User - User name with single quote (') in name" in {
+ 	       	 var temp = ttt_sendUserApiCommand (apiPath, userName + "'", email, password, role, latitude, longitude)
+ println("\n\n===== single quote =======\n" + temp + "\n========")	       	 
+   			 "temp" must contain(userName + """'""")
+ 	       	 "temp" must contain("primaryLoc")
+		}
+		
+		"Create User - User name with single semicolon (;) in name" in {
+ 	       	 var temp = ttt_sendUserApiCommand (apiPath, userName + ";", email, password, role, latitude, longitude)
+println("\n\n===== semicolon =======\n" + temp + "\n========")
+			"temp" must contain(userName + """;""")
+ 	       	"temp" must contain("primaryLoc")
+		}
+
+		"Create User - User name with spaces in name" in {
+ 	       	 var temp = ttt_sendUserApiCommand (apiPath, """SELECT FROM""", email, password, role, latitude, longitude)
+//println("\n\n===== spaces in name =======\n" + temp + "\n========")
+ 	       	 "temp" must contain("This exception has been logged with id")
+ 	       	"temp" must not contain("primaryLoc")
+		}
+		
+		"Create User - User name with " +  """!@#$%^&*()|,."""  + " in name" in {
+ 	       	 var temp = ttt_sendUserApiCommand (apiPath, userName + """!@#$%^&*()|,.""", email, password, role, latitude, longitude)
+ //println("\n\n===== %&$^&#% =======\n" + temp + "\n========")	
+ // TODO - comparison having problems with userName = BadUser863!@#$%^&*()|,. user name did get created
+			"temp" must contain(userName + """!@#$%^&*()|,.""")
+ 	       	"temp" must contain("primaryLoc")
+		}
+	
+		"Create User - Use latitude and longitude greater than 360" in {
+	       	 var temp = ttt_sendUserApiCommand (apiPath, userName + TestHelperFunctions.ttt_generateUserName, email, password, role, 370.123, 370.456)
+ println("\n\n===== latitude longitude =======\n" + temp + "\n========")	       	    		
+	
+ 	       	"temp" must contain("primaryLoc")
+		}
+		
+		
+// println("\n\n===== %&$^&#% =======\n" + temp + "\n========")	      
+ 	    
+		"Create User - send commands with missing data" in {
+			pending
+		}
+		
+		"Create User - Send too many parameters" in {
+			pending
+	  	}
+		
+		"Create User - Send too few parameters" in {
+			pending
+		}
+		
+		"Create User - Send badly formed JSON" in  {
+
+			pending
+		}
+
+ 	}
+  	
+ 	def ttt_sendUserApiCommand (apiPath: String, userName: String, email: String, password: String, 
+ 	    role: String, latitude: Double, longitude: Double): String = {
+ 	  	  
+  		var user = Json.obj(
+    		"userName" -> userName, 
+    		"email" -> email, 
+    		"password" -> password, 
+    		"role" -> role, 
+    		"latitude" -> latitude,  
+    		"longitude" -> longitude
+    	)
+ 	  
+ 
+		var temp = Helpers.await(WS.url(serverLocation + "/api/v1/" + apiPath).post(user)).body 
+ 	  
+		temp
+ 	}
+ 	
+ 	def ttt_getValue(str: String, name: String): String = {
+ 	  
+  	   var value = ""
+ 	  			
+ 	   if (str.length > 0) {
+ 		   var x = str.indexOf(""""""" + name + """"""") + name.length + 3
+ 		   value = str.slice(x,str.indexOf(",", x))
+ 	   }
  		
- 		
- 		// TODO - remove "id":xx from string since original user object doen't have an id
- 		
- 		//newUser must contain (tempUser)
+  		return value 
  	}
      
 }  // end of class ApplicationSpec
 
-// Each user name has a number that gets incremented to avoid duplicate users
-object incrementUserName {
 
-}
 
 // Incrementing userName
 object ApplicationSpec {
-	var count = 205
+  
+  // TODO - Keep track of last user name each time this test is run
+  
+  // =============================
+  //  NOTE: this is temporary
+  //     Manually increment count by ten or erase the database before running the test
+  //        or this test will fail
+  
+	var count = 1
 
 	def currentCount(): Long = {
-	    count += 1
+	    count += 50
 	    count
 	}
   
+	
 }
 
