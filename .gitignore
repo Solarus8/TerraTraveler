@@ -20,3 +20,5 @@ dist
 .target
 /target
 .DS_Store
+conf/evolutions/default/.DS_Store
+

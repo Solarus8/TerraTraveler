@@ -17,7 +17,7 @@ import play.api.Application
 import scala.io.Source._
 
 
-import java.lang.Object
+//import java.lang.Object
 import java.util.Calendar
 import java.text.SimpleDateFormat
 import java.io._
@@ -47,25 +47,26 @@ class ApplicationSpec extends Specification with JsonMatchers {
   
 	// TODO - add test to verify server is running or nothing works
 	val serverLocation = "http://localhost:9998"
-	
 
 	"Terra Traveler Test" should {
   	
-		//println("\n\n\n\n==================== Test Started " + Calendar.getInstance().getTime() + " =======================")
+		println("\n\n\n\n==================== Test Started " + Calendar.getInstance().getTime() + " =======================")
+
+		"Web server tests" should {
+		
+			"send 404 on a bad request" in new WithApplication{
+				  route(FakeRequest(GET, "/boum")) must beNone
+			}
+			
+			"render the index page" in new WithApplication{
+				val home = route(FakeRequest(GET, "/")).get
 				
-//		println("--- Web Page - check for 404 error condition")
-		"send 404 on a bad request" in new WithApplication{
-			  route(FakeRequest(GET, "/boum")) must beNone
+				status(home) must equalTo(OK)
+				contentType(home) must beSome.which(_ == "text/html")
+				contentAsString(home) must contain ("Terra Traveler app is ready.")
+			}
 		}
 		
-//		println("--- Web Page - check for application ready on web page")
-		"render the index page" in new WithApplication{
-			val home = route(FakeRequest(GET, "/")).get
-			
-			status(home) must equalTo(OK)
-			contentType(home) must beSome.which(_ == "text/html")
-			contentAsString(home) must contain ("Terra Traveler app is ready.")
-		}
 		
 	
 		"Users API test" should
@@ -84,24 +85,52 @@ class ApplicationSpec extends Specification with JsonMatchers {
 				ttt_testCreateUser(user, true) // Check duplicate name	
 						
 				// Use user id from previous step to get user by Id	
-				// var id = (user \ "id")
+				// var id = (newUser \ "id")
 				// var id: JsValue = user \ "id"
-				var id = ttt_getValue(newUser, "id")	
+				//var id = (newUser \ "id").validate[Option[String]]
+				
+				var id = TestHelperFunctions.ttt_getValue(newUser, "id")
 				var userFromId =  ttt_getUserById(id.toString, "Get user from this id ", "")
 				
 				// Verify user, newUser and userFromId match
 				ttt_verifyNewUserHasCorrectData(user, newUser, userFromId)
-				
-			
-				// At least on test must be inside of "should {}" for test results to work properly
-				// Tests inside a function don't count here but still work
+							
+				// At least one test must be inside of "should {}" for test results to work properly
+				// Tests in a function work but tests in another file or class don't print
+				//    the results correctly.
 				"End of users test" in {			
 					"End of users test" must contain("End")
 				}
-							
-				  
-			} // End of Users API test
+											  
+			} // End of create user and verify user created
 			
+			
+			
+			
+			"Create a User Profile and verify the profile was created" should {
+			  
+				"User profile does not work and issue filed in github" in {
+					pending
+			}
+				
+			"End of users API test" in {			
+					"End of users API test" must contain("End")
+			}
+				
+		} // End of user API tests
+			
+		"Places tests API" should {
+			ttt_placesTest
+			
+			"End of users API test" in {			
+					"End of users API test" must contain("End")
+			}
+			
+  		} // End of Places Test API
+			
+	
+		"Edge tests" should	{
+		
 			"Edge Tests - Create New User /api/v1/users" should {
 			  
 				ttt_EdgeTests_CreateUser
@@ -123,16 +152,9 @@ class ApplicationSpec extends Specification with JsonMatchers {
 					"End" must beEqualTo("End")
 				}					
 			}
+		
 			
-			
-			
-			"This is where the user profile tests will be created" should {
-				"User profile test will be created here" in {
-					pending
-			}
-				
-				
-		} // End of the Users API test
+		} // End of Edge Tests
 		
 	} // End of Terra Traveler Test should
 
@@ -343,20 +365,21 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		// Single quote could cause database errors or database crash
 		"Create User - User name with single quote (') in name" in {
  	       	 var temp = ttt_sendUserApiCommand (apiPath, userName + "'", email, password, role, latitude, longitude)
- println("\n\n===== single quote =======\n" + temp + "\n========")	       	 
+//println("\n\n===== single quote =======\n" + temp + "\n========")	       	 
    			 "temp" must contain(userName + """'""")
  	       	 "temp" must contain("primaryLoc")
 		}
 		
+		// Semicolon could cause database problems and is used in SQL injection
 		"Create User - User name with single semicolon (;) in name" in {
  	       	 var temp = ttt_sendUserApiCommand (apiPath, userName + ";", email, password, role, latitude, longitude)
-println("\n\n===== semicolon =======\n" + temp + "\n========")
+//println("\n\n===== semicolon =======\n" + temp + "\n========")
 			"temp" must contain(userName + """;""")
  	       	"temp" must contain("primaryLoc")
 		}
 
 		"Create User - User name with spaces in name" in {
- 	       	 var temp = ttt_sendUserApiCommand (apiPath, """SELECT FROM""", email, password, role, latitude, longitude)
+ 	       	 var temp = ttt_sendUserApiCommand (apiPath, """SELECT password FROM user""", email, password, role, latitude, longitude)
 //println("\n\n===== spaces in name =======\n" + temp + "\n========")
  	       	 "temp" must contain("This exception has been logged with id")
  	       	"temp" must not contain("primaryLoc")
@@ -370,9 +393,10 @@ println("\n\n===== semicolon =======\n" + temp + "\n========")
  	       	"temp" must contain("primaryLoc")
 		}
 	
+		
 		"Create User - Use latitude and longitude greater than 360" in {
 	       	 var temp = ttt_sendUserApiCommand (apiPath, userName + TestHelperFunctions.ttt_generateUserName, email, password, role, 370.123, 370.456)
- println("\n\n===== latitude longitude =======\n" + temp + "\n========")	       	    		
+ //println("\n\n===== latitude longitude =======\n" + temp + "\n========")	       	    		
 	
  	       	"temp" must contain("primaryLoc")
 		}
@@ -399,6 +423,9 @@ println("\n\n===== semicolon =======\n" + temp + "\n========")
 
  	}
   	
+ 	// ==============================================================================
+ 	// ttt_sendUserApiCommand 
+ 	// 
  	def ttt_sendUserApiCommand (apiPath: String, userName: String, email: String, password: String, 
  	    role: String, latitude: Double, longitude: Double): String = {
  	  	  
@@ -417,19 +444,67 @@ println("\n\n===== semicolon =======\n" + temp + "\n========")
 		temp
  	}
  	
- 	def ttt_getValue(str: String, name: String): String = {
+
+ 	// Places test
+ 	//   1) Create new place and get ID
+ 	//   2) Get place by ID
+ 	//   3) Verify new place and place from ID match 	
+ 	def ttt_placesTest() {
  	  
-  	   var value = ""
- 	  			
- 	   if (str.length > 0) {
- 		   var x = str.indexOf(""""""" + name + """"""") + name.length + 3
- 		   value = str.slice(x,str.indexOf(",", x))
- 	   }
+ 		var name = "Hacker Dojo"
+ 		var desc = "The place to be"
+ 		var cat  = "Hacker Space"
+ 		var url  = "john@hackerdojo.com"
+ 		var latitude  =  37.386052
+ 		var longitude =  -122.083851
+ 	  
+ 		var place = Json.obj(
+			"name" -> name,
+			"desc" -> desc, 
+			"cat"  -> cat,
+			"url" -> url, 
+			"latitude" -> latitude, 
+			"longitude" -> longitude	
+		)
+	    
+ 		var (sentPlace, newPlace) =  PlacesTest.ttt_Places_CreateNewPlace (place, 1000) 
  		
-  		return value 
+ 		var id = TestHelperFunctions.ttt_getValue(newPlace, "id")
+ 		var placeFromId = PlacesTest.ttt_Places_getPlaceById(id)
+ 		
+ 		
+ println("\n\n============ Place sent with Id " + id + " ==========\n" + sentPlace + "\n========  Received  =============\n" + newPlace + "\n===== Place by Id =====" + placeFromId)		
+ 
+ 
+ 		"Create new place, get place by id and verify place was created" in {
+ 		  
+ 		  println("It contains = " + """"name":"""" + name)
+ 		  println("It contains = " + """"desc":"""" + desc)
+ 		  println("It contains = " + """"cat":"""" + cat)
+ 
+	 		placeFromId must contain(""""name":"""" + name + """"""")
+	 		placeFromId must contain(""""desc":"""" + desc + """"""")
+	 		placeFromId must contain(""""cat":"""" + cat + """"""")
+	 		placeFromId must contain(""""url":"""" + url + """"""")
+	 		placeFromId must contain(""""lat":""" + latitude)
+	 		placeFromId must contain(""""lon":""" + longitude)
+ 		}
+ 
+ 		// TODO - verify place created
+ 		
+ 		"More places tests will be added" in {
+ 			pending
+ 		}
+ 			  
+ 		"End of places test" in {
+ 			"End" must beEqualTo("End")
+ 		}
  	}
-     
+ 	
+	
+ 	     
 }  // end of class ApplicationSpec
+
 
 
 
@@ -446,7 +521,7 @@ object ApplicationSpec {
 	var count = 1
 
 	def currentCount(): Long = {
-	    count += 50
+	    count += 2850
 	    count
 	}
   

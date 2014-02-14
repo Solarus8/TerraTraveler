@@ -18,7 +18,24 @@ import scala.util.Random
 
 
 
-object TestHelperFunctions extends ApplicationSpec {
+object TestHelperFunctions {
+  
+	val serverLocation = "http://localhost:9998"
+	  
+	  
+	  
+	  
+ 	def ttt_getValue(str: String, name: String): String = {
+ 	  
+  	   var value = ""
+ 	  			
+ 	   if (str.length > 0) {
+ 		   var x = str.indexOf(""""""" + name + """"""") + name.length + 3
+ 		   value = str.slice(x,str.indexOf(",", x))
+ 	   }
+ 		
+  		return value 
+ 	}
   
 	def ttt_generateUserName(): String = {
 	  // The "ApplicationSpec.currentCount" increments a counter to avoid
@@ -32,7 +49,7 @@ object TestHelperFunctions extends ApplicationSpec {
 	  userName
 	}
 	
-	def ttt_generateUserProfile(userId: Long): String = {
+	def ttt_generateUserProfile(userId: String): String = {
 	   /*	  
 			curl \
 			--header "Content-type: application/json" \
@@ -60,7 +77,7 @@ object TestHelperFunctions extends ApplicationSpec {
 		// TODO - Create random birth date, nationality, portrait, bio and history
 		
 		var userProfile = Json.obj(
-		    "userId" -> 1, 
+		    "userId" -> userId, 
 		    "firstName" -> firstName, 
 		    "lastName" -> lastName, 
 		    "gender" -> gender,
@@ -70,6 +87,9 @@ object TestHelperFunctions extends ApplicationSpec {
 		    "bio" -> "I began life as a small child.", 
 		    "story" -> "I am a very exotic person."
 	   )
+
+println ("User profile id = " + userId)
+println ("User profile JSON = " + userProfile)
 	   
 	   var temp = Helpers.await(WS.url(serverLocation + "/api/v1/users/profile").post(userProfile)).body
 		   
