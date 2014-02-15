@@ -21,4 +21,5 @@ dist
 /target
 .DS_Store
 conf/evolutions/default/.DS_Store
+ttt_testData.txt
 

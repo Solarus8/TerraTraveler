@@ -26,6 +26,7 @@ import java.io.File
 import scala.util.matching
 import scala.util.matching.Regex
 
+
 // To run this test 
 //     1. Start the postgresql server
 //     2. Open two terminal windows and go to the Terra Traveler directory    
@@ -43,10 +44,9 @@ import scala.util.matching.Regex
  */
 @RunWith(classOf[JUnitRunner])
 class ApplicationSpec extends Specification with JsonMatchers {
-
   
-	// TODO - add test to verify server is running or nothing works
-	val serverLocation = "http://localhost:9998"
+	// TODO - add test to verify server is running or nothing works 
+	val serverLocation = TestCommon.getServerLocation
 
 	"Terra Traveler Test" should {
   	
@@ -66,21 +66,37 @@ class ApplicationSpec extends Specification with JsonMatchers {
 				contentAsString(home) must contain ("Terra Traveler app is ready.")
 			}
 		}
+
 		
+		// =================================================================
+		//    Users API tests
+		//        Get User by ID
+		//        Create User
+		//        Create UserProfile
+		//        Get UserProfile
+		//        Get all Users (Should test be written since this may go away
+		//                       but is very useful for test and debug
+		// =================================================================
 		
-	
 		"Users API test" should
 		{
 		  
-			"Create new user and verify user was created" should {
+			"Create New User and verify user was created with Get User By Id" should {
 			  
-		  
+println("User counter 1 = " + TestCommon.getUserCounter)
+println("User counter 2 = " + TestCommon.getUserCounter)
+println("User counter 2B = " + TestCommon.getUserCounter)
+println("User counter 3 = " + TestCommon.getUserCounter)
+println("User counter 4 = " + TestCommon.getUserCounter)
+println("User counter 5 = " + TestCommon.getUserCounter)
+
+
 				// Generate user object	
 				var user = TestHelperFunctions.ttt_generateUserObject(37.774932, -122.419420, 1000, true)
 
 				// Create new user 
 				var newUser = ttt_testCreateUser(user, false)
-		
+	
 				// Duplicate users 
 				ttt_testCreateUser(user, true) // Check duplicate name	
 						
@@ -90,6 +106,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
 				//var id = (newUser \ "id").validate[Option[String]]
 				
 				var id = TestHelperFunctions.ttt_getValue(newUser, "id")
+				TestCommon.setUserId(id)
 				var userFromId =  ttt_getUserById(id.toString, "Get user from this id ", "")
 				
 				// Verify user, newUser and userFromId match
@@ -118,16 +135,69 @@ class ApplicationSpec extends Specification with JsonMatchers {
 			}
 				
 		} // End of user API tests
+
+			
+			
+		// =================================================================
+		//    Places API tests
+		//        Create Place
+		//        Create Place 3rd Party Reference
+		//        Get Place 3rd Party Reference by ID
+	    //        Get Place 3rd Party Reference by TerraTraveler Place ID
+	    //        Get Place by ID
+		//        Get Users (attendies) by Event ID"
+		//        Get all Activity Types and Categories
+		//        Get User Contacts by User ID
+		//        Associate User to Contact
+		//        Create Place 3rd Party Reference
+		// =================================================================
 			
 		"Places tests API" should {
 			ttt_placesTest
+						
+			"Create Place 3rd Party Reference" in {pending}
+			"Get Place 3rd Party Reference by ID" in {pending}	
+			"Get Place 3rd Party Reference by TerraTraveler Place ID" in {pending}	
+			"Get Place by ID" in {pending}	
+			"Get Users (attendies) by Event ID" in {pending}	
+			"Get all Activity Types and Categories" in {pending}	
+			"Get User Contacts by User ID" in {pending}	
+			"Associate User to Contact" in {pending}	
+			"Create Place 3rd Party Reference" in {pending}				
+			
 			
 			"End of users API test" in {			
 					"End of users API test" must contain("End")
 			}
 			
   		} // End of Places Test API
+
+		
+		// =================================================================
+		//    Events API tests	
+		//        Create Event
+		//        Get Events by User ID
+		//        Get Event by ID
+		//
+		//        What is the accuracy for radius of events at the equator, Mountain View,
+		//            Fairbanks Alaska and Johannesburg South Affrica.
+		// =================================================================
+		
+		"Events API tests" should {
+		  
+			ttt_eventsTest
 			
+			
+			"Get Events by User ID" in {pending}		
+			"Get Events by location radius using location ID" in {pending}
+			"Get Events by latitude, longitude, radius, activity, and category" in {pending}
+			
+			"End of Events API test" in {			
+				"End" must beEqualTo("End")
+			}
+		} // End of Events API tests
+		
+		
 	
 		"Edge tests" should	{
 		
@@ -164,7 +234,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
 // TODO - Move these functions to another file
 // TODO - Move these functions to another file
 // TODO - Move these functions to another file	
-//    and figure out while test results don't print correctly from other files
+//    and figure out why test results don't print correctly from other files
 //    but work inside this class.
 // TODO - Move these functions to another file
 // TODO - Move these functions to another file	
@@ -282,13 +352,14 @@ class ApplicationSpec extends Specification with JsonMatchers {
   		val latitude = (user \ "latitude")
  		val longitude = (user \ "longitude") 	
  		
- 		println("UserName  = " + userName)
- 		println("Email     = " + email)
- 		println("Password  = " + password)
- 		println("Role      = " + role)
- 		println("Latitude  = " + latitude)
- 		println("Longitude = " + longitude)
- 
+ 		/*
+	 		println("UserName  = " + userName)
+	 		println("Email     = " + email)
+	 		println("Password  = " + password)
+	 		println("Role      = " + role)
+	 		println("Latitude  = " + latitude)
+	 		println("Longitude = " + longitude)
+ 		*/
   
  		"Verify that user that was just created has the correct data" in {
  		  
@@ -344,18 +415,13 @@ class ApplicationSpec extends Specification with JsonMatchers {
  	def ttt_EdgeTests_CreateUser {
 		
  	    var userName = TestHelperFunctions.ttt_generateUserName
- 	    var email = userName + "@aol.com"
+ 	    var email = userName + "@yahoo.com"
  	    var password = "password"
  	    var role = "NORM"
  	    var latitude = 37.1234
  	    var longitude = 127.5678
  	    var apiPath = "users"
 
-
- // TODO - Matchers not working with user names with colon, semicolon, single
- // TODO     double quote and $%$#% The user names are being created in the database. 
-
-      
 		"Create User - Missing user name" in {
  	       	 var temp = ttt_sendUserApiCommand (apiPath, "", email, password, role, latitude, longitude)
   	       	 temp must not contain("password")   		
@@ -363,46 +429,41 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		}
 		
 		// Single quote could cause database errors or database crash
-		"Create User - User name with single quote (') in name" in {
+		"Create User - User name with single quote (') in name get's created" in {
  	       	 var temp = ttt_sendUserApiCommand (apiPath, userName + "'", email, password, role, latitude, longitude)
-//println("\n\n===== single quote =======\n" + temp + "\n========")	       	 
-   			 "temp" must contain(userName + """'""")
- 	       	 "temp" must contain("primaryLoc")
+   			 temp must contain(userName + """'""")
+ 	       	 temp must contain("primaryLoc")
 		}
 		
 		// Semicolon could cause database problems and is used in SQL injection
-		"Create User - User name with single semicolon (;) in name" in {
+		"Create User - User name with single semicolon (;) in name get's created" in {
  	       	 var temp = ttt_sendUserApiCommand (apiPath, userName + ";", email, password, role, latitude, longitude)
-//println("\n\n===== semicolon =======\n" + temp + "\n========")
-			"temp" must contain(userName + """;""")
- 	       	"temp" must contain("primaryLoc")
+			temp must contain(userName + """;""")
+ 	       	temp must contain("primaryLoc")
 		}
 
-		"Create User - User name with spaces in name" in {
+		"Create User - User name with spaces in name fails" in {
  	       	 var temp = ttt_sendUserApiCommand (apiPath, """SELECT password FROM user""", email, password, role, latitude, longitude)
-//println("\n\n===== spaces in name =======\n" + temp + "\n========")
- 	       	 "temp" must contain("This exception has been logged with id")
- 	       	"temp" must not contain("primaryLoc")
+ 	       	 temp must contain("This exception has been logged with id")
+ 	       	temp must not contain("primaryLoc")
 		}
 		
-		"Create User - User name with " +  """!@#$%^&*()|,."""  + " in name" in {
+		"Create User - User name with " +  """!@#$%^&*()|,."""  + " in name gets created" in {
  	       	 var temp = ttt_sendUserApiCommand (apiPath, userName + """!@#$%^&*()|,.""", email, password, role, latitude, longitude)
- //println("\n\n===== %&$^&#% =======\n" + temp + "\n========")	
- // TODO - comparison having problems with userName = BadUser863!@#$%^&*()|,. user name did get created
-			"temp" must contain(userName + """!@#$%^&*()|,.""")
- 	       	"temp" must contain("primaryLoc")
+   			 //println("\n\n===== %&$^&#% =======\n" + temp + "\n========")	
+   			 // TODO - comparison having problems with userName = BadUser863!@#$%^&*()|,. user name did get created
+   			 temp must contain(userName + """!@#$%^&*()|,.""")
+ 	       	 temp must contain("primaryLoc")
 		}
 	
 		
 		"Create User - Use latitude and longitude greater than 360" in {
-	       	 var temp = ttt_sendUserApiCommand (apiPath, userName + TestHelperFunctions.ttt_generateUserName, email, password, role, 370.123, 370.456)
- //println("\n\n===== latitude longitude =======\n" + temp + "\n========")	       	    		
-	
- 	       	"temp" must contain("primaryLoc")
+	       	var temp = ttt_sendUserApiCommand (apiPath, userName + "LonLat", email, password, role, 370.123, 370.456)       	    		
+			temp must contain(userName + "LonLat")
+ 	       	temp must contain("primaryLoc")
+	       	// TODO - Verify latude and longitude are around 10 degrees
 		}
 		
-		
-// println("\n\n===== %&$^&#% =======\n" + temp + "\n========")	      
  	    
 		"Create User - send commands with missing data" in {
 			pending
@@ -444,7 +505,6 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		temp
  	}
  	
-
  	// Places test
  	//   1) Create new place and get ID
  	//   2) Get place by ID
@@ -470,17 +530,19 @@ class ApplicationSpec extends Specification with JsonMatchers {
  		var (sentPlace, newPlace) =  PlacesTest.ttt_Places_CreateNewPlace (place, 1000) 
  		
  		var id = TestHelperFunctions.ttt_getValue(newPlace, "id")
+ println ("****** The place id is = " + id)
+ 		TestCommon.setPlaceId(id.toLong)
  		var placeFromId = PlacesTest.ttt_Places_getPlaceById(id)
  		
  		
- println("\n\n============ Place sent with Id " + id + " ==========\n" + sentPlace + "\n========  Received  =============\n" + newPlace + "\n===== Place by Id =====" + placeFromId)		
+ //println("\n\n============ Place sent with Id " + id + " ==========\n" + sentPlace + "\n========  Received  =============\n" + newPlace + "\n===== Place by Id =====" + placeFromId)		
  
  
  		"Create new place, get place by id and verify place was created" in {
  		  
- 		  println("It contains = " + """"name":"""" + name)
- 		  println("It contains = " + """"desc":"""" + desc)
- 		  println("It contains = " + """"cat":"""" + cat)
+ 			println("It contains = " + """"name":"""" + name)
+ 			println("It contains = " + """"desc":"""" + desc)
+ 			println("It contains = " + """"cat":"""" + cat)
  
 	 		placeFromId must contain(""""name":"""" + name + """"""")
 	 		placeFromId must contain(""""desc":"""" + desc + """"""")
@@ -499,32 +561,54 @@ class ApplicationSpec extends Specification with JsonMatchers {
  		"End of places test" in {
  			"End" must beEqualTo("End")
  		}
- 	}
+ 	} // End of places test
  	
-	
- 	     
+
+  	def ttt_eventsTest() {
+ 
+  	  
+ // NOTE - This test not finished
+ // NOTE - This test not finished
+ // NOTE - This test not finished
+  	  
+  	  	var from = "2014-02-23 10:30:00.0"
+		var to   = ""
+		var title = "Outside Lands"
+		var activityType = 22
+		var activityCategories = "[1,2]"
+		var placeId = 247
+		var desc = """Outside Lands: best music festival in S.F."""
+		var minSize = 2
+		var maxSize= 50
+		var rsvpTot= ""
+		var waitListTot = ""
+		
+	  
+	 	var event = Json.obj(
+			"from" -> from, 
+			"to" -> to, 
+			"title" -> title, 
+		    "activityType" -> activityType, 
+		    "activityCategories" -> activityCategories, 
+		    "placeId" -> TestCommon.getPlaceId, 
+		    "desc" -> desc, 
+		    "minSize" -> minSize, 
+		    "maxSize" -> maxSize, 
+		    "rsvpTot" -> "", 
+		    "waitListTot" -> ""
+		)
+		
+		var newEvent = EventsTest.ttt_Events_createEvent(event)
+		
+println ("\n********* New Event *****************\n" + newEvent + "\n***************\n")		
+		
+		var id = TestHelperFunctions.ttt_getValue(newEvent, "id")
+println("^^^^^^^^^^ The event Id = " + id)
+//		var eventFromId = EventsTest.ttt_Events_getEventById(id)
+		var eventFromId = ""
+		
+		println("--------- New event response -----\n" + newEvent + "\n-----------Get event from ID -----\n" + eventFromId)
+ 	}	
+	     
 }  // end of class ApplicationSpec
-
-
-
-
-// Incrementing userName
-object ApplicationSpec {
-  
-  // TODO - Keep track of last user name each time this test is run
-  
-  // =============================
-  //  NOTE: this is temporary
-  //     Manually increment count by ten or erase the database before running the test
-  //        or this test will fail
-  
-	var count = 1
-
-	def currentCount(): Long = {
-	    count += 2850
-	    count
-	}
-  
-	
-}
 

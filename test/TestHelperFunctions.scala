@@ -20,11 +20,17 @@ import scala.util.Random
 
 object TestHelperFunctions {
   
-	val serverLocation = "http://localhost:9998"
+	val serverLocation = TestCommon.getServerLocation
 	  
 	  
-	  
-	  
+		def ttt_generateUserName(): String = {
+
+	  	  
+		var userName = "EdgeUser" + TestCommon.getUserCounter.toString.trim()
+		userName
+	}
+	
+		  
  	def ttt_getValue(str: String, name: String): String = {
  	  
   	   var value = ""
@@ -37,17 +43,7 @@ object TestHelperFunctions {
   		return value 
  	}
   
-	def ttt_generateUserName(): String = {
-	  // The "ApplicationSpec.currentCount" increments a counter to avoid
-	  // getting duplicate user names
-	  
-	  // TODO - Store the counter number between tests or find the last id in database
-	  // TODO - Currently you have to erase the database or increment the 
-	  // TODO -     variable "count" near the bottom of ApplicationSpec.scala
-	  
-	  var userName = "BadUser" + ApplicationSpec.currentCount.toString.trim()
-	  userName
-	}
+
 	
 	def ttt_generateUserProfile(userId: String): String = {
 	   /*	  
@@ -107,7 +103,7 @@ println ("User profile JSON = " + userProfile)
  
 	  
 		// userName uses the format name plus a unique number	 	  
- 		var userName = "User" + ApplicationSpec.currentCount.toString.trim()
+ 		var userName = "User" + TestCommon.getUserCounter.toString.trim()
 
  	  //  var userName = "User142" // TODO add the ability automatically create unique user names
  	    var email = userName + "@gmail.com"
