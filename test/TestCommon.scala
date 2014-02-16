@@ -61,7 +61,7 @@ object TestCommon {
 	// ttt_testData.txt at the same time to start over with the count at one.	
 	def getUserCounter: Long = {
 	  
-		val fileName = "ttt_testData.txt"
+		val fileName = "test/ttt_testData.txt"
 		  		
 		 // Get value of counter from file or create file
 		try {
@@ -79,7 +79,7 @@ object TestCommon {
          }
 		}
 
-	    println ("========== Counter = " + userCounter)
+	    //println ("========== Counter = " + userCounter)
 	    
 	    userCounter = userCounter + 1
 	    

@@ -22,4 +22,9 @@ dist
 .DS_Store
 conf/evolutions/default/.DS_Store
 ttt_testData.txt
+ttt_testFile.sh
+test/ttt_testData.txt
+test/ttt_testFile.sh
+
+
 

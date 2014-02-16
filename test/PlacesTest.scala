@@ -52,7 +52,7 @@ object PlacesTest extends ApplicationSpec {
         	case e: Exception => println("Create New Place - exception caught: " + e);          
         }
 	   	   
-		println("\n\n=========== Create place ================\n" + place + "\n======== Place Created =====\n" + temp + "\n========")
+		//println("\n\n=========== Create place ================\n" + place + "\n======== Place Created =====\n" + temp + "\n========")
 
 
 	   	return (place, temp)
@@ -87,7 +87,7 @@ object PlacesTest extends ApplicationSpec {
   	  
  		var user = Json.obj()
  
-  		//var temp = Helpers.await(WS.url(serverLocation + "/api/v1/locations/place/" + id).post(Json.obj())).body
+  
   		var temp = Helpers.await(WS.url(serverLocation + "/api/v1/locations/place/" + id).get()).body
   	  
   		return temp

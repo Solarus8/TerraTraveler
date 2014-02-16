@@ -342,7 +342,7 @@ println("User counter 5 = " + TestCommon.getUserCounter)
 	    //    3) The ID from was used to obtain "userFromId"
  	    // This test checks for correct data in "user", "newUser", "userFromId"
  	  
-  		println("\n====== user =====\n" + user + "\n==== newUser ======\n" + newUser + "\n===== userFromId ====\n" + userFromId + "\n==================================")
+  		//println("\n====== user =====\n" + user + "\n==== newUser ======\n" + newUser + "\n===== userFromId ====\n" + userFromId + "\n==================================")
  
    		// Get values from the JSON "user" object - this was sent with Create User /api/v1/users
  		val userName = (user \ "userName")
@@ -530,7 +530,7 @@ println("User counter 5 = " + TestCommon.getUserCounter)
  		var (sentPlace, newPlace) =  PlacesTest.ttt_Places_CreateNewPlace (place, 1000) 
  		
  		var id = TestHelperFunctions.ttt_getValue(newPlace, "id")
- println ("****** The place id is = " + id)
+
  		TestCommon.setPlaceId(id.toLong)
  		var placeFromId = PlacesTest.ttt_Places_getPlaceById(id)
  		
@@ -570,44 +570,53 @@ println("User counter 5 = " + TestCommon.getUserCounter)
  // NOTE - This test not finished
  // NOTE - This test not finished
  // NOTE - This test not finished
-  	  
+	  
   	  	var from = "2014-02-23 10:30:00.0"
-		var to   = ""
+		var to   = "" 
 		var title = "Outside Lands"
 		var activityType = 22
 		var activityCategories = "[1,2]"
-		var placeId = 247
-		var desc = """Outside Lands: best music festival in S.F."""
+		var placeId = TestCommon.getPlaceId
+		var desc = "Outside Lands: best music festival in S.F."
 		var minSize = 2
 		var maxSize= 50
 		var rsvpTot= ""
 		var waitListTot = ""
-		
-	  
+
 	 	var event = Json.obj(
 			"from" -> from, 
 			"to" -> to, 
 			"title" -> title, 
 		    "activityType" -> activityType, 
 		    "activityCategories" -> activityCategories, 
-		    "placeId" -> TestCommon.getPlaceId, 
+		    "placeId" -> placeId, 
 		    "desc" -> desc, 
 		    "minSize" -> minSize, 
 		    "maxSize" -> maxSize, 
-		    "rsvpTot" -> "", 
-		    "waitListTot" -> ""
+		    "rsvpTot" -> 5, 
+		    "waitListTot" -> 0
 		)
 		
 		var newEvent = EventsTest.ttt_Events_createEvent(event)
 		
-println ("\n********* New Event *****************\n" + newEvent + "\n***************\n")		
-		
 		var id = TestHelperFunctions.ttt_getValue(newEvent, "id")
-println("^^^^^^^^^^ The event Id = " + id)
-//		var eventFromId = EventsTest.ttt_Events_getEventById(id)
-		var eventFromId = ""
+
+		var eventFromId = EventsTest.ttt_Events_getEventById(id)
 		
-		println("--------- New event response -----\n" + newEvent + "\n-----------Get event from ID -----\n" + eventFromId)
+		
+// TODO - convert Linux time to "2014-02-23 10:30:00.0"
+ //		eventFromId must contain(""""from":"""" + from + """"""")
+//  	eventFromId must contain(""""to":"""" + to + """"""")
+  	  	eventFromId must contain(""""title":"""" + title + """"""")
+  	  	eventFromId must contain(""""activityType":""" + activityType)
+//  	  	eventFromId must contain(""""activityCategories":"""" + activityCategories + """"""")
+  	  	eventFromId must contain(""""description":"""" + desc + """"""")
+  	  	eventFromId must contain(""""minSize":""" + minSize)
+  	  	eventFromId must contain(""""maxSize":""" + maxSize)
+  	  	eventFromId must contain(""""rsvpTotal":""" + rsvpTot)
+  	  	eventFromId must contain(""""waitListTotal":""" + waitListTot)
+		
+		//println("--------- New event response -----\n" + newEvent + "\n-----------Get event from ID -----\n" + eventFromId)
  	}	
 	     
 }  // end of class ApplicationSpec
