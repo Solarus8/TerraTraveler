@@ -96,5 +96,109 @@ object EventsTest {
 		temp
 	}
 	
+	
+	def ttt_Events_getEventsByLocationRadiusUsingLocationId(locationId:Long, radius:Long, 
+	    activityType:Long, activityCategory:Long ) {
+
+	  // TODO - Not finished, creating us
+	  
+		/*
+			example request
+			curl \
+				--header "Content-type: application/json" \
+				--request GET \
+				--data '{}' \
+				ec2-54-193-80-119.us-west-1.compute.amazonaws.com:9000/api/v1/events/location/5/5100 \
+				| python -mjson.tool
+						
+			xample response   [MODIFIED]
+			{
+			    "events": [
+			        {
+			            "activityCategories": [
+			                [
+			                    1,
+			                    2
+			                ]
+			            ],
+			            "activityType": 22,
+			            "description": "Outside Lands: best music festival in S.F.",
+			            "from": 1393142400000,
+			            "id": 1,
+			            "lat": 37.768395,
+			            "lon": -122.492259,
+			            "maxSize": 50,
+			            "minSize": 2,
+			            "placeId": 1,
+			            "rsvpTotal": null,
+			            "title": "Outside Lands",
+			            "to": null,
+			            "waitListTotal": null
+			        },
+			        {
+			            "activityCategories": [
+			                [
+			                    2,
+			                    4
+			                ]
+			            ],
+			            "activityType": 22,
+			            "description": "Outdoor fun under the eucalyptus trees for the whole family",
+			            "from": 1393142400000,
+			            "id": 2,
+			            "lat": 37.735681,
+			            "lon": -122.492065,
+			            "maxSize": 50,
+			            "minSize": 2,
+			            "placeId": 2,
+			            "rsvpTotal": null,
+			            "title": "Stern Grove Music Festival",
+			            "to": null,
+			            "waitListTotal": null
+			        }
+			    ]
+			}
+	 
+	    */
+	  
+	  
+		var events = Json.obj(
+			"activityType" -> activityType,
+			"activityCategory" -> activityCategory 
+		)
+	  
+		var temp = Helpers.await(WS.url(serverLocation + "api/v1/events/location/" + locationId + "/" + radius).post(events)).body
+		
+	  
+	} // End of function ttt_Events_getEventsByLocationRadiusUsingLocationId
+	  
+
+	
+	def ttt_Events_getEventsByLatitudeLongitudeRadiusActivityAndCategory () {
+	   // TODO - Not finished yet
+	  
+	}
+
+	def ttt_Events_associateUserAndvent(userId:Long, eventId:Long): String ={
+	
+		/*
+			curl \
+				--header "Content-type: application/json" \
+				--request POST \
+				--data '{}' \
+				localhost:9998/api/v1/events/2/user/1 \
+				| python -mjson.tool
+		*/	
+	  
+		var temp = Helpers.await(WS.url(serverLocation + "api/v1/events/" + eventId.toString + "/user/" + userId.toString).get()).body
+
+		println("\n-------- Associate User and event ------\n" + temp + "\n--------------")
+		
+		return temp
+		
+	}  // End of ttt_Events_associateUserAndvent()
+	
+	
+	
 
 } // End of ttt_Events_createEvent

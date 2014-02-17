@@ -34,6 +34,8 @@ import scala.util.matching.Regex
 //           $ start -Dhttp.port=9998
 //        b. In the other terminal window type: play test
 //
+//  Hacker Dojo 37.402840   -122.050000
+
 
 
 /**
@@ -83,16 +85,13 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		  
 			"Create New User and verify user was created with Get User By Id" should {
 			  
-println("User counter 1 = " + TestCommon.getUserCounter)
-println("User counter 2 = " + TestCommon.getUserCounter)
-println("User counter 2B = " + TestCommon.getUserCounter)
-println("User counter 3 = " + TestCommon.getUserCounter)
-println("User counter 4 = " + TestCommon.getUserCounter)
-println("User counter 5 = " + TestCommon.getUserCounter)
-
+TestCommon.ttt_distanceAndBearing(37.402840, -122.050000, 50000.0, 0)
+TestCommon.ttt_distanceAndBearing(37.402840, -122.050000, 10000.0, 0)
+TestCommon.ttt_distanceAndBearing(37.402840, -122.050000, 15000.0, 0)
+TestCommon.ttt_distanceAndBearing(37.402840, -122.050000, 20000.0, 0)
 
 				// Generate user object	
-				var user = TestHelperFunctions.ttt_generateUserObject(37.774932, -122.419420, 1000, true)
+				var user = UsersTests.ttt_generateUserObject(37.774932, -122.419420, 1000, true)
 
 				// Create new user 
 				var newUser = ttt_testCreateUser(user, false)
@@ -105,9 +104,9 @@ println("User counter 5 = " + TestCommon.getUserCounter)
 				// var id: JsValue = user \ "id"
 				//var id = (newUser \ "id").validate[Option[String]]
 				
-				var id = TestHelperFunctions.ttt_getValue(newUser, "id")
+				var id = TestCommon.ttt_getValue(newUser, "id")
 				TestCommon.setUserId(id)
-				var userFromId =  ttt_getUserById(id.toString, "Get user from this id ", "")
+				var userFromId =  ttt_getUserById_WithMatchers(id.toString, "Get user from this id ", "")
 				
 				// Verify user, newUser and userFromId match
 				ttt_verifyNewUserHasCorrectData(user, newUser, userFromId)
@@ -122,8 +121,7 @@ println("User counter 5 = " + TestCommon.getUserCounter)
 			} // End of create user and verify user created
 			
 			
-			
-			
+						
 			"Create a User Profile and verify the profile was created" should {
 			  
 				"User profile does not work and issue filed in github" in {
@@ -186,7 +184,7 @@ println("User counter 5 = " + TestCommon.getUserCounter)
 		"Events API tests" should {
 		  
 			ttt_eventsTest
-			
+			ttt_Test_getEventsByUserId
 			
 			"Get Events by User ID" in {pending}		
 			"Get Events by location radius using location ID" in {pending}
@@ -239,7 +237,7 @@ println("User counter 5 = " + TestCommon.getUserCounter)
 // TODO - Move these functions to another file
 // TODO - Move these functions to another file	
 
- 	def ttt_getUserById(id: String, title: String,expectedErrorMessage: String): String = {	    
+ 	def ttt_getUserById_WithMatchers(id: String, title: String,expectedErrorMessage: String): String = {	    
 	    // expectedFailure - Blank if you expect test to pass
 	    //                 - or error message you expect to receive
 	    
@@ -399,24 +397,22 @@ println("User counter 5 = " + TestCommon.getUserCounter)
 	
  	def ttt_EdgeTests_getUserById {
  	  
-		ttt_getUserById("dsfddf", "Get User By Id - Send text instead of a number", "Cannot parse parameter id as Long:")
+		ttt_getUserById_WithMatchers("dsfddf", "Get User By Id - Send text instead of a number", "Cannot parse parameter id as Long:")
 		
 		// Send negative number
-		ttt_getUserById("-1", "Get User By Id - Send a negative number", """{"status":"None"}""")
+		ttt_getUserById_WithMatchers("-1", "Get User By Id - Send a negative number", """{"status":"None"}""")
 		
 		// Very large and very small integer sizes for ID
-		ttt_getUserById("0", "Get User By Id - Check user id zerro", """{"status":"None"}""")
-		ttt_getUserById("9223372036854775807", "Get User By Id - Send largest 'long' size available", """{"status":"None"}""")
-		ttt_getUserById("9223372036854775807", "Get User By Id - Send greater than largest 'long' size ", """{"status":"None"}""")
-		ttt_getUserById("-9223372036854775808", "Get User By Id - Send the smallest 'long available", """{"status":"None"}""")
-		ttt_getUserById("-9223372036854775809", "Get User By Id - Send the smallest 'long available", "Cannot parse parameter id as Long:")	  
+		ttt_getUserById_WithMatchers("0", "Get User By Id - Check user id zerro", """{"status":"None"}""")
+		ttt_getUserById_WithMatchers("9223372036854775807", "Get User By Id - Send largest 'long' size available", """{"status":"None"}""")
+		ttt_getUserById_WithMatchers("9223372036854775807", "Get User By Id - Send greater than largest 'long' size ", """{"status":"None"}""")
+		ttt_getUserById_WithMatchers("-9223372036854775808", "Get User By Id - Send the smallest 'long available", """{"status":"None"}""")
+		ttt_getUserById_WithMatchers("-9223372036854775809", "Get User By Id - Send the smallest 'long available", "Cannot parse parameter id as Long:")	  
  	}
  		
  	def ttt_EdgeTests_CreateUser {
 		
- 	    var userName = TestHelperFunctions.ttt_generateUserName
- 	    var email = userName + "@yahoo.com"
- 	    var password = "password"
+ 	    var (userName:String, email:String, password:String) = TestCommon.ttt_generateUserNameEmailAndPassword
  	    var role = "NORM"
  	    var latitude = 37.1234
  	    var longitude = 127.5678
@@ -529,7 +525,7 @@ println("User counter 5 = " + TestCommon.getUserCounter)
 	    
  		var (sentPlace, newPlace) =  PlacesTest.ttt_Places_CreateNewPlace (place, 1000) 
  		
- 		var id = TestHelperFunctions.ttt_getValue(newPlace, "id")
+ 		var id = TestCommon.ttt_getValue(newPlace, "id")
 
  		TestCommon.setPlaceId(id.toLong)
  		var placeFromId = PlacesTest.ttt_Places_getPlaceById(id)
@@ -599,7 +595,7 @@ println("User counter 5 = " + TestCommon.getUserCounter)
 		
 		var newEvent = EventsTest.ttt_Events_createEvent(event)
 		
-		var id = TestHelperFunctions.ttt_getValue(newEvent, "id")
+		var id = TestCommon.ttt_getValue(newEvent, "id")
 
 		var eventFromId = EventsTest.ttt_Events_getEventById(id)
 		
@@ -618,6 +614,12 @@ println("User counter 5 = " + TestCommon.getUserCounter)
 		
 		//println("--------- New event response -----\n" + newEvent + "\n-----------Get event from ID -----\n" + eventFromId)
  	}	
+  	
+  	def ttt_Test_getEventsByUserId() {
+
+  		
+  	  
+  	}
 	     
 }  // end of class ApplicationSpec
 
