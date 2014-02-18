@@ -64,7 +64,7 @@ object UsersTests extends ApplicationSpec {
 	
 	// This function will take the latitude and longitude passed to it and create at
 	// use at the range and compass bearing passed to it.
-	def tttt_Users_createUserWithRangeAndBearing(latitude:Double, longitude:Double, rangeMeters:Double, bearing:Long): String = {
+	def ttt_Users_createUserWithRangeAndBearing(latitude:Double, longitude:Double, rangeMeters:Double, bearing:Long): String = {
 
    		/*
 		curl \
@@ -96,7 +96,17 @@ object UsersTests extends ApplicationSpec {
 
 	
 	
- 	def ttt_Users_createUser (latitude:Double, longitude:Double, radiusMeters:Long): String = {
+	// =================================================================================
+	//                          ttt_Users_createUser
+	//
+	// The function will create a user at a fixed longitude and latitude	
+	//
+	// The function ttt_Users_createUserWithRangeAndBearing will create a user at a
+	//     distance and compass bearing from the current longitude and latitude
+	// The function ttt_Users_createUserWithinRadius will create a user with a random 
+	//     latitude and longitude within a radius.
+	//	
+ 	def ttt_Users_createUser (latitude:Double, longitude:Double, role:String): (Long, JsValue) = {
  
  	  // TODO - Not finished
  	  
@@ -121,17 +131,40 @@ object UsersTests extends ApplicationSpec {
 			    }
 			} 		
  		 */
- 	  		
-//		var temp = Helpers.await(WS.url(serverLocation + "/api/v1/users").post(user)).body 
-		      
-	    
-
-	//    temp
  	  
- 	  return "Something"
-	    
+// TODO - Add test to verify user created matches the data coming back from 
+// TODO -    the server and abort test if it fails.  All other tests will fail
+ 	  
+		var(userName:String, email:String, password:String) = TestCommon.ttt_generateUserNameEmailAndPassword
+		
+ 		var userSent = Json.obj(
+    		"userName" -> userName, 
+    		"email" -> email, 
+    		"password" -> password, 
+    		"role" -> role, 
+    		"latitude" -> latitude,  
+    		"longitude" -> longitude
+    	)
+ 
+    	
+    	var temp:JsValue = Json.obj()
+    	var id:Long = 0
+    	
+    	  try{  		    	
+			temp = Json.parse(Helpers.await(WS.url(serverLocation + "/api/v1/users").post(userSent)).body) 			
+			id = (temp \ "user" \ "id").as[Long]
+    	} catch {
+			case e: Exception => println("exception caught: " + e);
+		}
+    	
+    	
+        println("=======Create user befor = " + id + "\n" + temp)
+    	
+
+		return (id, temp)	    
  	} 
 
+ 
  	
  	// This not part of any Terra Traveler test but is being used for other testing
 	def runEdgeTests() {

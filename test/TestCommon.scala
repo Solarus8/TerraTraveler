@@ -41,7 +41,6 @@ object TestCommon {
 	}
 	
 	def setUserId(id: String) {
-		println("(((((( User id = " + userId)
 	  
 		userId = id
 	}
@@ -53,7 +52,6 @@ object TestCommon {
 	
 	def setPlaceId(id: Long) {
 	  
-		println("(((((( Place id = " + placeId)
 		placeId = id		
 	}
 	
