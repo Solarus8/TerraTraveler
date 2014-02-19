@@ -107,20 +107,18 @@ object TestCommon {
 	  	  
 		var R = 6371.0  // Radius of the earth 6371.0
 		
-		var lat1 = latitude  * (Math.PI / 180);
-		var lon1 = longitude * (Math.PI / 180);
-		
+		var lat1 = latitude.toRadians
+		var lon1 = longitude.toRadians
+				
 		var lat2 = Math.asin( Math.sin(lat1)*Math.cos(d/R) + 
           Math.cos(lat1)*Math.sin(d/R)*Math.cos(brng) );
 		var lon2 = lon1 + Math.atan2(Math.sin(brng)*Math.sin(d/R)*Math.cos(lat1), 
                  Math.cos(d/R)-Math.sin(lat1)*Math.sin(lat2));
 
-		
-		
-		
+	
 		println("\n************* New longitude and latitude *****************")
-		println("Latitude  = " + lat2 * (180 / Math.PI))
-		println("Longitude = " + lon2 * (180 / Math.PI))	
+		println("Latitude  = " + lat2.toDegrees)
+		println("Longitude = " + lon2.toDegrees)	
 	
 	}
 	
@@ -148,6 +146,7 @@ object TestCommon {
 	
 	
  	def ttt_getValue(str: String, name: String): String = {
+ 	
  	  
   	   var value = ""
  	  			
@@ -162,14 +161,6 @@ object TestCommon {
  	
 	
 
- 	def temp() : (String, String, String) = {
- 	  
- 		var one = "one"
- 		var two = "Two"
- 		var three= "Three"
- 		  
- 		return (one, two, three)
- 	}
- 	
+ 
   
 } // End of object TestCommon()

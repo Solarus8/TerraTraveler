@@ -29,7 +29,7 @@ object UsersTests extends ApplicationSpec {
   
 
 	
-	def ttt_Users_getUserById(userId: Long): String ={
+	def ttt_Users_getUserById(userId: Long): JsValue ={
 
 		/*
 				GET		/api/v1/users/:id
@@ -55,7 +55,7 @@ object UsersTests extends ApplicationSpec {
 				}
 		*/
 	  
-		var temp = Helpers.await(WS.url(serverLocation + "/api/v1/users/" + userId.toString.trim).get()).body
+		var temp = Json.parse(Helpers.await(WS.url(serverLocation + "/api/v1/users/" + userId.toString.trim).get()).body)
 
 		temp
 	}
@@ -132,7 +132,7 @@ object UsersTests extends ApplicationSpec {
 			} 		
  		 */
  	  
-// TODO - Add test to verify user created matches the data coming back from 
+// TODO - Add test to verify user created data matches the data coming back from 
 // TODO -    the server and abort test if it fails.  All other tests will fail
  	  
 		var(userName:String, email:String, password:String) = TestCommon.ttt_generateUserNameEmailAndPassword
@@ -150,7 +150,7 @@ object UsersTests extends ApplicationSpec {
     	var temp:JsValue = Json.obj()
     	var id:Long = 0
     	
-    	  try{  		    	
+    	try{  		    	
 			temp = Json.parse(Helpers.await(WS.url(serverLocation + "/api/v1/users").post(userSent)).body) 			
 			id = (temp \ "user" \ "id").as[Long]
     	} catch {

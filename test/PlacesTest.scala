@@ -1,15 +1,32 @@
+import org.specs2.mutable._
+import org.specs2.mutable.Specification
+import org.specs2.runner._
+import org.junit.runner._
+
 import play.api.libs.json._
 import play.api.test._
 import play.api.test.Helpers._
 import play.api.test.Helpers.await
 import play.api.libs.json._
 import play.api.libs.ws._
+import play.api.mvc.Results._
+import java.lang.Object
+import controllers._
+
+import scala.util.Random
 
 object PlacesTest extends ApplicationSpec {
  
   
-
-  	def ttt_Places_CreateNewPlace(place: JsObject,radiusMeters:Long): (JsObject, String) = {
+	// =================================================================================
+    //                ttt_Places_CreateNewPlace
+    //
+    //     If radiusMeters is greater than zero then generate random latitude and
+    //     longitude within radiusMeters
+    //
+    //     If name, url or description are blank then include random text"
+    //
+  	def ttt_Places_CreateNewPlace(place:JsValue,radiusMeters:Long): (Long, Long, JsValue) = {
   	  
 		/*	  
 			curl \
@@ -33,7 +50,7 @@ object PlacesTest extends ApplicationSpec {
 	    */	
 		
 		
-// TODO - If name, url or description are blank then include random text"
+  		// TODO - If name, url or description are blank then include random text"
 
         
         // If radius greater than zero then use random latitude and longitude
@@ -42,24 +59,41 @@ object PlacesTest extends ApplicationSpec {
         	// TODO - Add random latitude and longitude if radius greater than zero
         }
         
-        var temp = ""
-	   
-        try {
+        var temp:JsValue = Json.obj()
+        var placeId:Long = 0
+        var locId:Long =0
+
         
-        	temp = Helpers.await(WS.url(serverLocation + "/api/v1/locations/place").post(place)).body
+        try {
+ 
+ // TODO - fix exception error, ttt_Users_createUser has the same code without the error
+          
+          
+        	temp = Json.parse(Helpers.await(WS.url(serverLocation + "/api/v1/locations/place").post(place)).body)
+        	placeId = (temp \ "place" \ "id").as[Long]
+        	locId   = (temp \ "place" \ "locId").as[Long] 
+
+println("************** Inside Try " + temp + "\n========= Json before send ============= " + place + "\n=======")
+println("PlaceId = " + placeId + "Location Id=" + locId)        	
+          	
         } catch {
         	       	
-        	case e: Exception => println("Create New Place - exception caught: " + e);          
+        	case e: Exception => println("\n\nERROR - Create New Place - exception caught: " + e + "\n\n");          
         }
 	   	   
 		//println("\n\n=========== Create place ================\n" + place + "\n======== Place Created =====\n" + temp + "\n========")
 
-
-	   	return (place, temp)
+ 
+ 
+        
+	   	return (placeId, locId, temp)
 	}
  	
 
-  	def ttt_Places_getPlaceById(id: String): String = {
+	// =================================================================================
+  	//                    ttt_Places_getPlaceById
+  	//
+  	def ttt_Places_getPlaceById(id: Long): JsValue = {
 
   		/*
 		  	  curl \
@@ -85,10 +119,16 @@ object PlacesTest extends ApplicationSpec {
 			
 		*/
   	  
- 		var user = Json.obj()
+ 		var temp = Json.obj()
  
-  
-  		var temp = Helpers.await(WS.url(serverLocation + "/api/v1/locations/place/" + id).get()).body
+ 		
+        try {
+        	var temp = Json.parse(Helpers.await(WS.url(serverLocation + "/api/v1/locations/place/" + id.toString.trim()).get()).body)
+        
+        } catch {
+          
+          	case e: Exception => println("ERROR - Get Place By Id - exception caught: " + e);
+        }
   	  
   		return temp
   				

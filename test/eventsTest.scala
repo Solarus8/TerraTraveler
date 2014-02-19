@@ -18,6 +18,10 @@ import scala.sys.process._
 object EventsTest {
 	val serverLocation = TestCommon.server
 	
+	
+	// =================================================================================
+	//                 ttt_Events_createEvent
+	//
 	def ttt_Events_createEvent(event: JsObject): String = {	  
 		/*
 			curl \
@@ -77,7 +81,7 @@ object EventsTest {
 	    //println("============ Events JSON object ============\n" + event + "\n=========== Events after send curl command" + temp + "\n==End of Events =======\n")
 
 	    temp
-	}
+	} // End of ttt_Events_createEvent
 	
 	
 	def ttt_Events_getEventById(id: String): String = {

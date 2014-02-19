@@ -34,7 +34,7 @@ import scala.util.matching.Regex
 //           $ start -Dhttp.port=9998
 //        b. In the other terminal window type: play test
 //
-//  Hacker Dojo 37.402840   -122.050000
+
 
 
 
@@ -54,6 +54,8 @@ class ApplicationSpec extends Specification with JsonMatchers {
   	
 		println("\n\n\n\n==================== Test Started " + Calendar.getInstance().getTime() + " =======================")
 
+
+		
 		"Web server tests" should {
 		
 			"send 404 on a bad request" in new WithApplication{
@@ -83,57 +85,20 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		"Users API test" should
 		{
 		  
-			"Create New User and verify user was created with Get User By Id" should {
-
-			  
-
-			  // NOTE: Some user tests are being replaced or modified
-
-
-				ttt_UsersApiTest_createUser
-
-
-				// Generate user object	
-				var user = UsersTests.ttt_generateUserObject(37.774932, -122.419420, 1000, true)
-
-				// Create new user 
-				var newUser = ttt_testCreateUser(user, false)
-	
-				// Duplicate users 
-				ttt_testCreateUser(user, true) // Check duplicate name	
-						
-				// Use user id from previous step to get user by Id	
-				// var id = (newUser \ "id")
-				// var id: JsValue = user \ "id"
-				//var id = (newUser \ "id").validate[Option[String]]
-				
-				var id = TestCommon.ttt_getValue(newUser, "id")  // TODO - Remove this
-				TestCommon.setUserId(id)
-				var userFromId =  ttt_getUserById_WithMatchers(id.toString, "Get user from this id ", "")
-				
-				// Verify user, newUser and userFromId match
-				ttt_verifyNewUserHasCorrectData(user, newUser, userFromId)
-							
-				// At least one test must be inside of "should {}" for test results to work properly
-				// Tests in a function work but tests in another file or class don't print
-				//    the results correctly.
-				"End of users test" in {			
-					"End of users test" must contain("End")
-				}
-											  
-			} // End of create user and verify user created
+			ttt_UsersApiTest_createUser
+			ttt_UsersApiTest_getUserById
 			
+			"Create User Profile" in {pending}
+			"Get User Profile" in {pending}
 			
+			// TODO - Create user profile
+			// TODO
 						
-			"Create a User Profile and verify the profile was created" should {
-			  
-				"User profile does not work and issue filed in github" in {
-					pending
-			}
-				
-			"End of users API test" in {			
-					"End of users API test" must contain("End")
-			}
+			// At least one test must be directly inside of "should {}" for test results to 
+			// work properly. Tests in a function work but tests in another file or class don't print
+			// the results correctly.				
+			"End of users API test" in {"End" must contain("End")			
+
 				
 		} // End of user API tests
 
@@ -154,7 +119,10 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		// =================================================================
 			
 		"Places tests API" should {
-			ttt_placesTest
+		  
+			ttt_placesApiTest_createPlace
+			ttt_placesApiTest_getPlaceById
+	
 						
 			"Create Place 3rd Party Reference" in {pending}
 			"Get Place 3rd Party Reference by ID" in {pending}	
@@ -204,23 +172,20 @@ class ApplicationSpec extends Specification with JsonMatchers {
 			"Edge Tests - Create New User /api/v1/users" should {
 			  
 				ttt_EdgeTests_CreateUser
-			  			  
-				
-				"End of Edge Tests for Create User" in {
-				  "End" must beEqualTo("End")				  
-				}
+			  			  				
+				"End of Edge Tests for Create User" in {"End" must beEqualTo("End")}
+				  				  
+
 			
 			} // End of Create User edge tests
 
 
 			"Edge Tests - Get User By Id /api/v1/users/1:" should {
 			  
-				// Run Get User By Id edge tests
 				ttt_EdgeTests_getUserById
 			  				
-				"End of Edge Tests for Get User By Id" in {
-					"End" must beEqualTo("End")
-				}					
+				"End of Edge Tests for Get User By Id" in {"End" must beEqualTo("End")}
+									
 			}
 		
 			
@@ -334,68 +299,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
 	    temp
  	} 	
 	 	
- 	def ttt_verifyNewUserHasCorrectData (user: JsObject, newUser: String, userFromId: String) {
- 		
-		// In the previous tests 
-		//    1) A user JSON object was created "user"
-	    //    2) A new user was created "newUser"
-	    //    3) The ID from was used to obtain "userFromId"
- 	    // This test checks for correct data in "user", "newUser", "userFromId"
- 	  
-  		//println("\n====== user =====\n" + user + "\n==== newUser ======\n" + newUser + "\n===== userFromId ====\n" + userFromId + "\n==================================")
- 
-   		// Get values from the JSON "user" object - this was sent with Create User /api/v1/users
- 		val userName = (user \ "userName")
- 		val email = (user \ "email")
- 		val password = (user \ "password")
- 		val role = (user \ "role")
-  		val latitude = (user \ "latitude")
- 		val longitude = (user \ "longitude") 	
- 		
- 		/*
-	 		println("UserName  = " + userName)
-	 		println("Email     = " + email)
-	 		println("Password  = " + password)
-	 		println("Role      = " + role)
-	 		println("Latitude  = " + latitude)
-	 		println("Longitude = " + longitude)
- 		*/
-  
- 		"Verify that user that was just created has the correct data" in {
- 		  
-	  		  	  
- 			// Verify "user" has data
- 		    userName must not be empty
- 		    email must not be empty
- 		    password must not be empty // Password will be removed form API return value
- 		    role must not be empty
- 		    latitude must not be empty
- 		    longitude must not be empty
- 		    		    
- 		    // Verify the values from "User" match "newUser"
- 		    userFromId must contain(""""userName":""" + userName)
- 		    userFromId must contain(""""email":""" + email)
- 		    userFromId must contain(""""password":""" + password)
- 		    userFromId must contain(""""role":""" + role)
-  		    userFromId must contain(""""lat":""" + latitude)
-  		    userFromId must contain(""""lon":""" + longitude)
- 		    		    
- 		    // Verify the values from the "user" match "userFromId"
- 		    userFromId must contain(""""userName":""" + userName)
- 		    userFromId must contain(""""email":""" + email)
- 		    userFromId must contain(""""password":""" + password)
- 		    userFromId must contain(""""role":""" + role)
-  		    userFromId must contain(""""lat":""" + latitude)
-  		    userFromId must contain(""""lon":""" + longitude)
-  		     		     		    		    		  
- 			newUser must beEqualTo (userFromId)		    
- 		    newUser must contain("primaryLoc")
- 		    userFromId must contain("primaryLoc")
- 		  
- 		}
-		
- 	} // End of def ttt_verifyNewUserHasCorrectData
- 	
+	
 	
  	def ttt_EdgeTests_getUserById {
  	  
@@ -503,16 +407,15 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		temp
  	}
  	
- 	// Places test
- 	//   1) Create new place and get ID
- 	//   2) Get place by ID
- 	//   3) Verify new place and place from ID match 	
- 	def ttt_placesTest() {
+ 	// ================================================================================
+ 	//                       ttt_placesApiTest_createPlace
+ 	//
+ 	def ttt_placesApiTest_createPlace() {
  	  
- 		var name = "Hacker Dojo"
+ 		var name = "Hacker Dojo2"
  		var desc = "The place to be"
- 		var cat  = "Hacker Space"
- 		var url  = "john@hackerdojo.com"
+ 		var cat  = "PARK"
+ 		var url  = "jim@hackerdojo.com"
  		var latitude  =  37.386052
  		var longitude =  -122.083851
  	  
@@ -524,44 +427,74 @@ class ApplicationSpec extends Specification with JsonMatchers {
 			"latitude" -> latitude, 
 			"longitude" -> longitude	
 		)
-	    
- 		var (sentPlace, newPlace) =  PlacesTest.ttt_Places_CreateNewPlace (place, 1000) 
- 		
- 		var id = TestCommon.ttt_getValue(newPlace, "id")
 
- 		TestCommon.setPlaceId(id.toLong)
- 		var placeFromId = PlacesTest.ttt_Places_getPlaceById(id)
- 		
- 		
- //println("\n\n============ Place sent with Id " + id + " ==========\n" + sentPlace + "\n========  Received  =============\n" + newPlace + "\n===== Place by Id =====" + placeFromId)		
- 
- 
- 		"Create new place, get place by id and verify place was created" in {
+
+		
+		
+		var (placeId:Long, locId:Long, newPlace:JsValue) =  PlacesTest.ttt_Places_CreateNewPlace (place, 0) 
+ println (" ========== create user place = " + placeId + ", locId = " + locId + "\n" + newPlace + "\n======")
+		
+		
+		
+  		"ttt_placesApiTest_createPlace called " + name in {
  		  
- 			println("It contains = " + """"name":"""" + name)
- 			println("It contains = " + """"desc":"""" + desc)
- 			println("It contains = " + """"cat":"""" + cat)
- 
-	 		placeFromId must contain(""""name":"""" + name + """"""")
-	 		placeFromId must contain(""""desc":"""" + desc + """"""")
-	 		placeFromId must contain(""""cat":"""" + cat + """"""")
-	 		placeFromId must contain(""""url":"""" + url + """"""")
-	 		placeFromId must contain(""""lat":""" + latitude)
-	 		placeFromId must contain(""""lon":""" + longitude)
+ 			name      must beEqualTo((newPlace \ "place" \ "name").as[String])
+ 			desc      must beEqualTo((newPlace \ "place" \ "desc").as[String])
+			cat       must beEqualTo((newPlace \ "place" \ "cat").as[String])
+ 			url       must beEqualTo((newPlace \ "place" \ "url").as[String])
+			latitude  must beEqualTo((newPlace \ "place" \ "lat").as[Double])
+	  		longitude must beEqualTo((newPlace \ "place" \ "lon").as[Double])
+ 		  
  		}
  
- 		// TODO - verify place created
+
+ 	} // End of ttt_placesApiTest_createPlace
+ 	
+ 	
+ 	// =================================================================================
+ 	//                       ttt_placesApitTest_getPlaceById
+ 	//
+ 	// Create a place then get the id number.  User the place id number to
+ 	// verify the place was created
+ 	def ttt_placesApiTest_getPlaceById() {
+ 		var name = "Computer History Museum2"
+ 		var desc = "History of the computer"
+ 		var cat  = "PARK"
+ 		var url  = "john@hackerdojo.com"
+ 		var latitude  =  37.414452
+ 		var longitude =  -122.077581
  		
- 		"More places tests will be added" in {
- 			pending
+ 		var place = Json.obj(
+			"name" -> name,
+			"desc" -> desc, 
+			"cat"  -> cat,
+			"url" -> url, 
+			"latitude" -> latitude, 
+			"longitude" -> longitude	
+		)
+		
+		var (placeId:Long, locId:Long, newPlace:JsValue) =  PlacesTest.ttt_Places_CreateNewPlace (place, 0)
+		var placeById:JsValue = PlacesTest.ttt_Places_getPlaceById(placeId)
+ 
+ 	  
+		"ttt_placesApiTest_getPlaceById - " + name + " with id = " + placeId + " " in {
+ 		  
+ 			name      must beEqualTo((newPlace \ "place" \ "name").as[String])
+ 			desc      must beEqualTo((newPlace \ "place" \ "desc").as[String])
+			cat       must beEqualTo((newPlace \ "place" \ "cat").as[String])
+ 			url       must beEqualTo((newPlace \ "place" \ "url").as[String])
+ 			latitude  must beEqualTo((newPlace \ "place" \ "lat").as[Double])
+	  		longitude must beEqualTo((newPlace \ "place" \ "lon").as[Double])  
  		}
- 			  
- 		"End of places test" in {
- 			"End" must beEqualTo("End")
- 		}
- 	} // End of places test
+ 	  
+ 	  
+ 	}
  	
 
+ 	
+  	// =================================================================================
+  	//                     
+  	//  	
   	def ttt_eventsTest() {
  
   	  
@@ -616,6 +549,8 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		
 		//println("--------- New event response -----\n" + newEvent + "\n-----------Get event from ID -----\n" + eventFromId)
  	}	
+  	
+  	
   
   	// =================================================================================
   	//                     ttt_UsersApiTest_createUser
@@ -668,6 +603,47 @@ class ApplicationSpec extends Specification with JsonMatchers {
 
   		}
   	} // End of ttt_UsersApiTest_createUse()
+  	
+   	// =================================================================================
+  	//                     ttt_UsersApiTest_createUser
+  	//  	
+  	def ttt_UsersApiTest_getUserById() {
+  	  
+  		// Red Rock Cafe 37.393546   -122.078874
+  	
+  	
+  		var latitude = 37.393546
+  		var longitude = -122.078874
+  		var role = "NORM"  	  
+  	  
+  		// Create a new user
+		var(id:Long, user:JsValue) = UsersTests.ttt_Users_createUser(latitude, longitude, role)
+
+ 		val userName = (user \ "user" \ "userName").toString() 
+ 		val email    = (user \ "user" \ "email").toString()
+ 		val password = (user \ "user" \ "password").toString()
+		val primaryLoc = (user \ "user" \ "primaryLoc").toString()
+ 		
+		var userFromId:JsValue = UsersTests.ttt_Users_getUserById(id)
+		
+		"ttt_UsersApiTest_getUserById - Get " + userName +  " with ID=" + id in {
+  		  
+  	  		userName must not be empty
+	  		email must contain("""@""")
+	  		email must contain(".com")
+	  		password must contain("password")
+  		  
+  		  	id         must beEqualTo((userFromId \ "user" \ "id").as[Long]) 
+			password   must beEqualTo((userFromId \ "user" \ "password").as[String]) 
+  		  	primaryLoc must beEqualTo((userFromId \ "user" \ "primaryLoc").as[Long]) 
+	  		role       must beEqualTo((userFromId \ "user" \ "role").as[String]) 
+	  		userName   must beEqualTo((userFromId \ "user" \ "userName").as[String]) 
+	  		
+	  			  		
+  		}
+		 	  
+  	} // End of ttt_UsersApiTest_getUserById()
+  	
   	
   	
 	     
