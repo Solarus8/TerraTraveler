@@ -1,21 +1,25 @@
+
 import org.specs2.mutable._
 import org.specs2.mutable.Specification
 import org.specs2.runner._
 import org.junit.runner._
 
 import play.api.libs.json._
+
 import play.api.test._
 import play.api.test.Helpers._
 import play.api.test.Helpers.await
-import play.api.libs.json._
+
 import play.api.libs.ws._
 import play.api.mvc.Results._
+
 import java.lang.Object
+
 import controllers._
 
 import scala.util.Random
 
-object PlacesTest extends ApplicationSpec {
+object PlacesTest {
  
   
 	// =================================================================================
@@ -26,7 +30,7 @@ object PlacesTest extends ApplicationSpec {
     //
     //     If name, url or description are blank then include random text"
     //
-  	def ttt_Places_CreateNewPlace(place:JsValue,radiusMeters:Long): (Long, Long, JsValue) = {
+  	def ttt_Places_CreateNewPlace(place:JsObject,radiusMeters:Long): (Long, JsValue) = {
   	  
 		/*	  
 			curl \
@@ -48,10 +52,8 @@ object PlacesTest extends ApplicationSpec {
 			    }
 			}	
 	    */	
-		
-		
-  		// TODO - If name, url or description are blank then include random text"
-
+	
+  		// TODO - If name, url or description are blank then include random text"	  
         
         // If radius greater than zero then use random latitude and longitude
         if (radiusMeters > 0)
@@ -63,31 +65,19 @@ object PlacesTest extends ApplicationSpec {
         var placeId:Long = 0
         var locId:Long =0
 
-        
         try {
  
- // TODO - fix exception error, ttt_Users_createUser has the same code without the error
-          
-          
-        	temp = Json.parse(Helpers.await(WS.url(serverLocation + "/api/v1/locations/place").post(place)).body)
+        	temp = Json.parse(Helpers.await(WS.url(TestCommon.serverLocation +  "/api/v1/locations/place").post(place)).body)
         	placeId = (temp \ "place" \ "id").as[Long]
         	locId   = (temp \ "place" \ "locId").as[Long] 
-
-println("************** Inside Try " + temp + "\n========= Json before send ============= " + place + "\n=======")
-println("PlaceId = " + placeId + "Location Id=" + locId)        	
-          	
+        	         	
         } catch {
         	       	
-        	case e: Exception => println("\n\nERROR - Create New Place - exception caught: " + e + "\n\n");          
+        	case e: Exception => println("\n\nERROR - Create New Place - exception caught: " + e + "\nJson sent " + place + "\n\n");          
         }
-	   	   
-		//println("\n\n=========== Create place ================\n" + place + "\n======== Place Created =====\n" + temp + "\n========")
-
- 
- 
-        
-	   	return (placeId, locId, temp)
-	}
+       
+	   	return (placeId, temp)
+	}  // End function ttt_Places_CreateNewPlace
  	
 
 	// =================================================================================
@@ -123,8 +113,8 @@ println("PlaceId = " + placeId + "Location Id=" + locId)
  
  		
         try {
-        	var temp = Json.parse(Helpers.await(WS.url(serverLocation + "/api/v1/locations/place/" + id.toString.trim()).get()).body)
-        
+        	var temp = Json.parse(Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/locations/place/" + id.toString.trim()).get()).body)
+       
         } catch {
           
           	case e: Exception => println("ERROR - Get Place By Id - exception caught: " + e);
@@ -133,6 +123,19 @@ println("PlaceId = " + placeId + "Location Id=" + locId)
   		return temp
   				
   	}
+  	
+  	
+  	
+  	 def testFunction(someJson:JsObject) {
+  	   	  
+  	    var result = Helpers.await(WS.url("http://localhost:9998/api/v1/locations/place").post(someJson)).body
+  	  
+  	    println("\n==========================================================================")
+ 		println("\n\n************* Json object inside function"  + someJson)
+		println("\n**************** Place Json Result inside function \n" + result + "\n*************\n")  
+  	     
+  	}
+  	
   
 } // end of object PlacesTest
   

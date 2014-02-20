@@ -55,7 +55,7 @@ object UsersTests extends ApplicationSpec {
 				}
 		*/
 	  
-		var temp = Json.parse(Helpers.await(WS.url(serverLocation + "/api/v1/users/" + userId.toString.trim).get()).body)
+		var temp = Json.parse(Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/users/" + userId.toString.trim).get()).body)
 
 		temp
 	}
@@ -151,16 +151,12 @@ object UsersTests extends ApplicationSpec {
     	var id:Long = 0
     	
     	try{  		    	
-			temp = Json.parse(Helpers.await(WS.url(serverLocation + "/api/v1/users").post(userSent)).body) 			
+			temp = Json.parse(Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/users").post(userSent)).body) 			
 			id = (temp \ "user" \ "id").as[Long]
     	} catch {
 			case e: Exception => println("exception caught: " + e);
 		}
-    	
-    	
-        println("=======Create user befor = " + id + "\n" + temp)
-    	
-
+  
 		return (id, temp)	    
  	} 
 
@@ -238,7 +234,7 @@ object UsersTests extends ApplicationSpec {
 println ("User profile id = " + userId)
 println ("User profile JSON = " + userProfile)
 	   
-	   var temp = Helpers.await(WS.url(serverLocation + "/api/v1/users/profile").post(userProfile)).body
+	   var temp = Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/users/profile").post(userProfile)).body
 		   
 	   temp
 	}

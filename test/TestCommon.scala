@@ -14,7 +14,7 @@ import scala.util.Random
 
 object TestCommon {
 
-	val server = "http://localhost:9998"
+	val serverLocation = "http://localhost:9998"
 	
 	// Each user name consists of text and a number.  This counter increments
 	// the number to avoid getting duplicate user errors
@@ -26,10 +26,10 @@ object TestCommon {
 	// When place API is tested save Place ID to be used with other API tests
 	private var placeId:Long = 1
 	   
-	// Location of the server where this test will be run
-	def getServerLocation: String = {	  
-		return server
-	}
+//	// Location of the server where this test will be run
+//	def getServerLocation: String = {	  
+//		return server
+//	}
 	
 	
 	def getCurrentDirectory = new java.io.File( "." ).getCanonicalPath

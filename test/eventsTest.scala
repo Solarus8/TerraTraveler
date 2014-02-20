@@ -16,8 +16,7 @@ import play.api.Application
 import scala.sys.process._
 
 object EventsTest {
-	val serverLocation = TestCommon.server
-	
+
 	
 	// =================================================================================
 	//                 ttt_Events_createEvent
@@ -65,7 +64,7 @@ object EventsTest {
     		writer.write(""""maxSize" : 50, """)
     		writer.write(""""rsvpTot" : "", """)
     		writer.write(""""waitListTot" : """"")
-    		writer.write("""}' """ + serverLocation + "/api/v1/events")		    
+    		writer.write("""}' """ + TestCommon.serverLocation + "/api/v1/events")		    
 		writer.close()
 
 		
@@ -95,7 +94,7 @@ object EventsTest {
 		| python -mjson.tool
 		*/
 	  
-		var temp = Helpers.await(WS.url(serverLocation + "/api/v1/events/" + id).get()).body
+		var temp = Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/events/" + id).get()).body
 		
 		temp
 	}
@@ -171,7 +170,7 @@ object EventsTest {
 			"activityCategory" -> activityCategory 
 		)
 	  
-		var temp = Helpers.await(WS.url(serverLocation + "api/v1/events/location/" + locationId + "/" + radius).post(events)).body
+		var temp = Helpers.await(WS.url(TestCommon.serverLocation + "api/v1/events/location/" + locationId + "/" + radius).post(events)).body
 		
 	  
 	} // End of function ttt_Events_getEventsByLocationRadiusUsingLocationId
@@ -194,7 +193,7 @@ object EventsTest {
 				| python -mjson.tool
 		*/	
 	  
-		var temp = Helpers.await(WS.url(serverLocation + "api/v1/events/" + eventId.toString + "/user/" + userId.toString).get()).body
+		var temp = Helpers.await(WS.url(TestCommon.serverLocation + "api/v1/events/" + eventId.toString + "/user/" + userId.toString).get()).body
 
 		println("\n-------- Associate User and event ------\n" + temp + "\n--------------")
 		
