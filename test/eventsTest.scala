@@ -193,7 +193,7 @@ object EventsTest {
 				| python -mjson.tool
 		*/	
 	  
-		var temp = Helpers.await(WS.url(TestCommon.serverLocation + "api/v1/events/" + eventId.toString + "/user/" + userId.toString).get()).body
+		var temp = Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/events/" + eventId.toString + "/user/" + userId.toString).get()).body
 
 		println("\n-------- Associate User and event ------\n" + temp + "\n--------------")
 		
@@ -202,6 +202,40 @@ object EventsTest {
 	}  // End of ttt_Events_associateUserAndvent()
 	
 	
+		// =================================================================================
+	//               ttt_EventsApi_getAllActivityTypesAndCategories
+	def ttt_EventsApi_getAllActivityTypesAndCategories(): JsValue = {
+	   
+		  /*
+		  curl \
+				--header "Content-type: application/json" \
+				--request GET \
+				--data '{}' \
+				localhost:9000/api/v1/activity-types-cats/all \
+				| python -mjson.tool
+		  }
+
+		  */
+	  
+ 
+		var temp:JsValue = Json.obj()
+	  	  
+		try
+		
+			temp = Json.parse(Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/activity-types-cats/all").get()).body)
+  
+		catch {
+        	       	
+        	case e: Exception => println("\n\nERROR - Api Get All Activity Types and Categories: " + e +  "\n\n");          
+        }
+		println("-----------------" + temp)
+  
+		temp
+					
+	} // End of ttt_EventsApi_getAllActivityTypesAndCategories
+  		  
 	
 
-} // End of ttt_Events_createEvent
+
+
+} // End of object EventsTest

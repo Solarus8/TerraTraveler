@@ -10,6 +10,8 @@ import scala.math
 
 import scala.util.Random
 
+import play.api.libs.json._
+
 
 
 object TestCommon {
@@ -158,6 +160,72 @@ object TestCommon {
   		return value 
  	}
  	
+	
+ 	
+	val activityType = Map(
+		"1"->"Running",
+		"2"->"Gym",
+		"3"->"Walk",
+		"4"->"Clubbing",
+		"5"->"Cafe",
+		"6"->"Dog walk",
+		"7"->"Dog park",
+		"8"->"Child park",
+		"9"->"Site-see",
+		"10"->"Drinks",
+		"11"->"Lunch",
+		"12"->"Dinner",
+		"13"->"Breakfast",
+		"14"->"Theater",
+		"15"->"Attend Game",
+		"16"->"Play game sport court or field",
+		"17"->"Museum or Gallery",
+		"18"->"Shopping",
+		"19"->"Bicycling",
+		"20"->"Dancing",
+		"21"->"Movie",
+		"22"->"Concert",
+		"23"->"Event",
+		"24"->"Ride-share",
+		"26"->"Hike",
+		"27"->"Picnic",
+		"28"->"Park",
+		"29"->"Night Sky",
+		"30"->"Games board or computer",
+		"31"->"Hacking",
+		"32"->"Comedy",
+		"33"->"Apartment",
+		"34"->"Art Photography",
+		"35"->"Mall",
+		"37"->"Beach",
+		"39"->"Live music",
+		"40"->"Demonstration",
+		"41"->"Rally"
+	)
+  
+	var activityCategories = Map (
+		"1"->"Fitness",
+		"2"->"Outdoors",
+		"3"->"Nightlife",
+		"4"->"Eating",
+		"5"->"Pets",
+		"6"->"Kids",
+		"7"->"Sports",
+		"8"->"Entertainment",
+		"9"->"Tech",
+		"10"->"Transportation",
+		"11"->"Housing share",
+		"12"->"Maker",
+		"13"->"Performance",
+		"14"->"Hangout",
+		"15"->"Cultural",
+		"16"->"Traveler",
+		"17"->"Activism",
+		"18"->"Shop",
+		"19"->"Professional",
+		"20"->"Create",
+		"21"->"After work"
+	)
  	
 	
 

@@ -8,6 +8,7 @@ import play.api.test._
 import play.api.test.Helpers._
 import play.api.test.Helpers.await
 import play.api.libs.json._
+import play.api.libs.functional.syntax._
 import play.api.libs.ws._
 import play.api.mvc.Results._
 import play.api.Play
@@ -155,11 +156,13 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		"Events API tests" should {
 		  
 			ttt_eventsTest
+			ttt_EventsApiTest_getAllActivityTypesAndCategories
 				
 			"Get Events by User ID" in {pending}		
 			"Get Events by location radius using location ID" in {pending}
 			"Get Events by latitude, longitude, radius, activity, and category" in {pending}
-			
+	
+						
 			"End of Events API test" in {			
 				"End" must beEqualTo("End")
 			}
@@ -653,6 +656,43 @@ class ApplicationSpec extends Specification with JsonMatchers {
   		}
 		 	  
   	} // End of ttt_UsersApiTest_getUserById()
+  	
+  	
+ 
+  	def ttt_EventsApiTest_getAllActivityTypesAndCategories() {
+  	  
+  		var results:JsValue = EventsTest.ttt_EventsApi_getAllActivityTypesAndCategories
+
+  		
+        //{
+        //    "activity": "Drinks", 
+        //    "id": 10
+        //}, 
+
+  		"testing" in {
+  		  1 must beEqualTo(1)
+  		}
+  		
+
+  		var activityType = TestCommon.activityType
+  		
+  
+	  		activityType.keys.foreach{ id =>  
+	  		   var activity = activityType(id)
+	           println( "Key = " + id + ", Value = " + activityType(id))
+
+	  		
+//	           "Verify " + id + ", value = " + activity in {
+//	           
+//	  			   activity must beEqualTo((results \ "activityTypes" \ "activity" \ "activity").as[String])
+//	  		   }
+  		
+  	}
+  		
+  		   
+  		
+  	  
+  	} // End of ttt_EventsApiTest_getAllActivityTypesAndCategories()
   	
 
 	     
