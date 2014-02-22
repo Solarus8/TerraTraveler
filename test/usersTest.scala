@@ -192,15 +192,122 @@ object UsersTests extends ApplicationSpec {
 	}
 	
 	
-		def ttt_generateUserProfile(userId: String): String = {
-	   /*	  
+	// =================================================================================
+	//                          ttt_Users_getUserProfile
+	// 
+	//  Gets user profile from user ID
+	//
+	def ttt_Users_getUserProfile(userId:Long)(): JsValue = {
+		/*
+		 *  API documentation version 20
+		 * 
+			example request
 			curl \
-			--header "Content-type: application/json" \
-			--request POST \ 
-			--data '{"userId" : 1, "firstName" : "Zelda", "lastName" : "Zamora", "gender" : "F",
-			"birthdate" : "1990-02-23 10:30:00.0", "nationality" : "Brazilian", "portraitUrl" : "http://www.me.jpg", "bio" : "I began life as a small child.", "story" : "I am a very exotic lady."}' \ 
-			localhost:9998/api/v1/users/profile
-	    */	
+				--header "Content-type: application/json" \
+				--request GET \
+				--data '{}' \
+				localhost:9000/api/v1/users/1/profile \
+				| python -mjson.tool
+			
+			example response
+			{
+			    "userProfile": {
+			        "bio": "I yam what I yam",
+			        "birthdate": null,
+			        "firstName": "Richard",
+			        "gender": "male",
+			        "id": 1,
+			        "lastName": "Walker",
+			        "nationality": "http://www.codemonkey.com",
+			        "story": null,
+			        "userId": 1
+			    }
+			}
+		*/
+	  
+		var temp = Json.parse(Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/users/" 
+		    + userId.toString.trim + "/profile").get()).body)	  
+	  	    
+		 temp
+	}
+	
+	
+	// =================================================================================
+	//                      ttt_Users_createUserProfile
+	//
+	def ttt_Users_createUserProfile(profile:JsValue): (Long, JsValue) = {
+	  
+		/*
+		 *  API documentation version 20
+		 *  
+			example request
+			curl \
+				--header "Content-type: application/json" \
+				--request POST \
+				--data '{"userId" : 1, "firstName" : "Raymond", "lastName" : "Zamora", "gender" : "M", "birthdate" : "1990-02-23 10:30:00.0", "nationality" : "Brazilian", "portraitUrl" : "http://www.me.jpg", "bio" : "I began life as a small child.", "story" : "I am a very tough guy."}' \
+				ec2-54-193-80-119.us-west-1.compute.amazonaws.com:9000/api/v1/users/profile \
+				| python -mjson.tool
+			
+			example response
+			{
+			    "userProfile": {
+			        "bio": "I began life as a small child.",
+			        "birthdate": 635760000000,
+			        "firstName": "Zelda",
+			        "gender": "F       ",
+			        "id": 12,
+			        "lastName": "Zamora",
+			        "nationality": "Brazilian",
+			        "portraitUrl": "http://www.me.jpg",
+			        "story": "I am a very exotic lady.",
+			        "userId": 1
+			    }
+			}
+		 */
+	  	  	  	  
+		var temp = Json.parse(Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/users/profile").post(profile)).body)
+		var profileId = (temp \ "userProfile" \ "id").as[Long]
+		
+		return (profileId, temp)
+	}
+	
+	
+	
+	// =================================================================================
+	//                ttt_generateUserProfile
+	//
+	// This function will generate a random profile so we won't have a bunch
+	// of users with the exact same profile.
+	//
+	def ttt_generateUserProfile(userId: String): String = {
+
+	  // TODO - Not finished and not tested
+	  
+			/*
+example request
+			curl \
+				--header "Content-type: application/json" \
+				--request POST \
+				--data '{"userId" : 1, "firstName" : "Raymond", "lastName" : "Zamora", "gender" : "M", "birthdate" : "1990-02-23 10:30:00.0", "nationality" : "Brazilian", "portraitUrl" : "http://www.me.jpg", "bio" : "I began life as a small child.", "story" : "I am a very tough guy."}' \
+				ec2-54-193-80-119.us-west-1.compute.amazonaws.com:9000/api/v1/users/profile \
+				| python -mjson.tool
+						
+			example response
+			{
+			    "userProfile": {
+			        "bio": "I began life as a small child.",
+			        "birthdate": 635760000000,
+			        "firstName": "Zelda",
+			        "gender": "F       ",
+			        "id": 12,
+			        "lastName": "Zamora",
+			        "nationality": "Brazilian",
+			        "portraitUrl": "http://www.me.jpg",
+			        "story": "I am a very exotic lady.",
+			        "userId": 1
+			    }
+			}
+		*/
 	  
 		var firstMale = Array("John", "Tom", "Jon", "Tim", "Jun", "James", "Rick", "Casey", "Mark", "Jack", "Sam")
 		var firstFemale = Array("Sally", "Pam", "Jan", "Sarah", "Susie", "Mary", "Marie", "Sue")
@@ -218,6 +325,7 @@ object UsersTests extends ApplicationSpec {
 		lastName  = lastNames(Random.nextInt(lastNames.length))
 			
 		// TODO - Create random birth date, nationality, portrait, bio and history
+
 		
 		var userProfile = Json.obj(
 		    "userId" -> userId, 

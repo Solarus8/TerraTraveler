@@ -88,6 +88,8 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		  
 			ttt_UsersApiTest_createUser
 			ttt_UsersApiTest_getUserById
+			ttt_UsersApiTest_createUserProfile
+			ttt_UsersApiTest_getUserProfile
 			
 			"Create User Profile" in {pending}
 			"Get User Profile" in {pending}
@@ -190,6 +192,9 @@ class ApplicationSpec extends Specification with JsonMatchers {
 				"End of Edge Tests for Get User By Id" in {"End" must beEqualTo("End")}
 									
 			}
+			
+			"Edge Tests - Create User Profile" in {pending}
+			"Edge Tests - Get User Profile" in {pending}
 		
 			
 		} // End of Edge Tests
@@ -622,9 +627,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
   	//  	
   	def ttt_UsersApiTest_getUserById() {
   	  
-  		// Red Rock Cafe 37.393546   -122.078874
-  	
-  	
+  		// Red Rock Cafe 37.393546   -122.078874	
   		var latitude = 37.393546
   		var longitude = -122.078874
   		var role = "NORM"  	  
@@ -640,12 +643,12 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		var userFromId:JsValue = UsersTests.ttt_Users_getUserById(id)
 		
 		"ttt_UsersApiTest_getUserById - Get " + userName +  " with ID=" + id in {
-  		  
+  		 
   	  		userName must not be empty
 	  		email must contain("""@""")
 	  		email must contain(".com")
 	  		password must contain("password")
-  	  		password must contain(userName)
+  	  		password must contain(userName.replaceAll(""""""", ""))
   		  
   		  	id         must beEqualTo((userFromId \ "user" \ "id").as[Long]) 
   		  	primaryLoc must beEqualTo((userFromId \ "user" \ "primaryLoc").as[Long]) 
@@ -687,14 +690,131 @@ class ApplicationSpec extends Specification with JsonMatchers {
 //	  			   activity must beEqualTo((results \ "activityTypes" \ "activity" \ "activity").as[String])
 //	  		   }
   		
-  	}
+  		}
   		
-  		   
-  		
-  	  
+  
   	} // End of ttt_EventsApiTest_getAllActivityTypesAndCategories()
-  	
+  
+ 
+   	// =================================================================================
+  	//                           ttt_UsersApiTest_createUserProfile
+  	//
+ 	def ttt_UsersApiTest_createUserProfile() {
+ 	  
+ 	   //San Jose Airport 37.368613   -121.928523
+  		var latitude = 37.368613
+  		var longitude = -121.928523
+  		var role = "NORM"
+  		      
+  		// Create user and get ID
+  		var(userId:Long, user:JsValue) = UsersTests.ttt_Users_createUser(latitude, longitude, role)
+  		
 
+		var firstName = "Raymond" 
+		var lastName = "Zamora" 
+		var gender = "M" 
+		var birthdate = "1990-02-23 10:30:00.0" 
+		var nationality = "Brazilian" 
+		var portraitUrl = "http://www.me.jpg" 
+		var bio = "I began life as a small child." 
+		var story = "I am a very tough guy."
+  		
+  		
+  		var profile = Json.obj(
+  		
+			"userId"      -> userId, 
+			"firstName"   -> firstName, 
+			"lastName"    -> lastName, 
+			"gender"      -> gender, 
+			"birthdate"   -> birthdate, 
+			"nationality" -> nationality, 
+			"portraitUrl" -> portraitUrl, 
+			"bio"         -> bio, 
+			"story"       -> story
+ 		)
+ 
+ 		
+ 		// Create user profile
+ 		var (profileId:Long, newProfile:JsValue) = UsersTests.ttt_Users_createUserProfile(profile)
+ 
+ 		
+ 		"ttt_UsersApiTest_createUserProfile - Create profile for " + firstName + " " + lastName + " profile id = " +profileId in {
+ 		
+	 		userId must beEqualTo ((newProfile \ "userProfile" \ "userId").as[Long])
+	  		firstName must beEqualTo ((newProfile \ "userProfile" \ "firstName").as[String])
+	  		lastName must beEqualTo ((newProfile \ "userProfile" \ "lastName").as[String])
+	  		gender must beEqualTo ((newProfile \ "userProfile" \ "gender").as[String])
+	 		
+	 		// TODO - Covert date formats to match
+	  		//userId must beEqualTo ((newProfile \ "userProfile" \ "birthdate").as[String])
+	  		nationality must beEqualTo ((newProfile \ "userProfile" \ "nationality").as[String])
+	  		portraitUrl must beEqualTo ((newProfile \ "userProfile" \ "portraitUrl").as[String])
+	  		bio must beEqualTo ((newProfile \ "userProfile" \ "bio").as[String])
+	  		story must beEqualTo ((newProfile \ "userProfile" \ "story").as[String]) 		
+  		}
+ 		
+ 		
+  	  
+  	} // End of function ttt_UsersApiTest_createUserProfile
+
+   	// =================================================================================
+ 	//                            ttt_UsersApiTest_getUserProfile
+ 	def ttt_UsersApiTest_getUserProfile() {
+ 	  
+ 	   //Ridge Vineyards 37.298259   -122.116744
+  		var latitude = 37.298259
+  		var longitude = -122.116744
+  		var role = "NORM"
+  		      
+  		// Create user and get ID
+  		var(userId:Long, user:JsValue) = UsersTests.ttt_Users_createUser(latitude, longitude, role)
+  		
+		var firstName = "Mark" 
+		var lastName = "Zamora" 
+		var gender = "M" 
+		var birthdate = "1985-02-23 10:30:00.0" 
+		var nationality = "Brazilian" 
+		var portraitUrl = "http://www.me.jpg" 
+		var bio = "I began life as a small child." 
+		var story = "Raymond's brother"	  
+		  		  
+ 		var profile = Json.obj(
+  		
+			"userId"      -> userId, 
+			"firstName"   -> firstName, 
+			"lastName"    -> lastName, 
+			"gender"      -> gender, 
+			"birthdate"   -> birthdate, 
+			"nationality" -> nationality, 
+			"portraitUrl" -> portraitUrl, 
+			"bio"         -> bio, 
+			"story"       -> story
+ 		)
+		  
+		var (profileId:Long, newProfile:JsValue) = UsersTests.ttt_Users_createUserProfile(profile)
+		var profileFromId:JsValue = UsersTests.ttt_Users_getUserProfile(userId)
+ 
+ 
+  		"ttt_ttt_UsersApiTest_getUserProfile - Create profile for " + firstName + " " + lastName + " profile id = " +profileId in {
+ 		
+	 		userId must beEqualTo ((profileFromId \ "userProfile" \ "userId").as[Long])
+	  		firstName must beEqualTo ((profileFromId \ "userProfile" \ "firstName").as[String])
+	  		lastName must beEqualTo ((profileFromId \ "userProfile" \ "lastName").as[String])
+	  		gender must beEqualTo ((profileFromId \ "userProfile" \ "gender").as[String])
+	 		
+	 		// TODO - Covert date formats to match
+	  		//userId must beEqualTo ((newProfile \ "userProfile" \ "birthdate").as[String])
+	  		nationality must beEqualTo ((profileFromId \ "userProfile" \ "nationality").as[String])
+	  		portraitUrl must beEqualTo ((profileFromId \ "userProfile" \ "portraitUrl").as[String])
+	  		bio must beEqualTo ((profileFromId \ "userProfile" \ "bio").as[String])
+	  		story must beEqualTo ((profileFromId \ "userProfile" \ "story").as[String]) 		
+  		}
+ 
+			  
+ 	  
+ 	} // End of ttt_UsersApiTest_getUserProfile
+ 	
+ 	
 	     
 }  // end of class ApplicationSpec
 
