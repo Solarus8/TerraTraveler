@@ -3,6 +3,9 @@ import play.api.test._
 import play.api.test.Helpers._
 import play.api.test.Helpers.await
 import play.api.libs.json._
+import play.api.libs.json.Reads
+import play.api.libs.json.{Json, JsValue}
+import play.api.libs.functional.syntax._
 import play.api.libs.ws._
 
 import java.io._
@@ -202,9 +205,9 @@ object EventsTest {
 	}  // End of ttt_Events_associateUserAndvent()
 	
 	
-		// =================================================================================
+	// =================================================================================
 	//               ttt_EventsApi_getAllActivityTypesAndCategories
-	def ttt_EventsApi_getAllActivityTypesAndCategories(): JsValue = {
+	def ttt_Events_getAllActivityTypesAndCategories(): (JsValue, Map[Long, String]) = {
 	   
 		  /*
 		  curl \
@@ -230,10 +233,34 @@ object EventsTest {
         }
 		println("-----------------" + temp)
   
-		temp
+println("**************** ttt_getActivityCategories ******\n")		
+		var category:Map[Long, String] = ttt_getActivityCategories(temp)
+		
+println(category)
+		
+println("***************** After ttt_getActivityCategories ****\n")		
+		return (temp, category)
 					
 	} // End of ttt_EventsApi_getAllActivityTypesAndCategories
-  		  
+  
+	// =================================================================================
+	//                           ttt_getActivityCategories
+	//
+	def ttt_getActivityCategories (activityTypesJson:JsValue): Map[Long, String] = {
+	  
+  		var categoriesFromDatabaseMap:Map[Long, String] = Map();
+  	  	
+  		implicit val categories: Reads[(Long, String)] = (
+  		  (__ \ "id").read[Long] and
+		  (__ \ "category").read[String] 		  
+		).tupled
+		
+		val cats = (activityTypesJson \ "activityCategories").as[List[(Long, String)]] 				
+		cats.foreach({keyVal => categoriesFromDatabaseMap += (keyVal._1 -> keyVal._2)})
+				
+		return categoriesFromDatabaseMap
+	} // End of ttt_getActivityCategories
+	
 	
 
 

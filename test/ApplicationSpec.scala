@@ -51,12 +51,13 @@ class ApplicationSpec extends Specification with JsonMatchers {
 	// TODO - add test to verify server is running or nothing works 
 	val serverLocation = TestCommon.serverLocation
 
+
+	
 	"Terra Traveler Test" should {
   	
 		println("\n\n\n\n==================== Test Started " + Calendar.getInstance().getTime() + " =======================")
 
 
-		
 		"Web server tests" should {
 		
 			"send 404 on a bad request" in new WithApplication{
@@ -72,7 +73,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
 			}
 		}
 
-		
+
 		// =================================================================
 		//    Users API tests
 		//        Get User by ID
@@ -86,27 +87,21 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		"Users API test" should
 		{
 		  
-			ttt_UsersApiTest_createUser
+		    ttt_UsersApiTest_createUser
 			ttt_UsersApiTest_getUserById
 			ttt_UsersApiTest_createUserProfile
 			ttt_UsersApiTest_getUserProfile
 			
-			"Create User Profile" in {pending}
-			"Get User Profile" in {pending}
-			
-			// TODO - Create user profile
-			// TODO
+			// TODO - Get All Users test would take a long time - test not written yet
 						
 			// At least one test must be directly inside of "should {}" for test results to 
 			// work properly. Tests in a function work but tests in another file or class don't print
 			// the results correctly.				
-			"End of users API test" in {"End" must contain("End")			
+			"End of users API test" in {"End" must beEqualTo("End")}		
 
 				
 		} // End of user API tests
 
-			
-			
 		// =================================================================
 		//    Places API tests
 		//        Create Place
@@ -158,16 +153,14 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		"Events API tests" should {
 		  
 			ttt_eventsTest
-			ttt_EventsApiTest_getAllActivityTypesAndCategories
+//			ttt_EventsApiTest_getAllActivityTypesAndCategories
 				
 			"Get Events by User ID" in {pending}		
 			"Get Events by location radius using location ID" in {pending}
 			"Get Events by latitude, longitude, radius, activity, and category" in {pending}
 	
 						
-			"End of Events API test" in {			
-				"End" must beEqualTo("End")
-			}
+			"End of Events API test" in {"End" must beEqualTo("End")}
 		} // End of Events API tests
 		
 		
@@ -197,11 +190,15 @@ class ApplicationSpec extends Specification with JsonMatchers {
 			"Edge Tests - Get User Profile" in {pending}
 		
 			
-		} // End of Edge Tests
+		} // End of Edge Test		
+		
+		
+		
+		"End of all Tests" in {"End" must beEqualTo("End")}
 		
 	} // End of Terra Traveler Test should
 
-  } // End of "Application" should 
+  //} // End of "Application" should 
   
 
 // TODO - Move these functions to another file
@@ -662,10 +659,13 @@ class ApplicationSpec extends Specification with JsonMatchers {
   	
   	
  
-  	def ttt_EventsApiTest_getAllActivityTypesAndCategories() {
+  	def ttt_EventsApiTest_getAllActivityTypesAndCategories() { 
   	  
-  		var results:JsValue = EventsTest.ttt_EventsApi_getAllActivityTypesAndCategories
+  		// Get activity types from database
+  		var (results:JsValue, activitiesFromDatabase) = EventsTest.ttt_Events_getAllActivityTypesAndCategories
 
+  		// Get hard coded activity types
+  		var activityType = TestCommon.activityType
   		
         //{
         //    "activity": "Drinks", 
@@ -673,24 +673,40 @@ class ApplicationSpec extends Specification with JsonMatchers {
         //}, 
 
   		"testing" in {
-  		  1 must beEqualTo(1)
+  		   		  
+  			try {
+  		   
+		 		// Compare activities from database with hard code activities
+		  		activityType.keys.foreach{ id =>  	  		  	  		  
+		  		    var activity = activityType(id)
+		            println( "Key = " + id + ", Hard Code Value = " + activityType(id))
+		            println( "Key = " + id + ", Database Value  = " + activitiesFromDatabase(id.toLong))
+		        }
+  			} catch {
+  			  
+  			 	case e: Exception => println("\n\nERROR - Api Get All Activity Types and Categories: " + e +  "\n\n");
+  			}
+	 		
+	 		 1 must beEqualTo(1)
+ 		
   		}
   		
 
-  		var activityType = TestCommon.activityType
+ println("^^^^^^^^^^^^^^^^ Hard code activity type\n")
+  		activityType = TestCommon.activityType
   		
   
 	  		activityType.keys.foreach{ id =>  
 	  		   var activity = activityType(id)
 	           println( "Key = " + id + ", Value = " + activityType(id))
-
+            }
 	  		
 //	           "Verify " + id + ", value = " + activity in {
 //	           
 //	  			   activity must beEqualTo((results \ "activityTypes" \ "activity" \ "activity").as[String])
 //	  		   }
   		
-  		}
+
   		
   
   	} // End of ttt_EventsApiTest_getAllActivityTypesAndCategories()
@@ -756,6 +772,9 @@ class ApplicationSpec extends Specification with JsonMatchers {
  		
   	  
   	} // End of function ttt_UsersApiTest_createUserProfile
+
+
+
 
    	// =================================================================================
  	//                            ttt_UsersApiTest_getUserProfile
