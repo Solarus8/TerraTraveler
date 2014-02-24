@@ -30,7 +30,7 @@ object PlacesTest {
     //
     //     If name, url or description are blank then include random text"
     //
-  	def ttt_Places_CreateNewPlace(place:JsObject,radiusMeters:Long): (Long, JsValue) = {
+  	def ttt_Places_CreateNewPlace(place:JsValue,radiusMeters:Long): (Long, JsValue) = {
   	  
 		/*	  
 			curl \

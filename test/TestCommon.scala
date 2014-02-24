@@ -24,20 +24,7 @@ object TestCommon {
 		  
 	// Save a user Id to be used in multiple locations in the test
 	private var userId = ""	
-	  
-	// When place API is tested save Place ID to be used with other API tests
-	private var placeId:Long = 1
-	   
-//	// Location of the server where this test will be run
-//	def getServerLocation: String = {	  
-//		return server
-//	}
-	
-	
-	def getCurrentDirectory = new java.io.File( "." ).getCanonicalPath
-	
-
-	
+	  	
 	def getUserId: String = {
 		return userId
 	}
@@ -46,18 +33,6 @@ object TestCommon {
 	  
 		userId = id
 	}
-	
-	def getPlaceId: Long = {
-		
-		return placeId
-	}
-	
-	def setPlaceId(id: Long) {
-	  
-		placeId = id		
-	}
-	
-
 	
 	
 	// =================================================================================
@@ -145,22 +120,7 @@ object TestCommon {
 
 		return(userName, email, password)
 	}
-	
-	
- 	def ttt_getValue(str: String, name: String): String = {
- 	
- 	  
-  	   var value = ""
- 	  			
- 	   if (str.length > 0) {
- 		   var x = str.indexOf(""""""" + name + """"""") + name.length + 3
- 		   value = str.slice(x,str.indexOf(",", x))
- 	   }
- 		
-  		return value 
- 	}
- 	
-	
+		
  	
 	val activityType = Map(
 		"1"->"Running",

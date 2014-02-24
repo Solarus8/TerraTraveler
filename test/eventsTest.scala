@@ -24,7 +24,8 @@ object EventsTest {
 	// =================================================================================
 	//                 ttt_Events_createEvent
 	//
-	def ttt_Events_createEvent(event: JsObject): String = {	  
+	def ttt_Events_createEvent(event: JsObject): (Long, JsValue) = {	
+	    // API Documentation version 20
 		/*
 			curl \
 				--header "Content-type: application/json" \
@@ -39,54 +40,19 @@ object EventsTest {
 	  
 	  // No events in database {"events":[]}	
 	  
-		var temp = ""
-	  	
-	    // Web services (WS) is failing on [1,2] in ("activityCategories" : [1,2], "placeId" : 1, ")
-	    //      Web services will fail if id [1,2] doesn't have quotes
-	    //      Terra Traveler Create Event will fail if [1,2] has quotes
+  
+
+		var temp = Json.parse(Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/events").post(event)).body)		
+		var eventId = (temp \ "event" \ "id").as[Long]
 		  
-	    //var temp = Helpers.await(WS.url(serverLocation + "/api/v1/events").post(event)).body
-	    
-		// This a a temporary work around
-	    // TODO - Find a better solution
-    	//var path = "ttt_testFile.sh"
-    	  
-    	var path = "test/ttt_testFile.sh"
-	
-						    
-		val writer = new PrintWriter(new File(path))
-    		writer.write("""curl --header "Content-type: application/json" --request POST --data '{""" )
-    		writer.write(""""from" : "2014-02-23 10:30:00.0",""")
-    		writer.write(""""to" : "",""")
-    		writer.write(""" "title" : "Outside Lands",""")
-    		writer.write(""""activityType" : 22,""")
-    		writer.write(""""activityCategories" : [1,2],""")
-    		writer.write(""""placeId" : 1,""")
-    		writer.write(""""desc" : "Outside Lands: best music festival in S.F.",""")
-    		writer.write(""""minSize" : 2, """)
-    		writer.write(""""maxSize" : 50, """)
-    		writer.write(""""rsvpTot" : "", """)
-    		writer.write(""""waitListTot" : """"")
-    		writer.write("""}' """ + TestCommon.serverLocation + "/api/v1/events")		    
-		writer.close()
-
-		
-		 try {
-		     var tmp = "sh " + path !!	
-		     
-		     temp = tmp
-		 }
-		 catch {
-		 	case e: Exception => println("ERROR - Sending Create Event curl commands: " + e);
-		 }
-	    	    	    
-	    //println("============ Events JSON object ============\n" + event + "\n=========== Events after send curl command" + temp + "\n==End of Events =======\n")
-
-	    temp
+	    return (eventId, temp)
 	} // End of ttt_Events_createEvent
+
 	
-	
-	def ttt_Events_getEventById(id: String): String = {
+	// =================================================================================
+	//                          ttt_Events_getEventById
+	//
+	def ttt_Events_getEventById(id: Long): JsValue = {
 		/*
 		def ttt_Events_getEventById(eventId: String): String = {
 		curl \
@@ -97,10 +63,10 @@ object EventsTest {
 		| python -mjson.tool
 		*/
 	  
-		var temp = Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/events/" + id).get()).body
+		var temp = Json.parse(Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/events/" + id.toString.trim()).get()).body)
 		
 		temp
-	}
+	}  // End of ttt_Events_getEventById
 	
 	
 	def ttt_Events_getEventsByLocationRadiusUsingLocationId(locationId:Long, radius:Long, 
@@ -207,7 +173,7 @@ object EventsTest {
 	
 	// =================================================================================
 	//               ttt_EventsApi_getAllActivityTypesAndCategories
-	def ttt_Events_getAllActivityTypesAndCategories(): (JsValue, Map[Long, String]) = {
+	def ttt_Events_getAllActivityTypesAndCategories(): (JsValue, Map[Long, String], Map[Long, String]) = {
 	   
 		  /*
 		  curl \
@@ -239,12 +205,18 @@ println("**************** ttt_getActivityCategories ******\n")
 println(category)
 		
 println("***************** After ttt_getActivityCategories ****\n")		
-		return (temp, category)
+
+		var types:Map[Long, String] = ttt_getActivityCategories(temp)
+		
+		return (temp, category, types)
 					
 	} // End of ttt_EventsApi_getAllActivityTypesAndCategories
   
 	// =================================================================================
 	//                           ttt_getActivityCategories
+	//
+	// This function takes the Json returned from ttt_Events_getAllActivityTypesAndCategories
+	// and returns the activity categories as a map.
 	//
 	def ttt_getActivityCategories (activityTypesJson:JsValue): Map[Long, String] = {
 	  
@@ -259,6 +231,28 @@ println("***************** After ttt_getActivityCategories ****\n")
 		cats.foreach({keyVal => categoriesFromDatabaseMap += (keyVal._1 -> keyVal._2)})
 				
 		return categoriesFromDatabaseMap
+	} // End of ttt_getActivityCategories
+	
+	
+	// =================================================================================
+	//                           ttt_getActivityTypes
+	//
+	// This function takes the Json returned from ttt_Events_getAllActivityTypesAndCategories
+	// and returns the activity types as a Map.
+	//
+	def ttt_getActivityTypes (activityTypesJson:JsValue): Map[Long, String] = {
+	  
+  		var typesFromDatabaseMap:Map[Long, String] = Map();
+  	  	
+  		implicit val types: Reads[(Long, String)] = (
+  		  (__ \ "id").read[Long] and
+		  (__ \ "type").read[String] 		  
+		).tupled
+		
+		val cats = (activityTypesJson \ "activityTypes").as[List[(Long, String)]] 				
+		cats.foreach({keyVal => typesFromDatabaseMap += (keyVal._1 -> keyVal._2)})
+				
+		return typesFromDatabaseMap
 	} // End of ttt_getActivityCategories
 	
 	
