@@ -197,17 +197,10 @@ object EventsTest {
         	       	
         	case e: Exception => println("\n\nERROR - Api Get All Activity Types and Categories: " + e +  "\n\n");          
         }
-		println("-----------------" + temp)
   
-println("**************** ttt_getActivityCategories ******\n")		
 		var category:Map[Long, String] = ttt_getActivityCategories(temp)
-		
-println(category)
-		
-println("***************** After ttt_getActivityCategories ****\n")		
-
-		var types:Map[Long, String] = ttt_getActivityCategories(temp)
-		
+		var types:Map[Long, String] = ttt_getActivityTypes(temp)
+				
 		return (temp, category, types)
 					
 	} // End of ttt_EventsApi_getAllActivityTypesAndCategories
@@ -240,23 +233,19 @@ println("***************** After ttt_getActivityCategories ****\n")
 	// This function takes the Json returned from ttt_Events_getAllActivityTypesAndCategories
 	// and returns the activity types as a Map.
 	//
-	def ttt_getActivityTypes (activityTypesJson:JsValue): Map[Long, String] = {
+	def ttt_getActivityTypes (activityAndTypesJson:JsValue): Map[Long, String] = {
 	  
   		var typesFromDatabaseMap:Map[Long, String] = Map();
   	  	
   		implicit val types: Reads[(Long, String)] = (
   		  (__ \ "id").read[Long] and
-		  (__ \ "type").read[String] 		  
+		  (__ \ "activity").read[String] 		  
 		).tupled
 		
-		val cats = (activityTypesJson \ "activityTypes").as[List[(Long, String)]] 				
+		val cats = (activityAndTypesJson \ "activityTypes").as[List[(Long, String)]] 				
 		cats.foreach({keyVal => typesFromDatabaseMap += (keyVal._1 -> keyVal._2)})
 				
 		return typesFromDatabaseMap
 	} // End of ttt_getActivityCategories
-	
-	
-
-
 
 } // End of object EventsTest

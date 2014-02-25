@@ -109,17 +109,16 @@ object TestCommon {
 	  
 		var names = Array("John", "Tom", "Jon", "Tim", "Jun", "James", "Rick", "Casey", "Mark", "Jack", "Sam", 
 		    "Sally", "Pam", "Jan", "Sarah", "Susie", "Mary", "Marie", "Sue", "Jones", "Johnson", 
-		    "Smith", "Voelm", "Anderson", "Walker", "Gibson", "Thompson")
+		    "Smith", "Voelm", "Anderson", "Gibson", "Thompson")
 		    
-		var emails = Array("gmail", "yahoo", "aol", "outlook", "mail")
-		    
+		var emails = Array("gmail", "yahoo", "aol", "outlook", "mail", "spam")
 		
 		var userName = names(Random.nextInt(names.length)) + TestCommon.getUserCounter.toString.trim()
 		var email =  userName + "@" + emails(Random.nextInt(emails.length)) + ".com"
 		var password = "password" + userName
 
 		return(userName, email, password)
-	}
+	} // End of ttt_generateUserNameEmailAndPassword
 		
  	
 	val activityType = Map(

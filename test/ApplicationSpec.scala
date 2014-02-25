@@ -359,9 +359,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		
 		"Create User - User name with " +  """!@#$%^&*()|,."""  + " in name gets created" in {
  	       	 var temp = ttt_sendUserApiCommand (apiPath, userName + """!@#$%^&*()|,.""", email, password, role, latitude, longitude)
-   			 //println("\n\n===== %&$^&#% =======\n" + temp + "\n========")	
-   			 // TODO - comparison having problems with userName = BadUser863!@#$%^&*()|,. user name did get created
-   			 temp must contain(userName + """!@#$%^&*()|,.""")
+    		 temp must contain(userName + """!@#$%^&*()|,.""")
  	       	 temp must contain("primaryLoc")
 		}
 	
@@ -370,7 +368,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
 	       	var temp = ttt_sendUserApiCommand (apiPath, userName + "LonLat", email, password, role, 370.123, 370.456)       	    		
 			temp must contain(userName + "LonLat")
  	       	temp must contain("primaryLoc")
-	       	// TODO - Verify latude and longitude are around 10 degrees
+	       	// TODO - Verify latitude and longitude are around 10 degrees
 		}
 		
  	    
@@ -489,10 +487,9 @@ class ApplicationSpec extends Specification with JsonMatchers {
  		}
  	  
  	  
- 	}
+ 	} // End of ttt_placesApiTest_getPlaceById
  	
-
- 	
+ 		
   	// =================================================================================
   	//                               ttt_EventsApiTest_createEvent 
   	// 
@@ -549,7 +546,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
 			title               must beEqualTo((newEvent \ "event" \ "title").as[String])
 			activityType        must beEqualTo((newEvent \ "event" \ "activityType").as[Long])			
 // TODO -List comparison	[1,2]		
-//	  	  	activityCategories  must beEqualTo((newEvent \ "event" \ "activityType").as[List])
+//	  	  	activityCategories  must beEqualTo((newEvent \ "event" \ "activityType").as[List[Long]])
 			placeId             must beEqualTo((newEvent \ "event" \ "placeId").as[Long])
 			desc                must beEqualTo((newEvent \ "event" \ "description").as[String])
 			minSize             must beEqualTo((newEvent \ "event" \ "minSize").as[Long])
@@ -673,13 +670,9 @@ class ApplicationSpec extends Specification with JsonMatchers {
 	  		userName must not be empty
 	  		email must contain("""@""")
 	  		email must contain(".com")
-//	  		email must contain(userName)
+	  		email must contain(userName.replace(""""""",""))
 	  		password must contain("password")
-	  		
-	  		// TODO - Fix this error
-	  		// TODO - '"Susie758@outlook.com"' doesn't contain '"Susie758"' (ApplicationSpec.scala:658)
-	  		//password.toString() must contain(userName.toString())
-	  		
+	  			  		
   		}
   	} // End of ttt_UsersApiTest_createUse()
   	
@@ -701,7 +694,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
  		val userName = (user \ "user" \ "userName").toString() 
  		val email    = (user \ "user" \ "email").toString()
  		val password = (user \ "user" \ "password").toString()
-		val primaryLoc = (user \ "user" \ "primaryLoc").toString()
+		val primaryLoc = (user \ "user" \ "primaryLoc")
  		
 		var userFromId:JsValue = UsersTests.ttt_Users_getUserById(id)
 		
@@ -714,9 +707,9 @@ class ApplicationSpec extends Specification with JsonMatchers {
   	  		password must contain(userName.replaceAll(""""""", ""))
   		  
   		  	id         must beEqualTo((userFromId \ "user" \ "id").as[Long]) 
-  		  	primaryLoc must beEqualTo((userFromId \ "user" \ "primaryLoc").as[Long]) 
+  		  	primaryLoc must beEqualTo((userFromId \ "user" \ "primaryLoc")) 
 	  		role       must beEqualTo((userFromId \ "user" \ "role").as[String]) 
-	  		userName   must beEqualTo((userFromId \ "user" \ "userName").as[String]) 
+	  		userName.replaceAll(""""""", "")   must beEqualTo((userFromId \ "user" \ "userName").as[String]) 
 	  		
 	  			  		
   		}
@@ -753,67 +746,58 @@ class ApplicationSpec extends Specification with JsonMatchers {
   		var activityType = TestCommon.activityType
   		var activityCategory = TestCommon.activityCategories
   		
- 
-  		
- 		
-  		
- println("\n================== Categories from Database ==============\n") 
-  		var x =0
-  		categoriesFromDatabase.keys.foreach{id =>
-  		  	x = x + 1
- 			println(x + " Categories From Database " + id + ", " + categoriesFromDatabase(id))
-  		}
-  		
-  		
- 
- println("\n=============== Hard Coded Type ====================\n")
- 		var y =0
-  		activityType.keys.foreach{id =>
-  		    y = y + 1
-  			println(y + " Hard coded " + id + ", " + activityType(id))
- 		}
- 
- println("\n=============================================================\n")
-  		
-
-  		"Activities and Categories not finished yet" in {
+  		"ttt_EventsApiTest_getAllActivityTypesAndCategories - Activity Categories" in {
+   
+	 		var oneCategoryHc:String = "" 
+	 		var oneCategoryFromDatabase:String = ""
+	 		var passFail:Boolean = true
 		  
-  			try {
- 		   
-		 		// Compare activities from database with hard code activities
-		  		activityType.keys.foreach{ id =>  	
-		  		    println("Inside comparison loop " + id)
-		  		    var activity = activityType(id)
-		            println( "  Key = " + id + ", Hard Code Value = " + activityType(id))
-//		            if (typesFromDatabase isDefinedAt id)
-		        }
-  			} catch {
-  			  
-  			 	case e: Exception => println("\n\nERROR - Api Get All Activity Types and Categories: " + e +  "\n\n");
-  			}
+	 		// Compare activities from database with hard code activities
+	  		activityCategory.keys.foreach{ id =>  	
+	  		    oneCategoryHc = activityCategory(id)
+	  		    
+		        if (categoriesFromDatabase.isDefinedAt(id.toLong)) {
+	              oneCategoryFromDatabase = categoriesFromDatabase(id.toLong)
+		            } else {
+	              
+	            	passFail = false  // Activity Category missing from database              
+	            }	  		    
+	  	  		oneCategoryHc must beEqualTo(oneCategoryFromDatabase)	              	    
+	  		}
 	 		
-	 		 1 must beEqualTo(1)
- 		
-  		} // End of matchers
-  		
-
- println("^^^^^^^^^^^^^^^^ Hard code activity type\n")
-  		activityType = TestCommon.activityType
-  		
-  
-	  		activityType.keys.foreach{ id =>  
-	  		   var activity = activityType(id)
-	           println( "Key = " + id + ", Value = " + activityType(id))
-            }
+	 		// Number of hard coded activity Categories must match number in database
+	 		activityCategory.size must beEqualTo(categoriesFromDatabase.size)	 		
+	 		passFail must beEqualTo(true)
+	 		
+  		} // End of matchers for Category Types
+ 
 	  		
-//	           "Verify " + id + ", value = " + activity in {
-//	           
-//	  			   activity must beEqualTo((results \ "activityTypes" \ "activity" \ "activity").as[String])
-//	  		   }
-  		
+  		"ttt_EventsApiTest_getAllActivityTypesAndCategories - Activity Types" in {
+   
+	 		var oneTypeHc:String = "" 
+	 		var oneTypeFromDatabase:String = ""
+	 		var passFail:Boolean = true
+		  
+	 		// Compare activities from database with hard code activities
+	  		activityType.keys.foreach{ id =>  	
+	  		    oneTypeHc = activityType(id)
+	  		    
+		        if (typesFromDatabase.isDefinedAt(id.toLong)) {
+	              oneTypeFromDatabase = typesFromDatabase(id.toLong)
+		            } else {
+	              
+	            	passFail = false  // Activity type missing from database              
+	            }	  		    
+	  	  		oneTypeHc must beEqualTo(oneTypeFromDatabase)	              	    
+	  		}
+	 		
+	 		// Number of hard coded activity types must match number in database
+	 		activityType.size must beEqualTo(typesFromDatabase.size)	 		
+	 		passFail must beEqualTo(true)
+	 		
+  		} // End of matchers for Activity Types
+	  		
 
-  		
-  
   	} // End of ttt_EventsApiTest_getAllActivityTypesAndCategories()
   
  
@@ -873,12 +857,8 @@ class ApplicationSpec extends Specification with JsonMatchers {
 	  		bio must beEqualTo ((newProfile \ "userProfile" \ "bio").as[String])
 	  		story must beEqualTo ((newProfile \ "userProfile" \ "story").as[String]) 		
   		}
- 		
- 		
-  	  
+ 		 	  
   	} // End of function ttt_UsersApiTest_createUserProfile
-
-
 
 
    	// =================================================================================
@@ -937,8 +917,6 @@ class ApplicationSpec extends Specification with JsonMatchers {
 			  
  	  
  	} // End of ttt_UsersApiTest_getUserProfile
- 	
- 	
-	     
+ 		     
 }  // end of class ApplicationSpec
 
