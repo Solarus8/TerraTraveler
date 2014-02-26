@@ -12,6 +12,13 @@ import scala.util.Random
 
 import play.api.libs.json._
 
+import play.api.test._
+import play.api.test.Helpers._
+import play.api.test.Helpers.await
+
+import play.api.libs.ws._
+import play.api.mvc.Results._
+
 
 
 object TestCommon {
@@ -186,7 +193,49 @@ object TestCommon {
 		"21"->"After work"
 	)
  	
+	// =================================================================================
+	//                        ttt_sendApiCommand
+	//
+	def ttt_sendApiCommand(jsonToSend:JsValue, apiString:String, description:String): (Boolean, JsValue) = {
 	
+		var temp:JsValue = Json.obj()
+		var passFailStatus:Boolean = false
+		var apiUrl = TestCommon.serverLocation +  "/api/v1/" + apiString
+
+
+//		println("******** Command sent = " + apiUrl)
+//		println("******** Description  = " + description)
+//		println(jsonToSend)
+//		println("======================================")
+	  
+		try {
+		  
+			if (jsonToSend == Json.obj()) {
+//println("++++++++++ Get - " + apiUrl + " - " + description)			  
+				temp = Json.parse(Helpers.await(WS.url(apiUrl).get()).body)
+				passFailStatus = true
+				
+			} else {
+//println("+++++++++ Post - " + apiUrl + " - " + description)
+			    temp = Json.parse(Helpers.await(WS.url(apiUrl).post(jsonToSend)).body)
+				passFailStatus = true
+			}
+	
+       } catch {
+        	       	
+        	case e: Exception => 
+        	  println("\n======== ERROR - " + description )
+			  println("    Exception - " + e)
+        	  println("    Failed on " + apiUrl)
+        	  println("    Json object to was sent \n" + jsonToSend)
+        	  println("==================================\n")
+        	  
+        	  passFailStatus = false
+        	        
+        }
+       
+		return (passFailStatus, temp)
+	} // End of ttt_sendApiCommand
 
  
   

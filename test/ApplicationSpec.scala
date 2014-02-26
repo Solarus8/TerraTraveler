@@ -120,6 +120,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		  
 			ttt_placesApiTest_createPlace
 			ttt_placesApiTest_getPlaceById
+			ttt_placesApiTest_getPlacesByLatitudeLongitudeAndRadius
 	
 						
 			"Create Place 3rd Party Reference" in {pending}
@@ -417,7 +418,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
  	//
  	def ttt_placesApiTest_createPlace() {
  	  
- 		var name = "Hacker Dojo3"
+ 		var name = "Hacker Dojo"
  		var desc = "The place to be"
  		var cat  = "PARK"
  		var url  = "spam@spam.com"
@@ -917,6 +918,67 @@ class ApplicationSpec extends Specification with JsonMatchers {
 			  
  	  
  	} // End of ttt_UsersApiTest_getUserProfile
+ 
+ 	
+ 	// =================================================================================
+ 	//                   ttt_placesApiTest_getPlacesByLatitudeLongitudeAndRadius
+ 	//
+ 	def ttt_placesApiTest_getPlacesByLatitudeLongitudeAndRadius () {
+ 	  
+ 		var name = "Santa Cruz Beach Boardwalk"
+ 		var desc = "Beach and amusement park"
+ 		var cat  = "PARK"
+ 		var url  = "boardwalk@santacruz.com"
+ 		var latitude:Double  =  36.964207
+ 		var longitude:Double =  -122.018237
+ 
+ 		
+ 		var radiusSearch = 1000
+ 
+ 			
+ 		 var place = Json.obj(
+			"name" -> name,
+			"desc" -> desc, 
+			"cat"  -> cat,
+			"url" -> url, 
+			"latitude" -> latitude, 
+			"longitude" -> longitude	
+		)
+		
+ 		
+	 	  
+// 		var(placeId:Long, newPlace:JsValue) = PlacesTest.ttt_Places_CreateNewPlace(place, 0)
+//println("<<<<<<<<<<< Place id=" + placeId + ">>>>>>>>>>>>") 	  
+ 	  
+ 		var (passFailStatus:Boolean, results:JsValue) = PlacesTest.ttt_Places_getPlacesByLatitudeLongitudeAndRadius(latitude, longitude, radiusSearch)
+ 	  
+ 		println("\n--------------------Santa Cruz with on place in radius --------")
+ 		println(results)
+ 		println("\n-------------------------End places in radius ---------")
+ 
+ 		
+ 	
+
+ 		
+var(passFailStatus2:Boolean, results2:JsValue) = PlacesTest.ttt_Places_getPlacesByLatitudeLongitudeAndRadius(37.386052, -122.083851, radiusSearch)
+
+ 
+println("\n----------------Hacker Dojo with 1200 places in radius --------")
+println(results2)
+println("\n-------------------------End places in radius ---------")
+ 
+ 		
+ 		
+ 		"ttt_placesApiTest_getPlacesByLatitudeLongitudeAndRadius - Lots of places cause timeout" in {
+ 			failure
+ 		}
+
+ 	
+ 		
+ 		
+ 	
+ 	} // End of ttt_placesApiTest_getPlacesByLatitudeLongitudeAndRadius
+ 	
  		     
 }  // end of class ApplicationSpec
 

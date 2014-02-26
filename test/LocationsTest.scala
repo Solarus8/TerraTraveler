@@ -10,8 +10,6 @@ import play.api.test._
 import play.api.test.Helpers._
 import play.api.test.Helpers.await
 
-import play.api.libs.ws._
-import play.api.mvc.Results._
 
 import java.lang.Object
 
@@ -60,21 +58,17 @@ object PlacesTest {
         {
         	// TODO - Add random latitude and longitude if radius greater than zero
         }
-        
-        var temp:JsValue = Json.obj()
+                
         var placeId:Long = 0
         var locId:Long =0
 
-        try {
- 
-        	temp = Json.parse(Helpers.await(WS.url(TestCommon.serverLocation +  "/api/v1/locations/place").post(place)).body)
-        	placeId = (temp \ "place" \ "id").as[Long]
-        	locId   = (temp \ "place" \ "locId").as[Long] 
-        	         	
-        } catch {
-        	       	
-        	case e: Exception => println("\n\nERROR - Create New Place - exception caught: " + e + "\nJson sent " + place + "\n\n");          
+        var(passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(place, "locations/place", "Create Place")
+        if (passFailStatus == true)
+        {
+	        placeId = (temp \ "place" \ "id").as[Long]
+	    	locId   = (temp \ "place" \ "locId").as[Long] 
         }
+ 
        
 	   	return (placeId, temp)
 	}  // End function ttt_Places_CreateNewPlace
@@ -90,7 +84,7 @@ object PlacesTest {
 			--header "Content-type: application/json" \
 			--request GET \
 			--data '{}' \
-			ec2-54-193-80-119.us-west-1.compute.amazonaws.com:9000/api/v1/locations/place/3 \
+			localhost:9000/api/v1/locations/place/3 \
 			| python -mjson.tool
 			
 			example response
@@ -108,34 +102,59 @@ object PlacesTest {
 			}			
 			
 		*/
-  	  
- 		var temp = Json.obj()
- 
+ 	
  		
-        try {
-        	var temp = Json.parse(Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/locations/place/" + id.toString.trim()).get()).body)
-       
-        } catch {
-          
-          	case e: Exception => println("ERROR - Get Place By Id - exception caught: " + e);
-        }
-  	  
+        var(passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), "locations/place/" + id.toString.trim(), "Get Plce By Id")
+	   	  
   		return temp
   				
   	}
   	
-  	
-  	
-  	 def testFunction(someJson:JsObject) {
-  	   	  
-  	    var result = Helpers.await(WS.url("http://localhost:9998/api/v1/locations/place").post(someJson)).body
+	// =================================================================================
+	//                ttt_Places_getPlacesByLatitudeLongitudeAndRadius
+  	//
+  	def ttt_Places_getPlacesByLatitudeLongitudeAndRadius(latitude:Double, longitude:Double, radius:Long): (Boolean, JsValue) = {
+ 
+  		// Api documentaion version 20
+		/*
+			curl \
+				--header "Content-type: application/json" \
+				--request GET \
+				--data '{}' \
+				localhost:9000/api/v1/locations/place/37.774929/-122.419416/9500 \
+				| python -mjson.tool
+			
+			example response
+			{
+			    "places": [
+			        {
+			            "cat": "PARK",
+			            "desc": "In Golden Gate Park",
+			            "id": 3,
+			            "lat": 37.768395,
+			            "locId": 5,
+			            "lon": -122.492259,
+			            "name": "Polo Fields",
+			            "url": "http://sfrecpark.org/destination/golden-gate-park/"
+			        },
+		*/
   	  
-  	    println("\n==========================================================================")
- 		println("\n\n************* Json object inside function"  + someJson)
-		println("\n**************** Place Json Result inside function \n" + result + "\n*************\n")  
-  	     
-  	}
+		//  If no events in range
+		//	{
+		//	    "events": []
+		//	}
+   
+	  	var apiString = "locations/place/" + latitude.toString + "/" + longitude.toString + "/" + radius.toString
+	  	var description = "Get places by Latitude Longitude and Range"
+	  	
+	  	var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), apiString, description)
+  
+  		  	
+	  	return (passFailStatus, results)
+  	  
+  	}  // End of ttt_Places_getPlacesByLatitudeLongitudeAndRadius
   	
+ 	 	
   
 } // end of object PlacesTest
   
