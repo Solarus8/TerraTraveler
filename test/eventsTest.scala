@@ -6,7 +6,6 @@ import play.api.libs.json._
 import play.api.libs.json.Reads
 import play.api.libs.json.{Json, JsValue}
 import play.api.libs.functional.syntax._
-import play.api.libs.ws._
 
 import java.io._
 import java.io.PrintWriter
@@ -41,9 +40,11 @@ object EventsTest {
 	  // No events in database {"events":[]}	
 	  
   
-
-		var temp = Json.parse(Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/events").post(event)).body)		
-		var eventId = (temp \ "event" \ "id").as[Long]
+		var (passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(event,
+				"events", "Create Event")
+		
+		var eventId:Long = 0
+		if (passFailStatus == true) {eventId = (temp \ "event" \ "id").as[Long]}
 		  
 	    return (eventId, temp)
 	} // End of ttt_Events_createEvent
@@ -62,17 +63,21 @@ object EventsTest {
 		localhost:9998/api/v1/events/2 \
 		| python -mjson.tool
 		*/
+  
+		var (passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), 
+		    "events/" + id.toString.trim(), "Get Event By Id")
 	  
-		var temp = Json.parse(Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/events/" + id.toString.trim()).get()).body)
-		
 		temp
 	}  // End of ttt_Events_getEventById
 	
-	
-	def ttt_Events_getEventsByLocationRadiusUsingLocationId(locationId:Long, radius:Long, 
-	    activityType:Long, activityCategory:Long ) {
 
-	  // TODO - Not finished, creating us
+	// =================================================================================
+	//              ttt_Events_getEventsByLocationRadiusUsingLocationId
+	//
+	def ttt_Events_getEventsByLocationRadiusUsingLocationId(locationId:Long, radius:Long, 
+	    activityType:Long, activityCategory:Long ): JsValue = {
+
+	  // TODO - Not finished, creating this
 	  
 		/*
 			example request
@@ -80,7 +85,7 @@ object EventsTest {
 				--header "Content-type: application/json" \
 				--request GET \
 				--data '{}' \
-				ec2-54-193-80-119.us-west-1.compute.amazonaws.com:9000/api/v1/events/location/5/5100 \
+				localhost:9000/api/v1/events/location/5/5100 \
 				| python -mjson.tool
 						
 			xample response   [MODIFIED]
@@ -139,9 +144,12 @@ object EventsTest {
 			"activityCategory" -> activityCategory 
 		)
 	  
-		var temp = Helpers.await(WS.url(TestCommon.serverLocation + "api/v1/events/location/" + locationId + "/" + radius).post(events)).body
-		
-	  
+		var (passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), 
+		    "events/location/" + locationId + "/" + radius,
+		    "Get Events By Location Radius Using LocationId")
+
+		    
+	    return temp
 	} // End of function ttt_Events_getEventsByLocationRadiusUsingLocationId
 	  
 
@@ -151,7 +159,11 @@ object EventsTest {
 	  
 	}
 
-	def ttt_Events_associateUserAndvent(userId:Long, eventId:Long): String ={
+	
+	// =================================================================================
+	//                         ttt_Events_associateUserAndEvent
+	//
+	def ttt_Events_associateUserAndEvent(userId:Long, eventId:Long): (Boolean, JsValue) ={
 	
 		/*
 			curl \
@@ -162,13 +174,15 @@ object EventsTest {
 				| python -mjson.tool
 		*/	
 	  
-		var temp = Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/events/" + eventId.toString + "/user/" + userId.toString).get()).body
+	  
+		var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), 
+		    "events/" + eventId.toString + "/user/" + userId.toString, "Associate User and Event")
 
-		println("\n-------- Associate User and event ------\n" + temp + "\n--------------")
+		println("\n-------- Associate User and event ------\n" + results + "\n--------------")
 		
-		return temp
+		return (passFailStatus, results)
 		
-	}  // End of ttt_Events_associateUserAndvent()
+	}  // End of ttt_Events_associateUserAndEvent()
 	
 	
 	// =================================================================================
@@ -185,23 +199,18 @@ object EventsTest {
 		  }
 
 		  */
+
 	  
+		var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(),
+		    "activity-types-cats/all", "Get all Activity Types and Categories")
  
-		var temp:JsValue = Json.obj()
-	  	  
-		try
+
+  
+		var category:Map[Long, String] = ttt_getActivityCategories(results)
+		var types:Map[Long, String] = ttt_getActivityTypes(results)
 		
-			temp = Json.parse(Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/activity-types-cats/all").get()).body)
-  
-		catch {
-        	       	
-        	case e: Exception => println("\n\nERROR - Api Get All Activity Types and Categories: " + e +  "\n\n");          
-        }
-  
-		var category:Map[Long, String] = ttt_getActivityCategories(temp)
-		var types:Map[Long, String] = ttt_getActivityTypes(temp)
 				
-		return (temp, category, types)
+		return (results, category, types)
 					
 	} // End of ttt_EventsApi_getAllActivityTypesAndCategories
   

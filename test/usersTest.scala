@@ -10,7 +10,6 @@ import play.api.test._
 import play.api.test.Helpers._
 import play.api.test.Helpers.await
 
-import play.api.libs.ws._
 import play.api.mvc.Results._
 
 import java.lang.Object
@@ -54,48 +53,14 @@ object UsersTests extends ApplicationSpec {
 				    }
 				}
 		*/
+
 	  
-		var temp = Json.parse(Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/users/" + userId.toString.trim).get()).body)
+		var (passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), "users/" + userId.toString.trim, "Get User By Id")
 
 		temp
 	}
 
-	
-	
-	// This function will take the latitude and longitude passed to it and create at
-	// use at the range and compass bearing passed to it.
-	def ttt_Users_createUserWithRangeAndBearing(latitude:Double, longitude:Double, rangeMeters:Double, bearing:Long): String = {
-
-   		/*
-		curl \
-			--header "Content-type: application/json" \
-			--request POST \
-			--data '{ "userName" : "PJ", "email" : "PJ@sample.com", "password" : "secret", "role" : 
-			"NORM", "latitude" : 37.774932, "longitude" : -122.419420}' \
-			ec2-54-193-80-119.us-west-1.compute.amazonaws.com:9000/api/v1/users \
-			| python -mjson.tool
-		
-		example response
-		{
-		    "user": {
-		        "email": "PJ@sample.com",
-		        "id": 30,
-		        "password": "secret",
-		        "primaryLoc": 7,
-		        "role": "NORM",
-		        "userName": "PJ"
-		    }
-		} 		
-	 */
-	  
-	  
-	  
-	  
-		return "something"
-	}
-
-	
-	
+			
 	// =================================================================================
 	//                          ttt_Users_createUser
 	//
@@ -131,10 +96,7 @@ object UsersTests extends ApplicationSpec {
 			    }
 			} 		
  		 */
- 	  
-// TODO - Add test to verify user created data matches the data coming back from 
-// TODO -    the server and abort test if it fails.  All other tests will fail
- 	  
+ 	  	  
 		var(userName:String, email:String, password:String) = TestCommon.ttt_generateUserNameEmailAndPassword
 		
  		var userSent = Json.obj(
@@ -145,52 +107,18 @@ object UsersTests extends ApplicationSpec {
     		"latitude" -> latitude,  
     		"longitude" -> longitude
     	)
- 
-    	
-    	var temp:JsValue = Json.obj()
-    	var id:Long = 0
-    	
-    	try{  		    	
-			temp = Json.parse(Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/users").post(userSent)).body) 			
+   
+    	var (passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(userSent, "users", "Create User")
+    	    
+    	var id:Long = 0;
+		
+		if (passFailStatus == true) {
 			id = (temp \ "user" \ "id").as[Long]
-    	} catch {
-			case e: Exception => println("exception caught: " + e);
 		}
-  
+    	 
 		return (id, temp)	    
  	} 
 
- 
- 	
- 	// This not part of any Terra Traveler test but is being used for other testing
-	def runEdgeTests() {
-		"User Edge Tests" should {
-			"Test1" in {
-			  
-				1 must beEqualTo(1)
-			}
-			
-			test2
-			
-			"Test3" in {
-			  
-				3 must beEqualTo(3)
-			}		
-		  
-		  
-		}
-	  
-	}
-	
-	// This not part of any Terra Traveler test but is being used for other testing
-	def test2() {
-		"Test2" in {
-		  
-			2 must beEqualTo(2)
-		}	
-		
-	}
-	
 	
 	// =================================================================================
 	//                          ttt_Users_getUserProfile
@@ -214,10 +142,10 @@ object UsersTests extends ApplicationSpec {
 			    "userProfile": {
 			        "bio": "I yam what I yam",
 			        "birthdate": null,
-			        "firstName": "Richard",
+			        "firstName": "Ricky",
 			        "gender": "male",
 			        "id": 1,
-			        "lastName": "Walker",
+			        "lastName": "Ricardo",
 			        "nationality": "http://www.codemonkey.com",
 			        "story": null,
 			        "userId": 1
@@ -225,8 +153,9 @@ object UsersTests extends ApplicationSpec {
 			}
 		*/
 	  
-		var temp = Json.parse(Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/users/" 
-		    + userId.toString.trim + "/profile").get()).body)	  
+		var (passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), 
+		    "users/" + userId.toString.trim + "/profile", "Get User Profile")
+	  
 	  	    
 		 temp
 	}
@@ -264,12 +193,25 @@ object UsersTests extends ApplicationSpec {
 			    }
 			}
 		 */
-	  	  	  	  
-		var temp = Json.parse(Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/users/profile").post(profile)).body)
-		var profileId = (temp \ "userProfile" \ "id").as[Long]
+
+	  
+		var (passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(profile,
+		    "users/profile", "Create User Profile")
+
+		var proFileId:Long = 0;
+		if (passFailStatus == true) {
+			proFileId = (temp \ "userProfile" \ "id").as[Long]
+		  
+		}
+
+	  
+//		var temp = Json.parse(Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/users/profile").post(profile)).body)
 		
-		return (profileId, temp)
-	}
+		    
+//		    var profileId = (temp \ "userProfile" \ "id").as[Long]
+		
+		return (proFileId, temp)
+	}  // End of ttt_Users_createUserProfile
 	
 	
 	
@@ -279,7 +221,7 @@ object UsersTests extends ApplicationSpec {
 	// This function will generate a random profile so we won't have a bunch
 	// of users with the exact same profile.
 	//
-	def ttt_generateUserProfile(userId: String): String = {
+	def ttt_generateUserProfile(userId: String): JsValue = {
 
 	  // TODO - Not finished and not tested
 	  
@@ -341,42 +283,74 @@ example request
 
 println ("User profile id = " + userId)
 println ("User profile JSON = " + userProfile)
-	   
-	   var temp = Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/users/profile").post(userProfile)).body
+
+	   var (passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(userProfile,
+		   "users/profile", "Generate User Profile")
+
 		   
 	   temp
 	}
+
+	// =================================================================================
+	//                   ttt_Users_associateUserAndEvent
+	//
+
+	def ttt_Users_associateUserAndEvent(userId:Long, eventId:Long): (Boolean, JsValue) = {
+		// API Documentation version 20
+		/*
+			example request
+			curl \
+				--header "Content-type: application/json" \
+				--request POST \
+				--data '{}' \
+				localhost:9000/api/v1/events/2/user/1 \
+				| python -mjson.tool
+			
+			example response   [CORRECTED]
+			{
+			    "event": {
+			        "activityCategories": [
+			            1,
+			            2
+			        ],
+			        "activityType": 22,
+			        "description": "Outside Lands: best music festival in S.F.",
+			        "from": 1393142400000,
+			        "id": 1,
+			        "lat": 37.768395,
+			        "lon": -122.492259,
+			        "maxSize": 50,
+			        "minSize": 2,
+			        "placeId": 1,
+			        "rsvpTotal": null,
+			        "title": "Outside Lands",
+			        "to": null,
+			        "waitListTotal": null
+			    },
+			    "status": "success",
+			    "userId": 1,
+			    "user_event-PK": 2
+			}
+		*/
+
+	  
+println("=========== User id =  " + userId)
+println("=========== Place id = " + eventId)
+	  
+	  
+		var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), 
+		    "events/" + eventId.toString.trim() + "/user/" + userId.toString.trim(), "Associate User and Event")
 		
-	def ttt_generateUserObject(latitude: Double, longitude: Double, radius: Int, randomLocation: Boolean): JsObject = {
- 		// parameters
- 	    // latitude
- 	    // longitude
- 	    // radius:  For creating random location based on the radius form the longitude
- 	    //          and latitude. Radius in meters
- 	    // randomLocation: true - creates a random location based on latitude and longitude
- 	    //                 false - no change is latitude and longitude
- 
-		var (userName:String, email:String, password:String) = TestCommon.ttt_generateUserNameEmailAndPassword	  
- 	    var role = "NORM"
- 	      
- 	    if (randomLocation == true) {
- 	    	// TODO - add code for random location within radius
- 	    }
-  			   	  
-		var user = Json.obj(
-    		"userName" -> userName, 
-    		"email" -> email, 
-    		"password" -> password, 
-    		"role" -> role, 
-    		"latitude" -> latitude,  
-    		"longitude" -> longitude
-    	)
-	    	
-	    user
-  	}  // End of ttt_generateUserObject
-  	
+	  
+	    return (passFailStatus, results)
+		    
+	    	   
+	} // End of ttt_Users_associateUserAndEvent
+	
+
+	
  	
-}
+} // End of UsersTests object
 
 
 

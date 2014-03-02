@@ -227,7 +227,7 @@ object TestCommon {
         	  println("\n======== ERROR - " + description )
 			  println("    Exception - " + e)
         	  println("    Failed on " + apiUrl)
-        	  println("    Json object to was sent \n" + jsonToSend)
+        	  println("    Json object that was sent \n" + jsonToSend)
         	  println("==================================\n")
         	  
         	  passFailStatus = false

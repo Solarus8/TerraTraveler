@@ -104,7 +104,8 @@ object PlacesTest {
 		*/
  	
  		
-        var(passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), "locations/place/" + id.toString.trim(), "Get Plce By Id")
+        var(passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), 
+            "locations/place/" + id.toString.trim(), "Get Plce By Id")
 	   	  
   		return temp
   				
