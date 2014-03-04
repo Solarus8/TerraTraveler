@@ -17,7 +17,7 @@ import controllers._
 
 import scala.util.Random
 
-object PlacesTest {
+object LocationsApi {
  
   
 	// =================================================================================

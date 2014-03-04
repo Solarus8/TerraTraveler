@@ -24,7 +24,7 @@ import scala.util.Random
 //
 // ==================
 
-object UsersTests extends ApplicationSpec {
+object UsersApi extends ApplicationSpec {
   
 
 	
@@ -332,15 +332,11 @@ println ("User profile JSON = " + userProfile)
 			    "user_event-PK": 2
 			}
 		*/
+	  
 
+		var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(),
+		    "events/" + eventId.toString.trim() + "/user/" + userId.toString.trim(), "Associate User and Event")		
 	  
-println("=========== User id =  " + userId)
-println("=========== Place id = " + eventId)
-	  
-	  
-		var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), 
-		    "events/" + eventId.toString.trim() + "/user/" + userId.toString.trim(), "Associate User and Event")
-		
 	  
 	    return (passFailStatus, results)
 		    

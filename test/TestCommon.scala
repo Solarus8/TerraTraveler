@@ -10,6 +10,7 @@ import scala.math
 
 import scala.util.Random
 
+import play.api.libs.json.Json
 import play.api.libs.json._
 
 import play.api.test._
@@ -225,9 +226,9 @@ object TestCommon {
         	       	
         	case e: Exception => 
         	  println("\n======== ERROR - " + description )
-			  println("    Exception - " + e)
-        	  println("    Failed on " + apiUrl)
-        	  println("    Json object that was sent \n" + jsonToSend)
+			  println("    ** Exception - " + e)
+        	  println("    ** Failed on " + apiUrl)
+        	  println("    ** Json object that was sent \n" + jsonToSend)
         	  println("==================================\n")
         	  
         	  passFailStatus = false

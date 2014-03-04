@@ -2,8 +2,8 @@ import org.specs2.mutable._
 import org.specs2.mutable.Specification
 import org.specs2.matcher.JsonMatchers
 import org.specs2.runner._
-import org.junit.runner._
 
+import org.junit.runner._
 import play.api.test._
 import play.api.test.Helpers._
 import play.api.test.Helpers.await
@@ -14,11 +14,7 @@ import play.api.mvc.Results._
 import play.api.Play
 import play.api.Play.current
 import play.api.Application
-
 import scala.io.Source._
-
-
-//import java.lang.Object
 import java.util.Calendar
 import java.text.SimpleDateFormat
 import java.io._
@@ -26,6 +22,8 @@ import java.io.PrintWriter
 import java.io.File
 import scala.util.matching
 import scala.util.matching.Regex
+import java.util.Date
+import java.text.SimpleDateFormat
 
 
 // To run this test 
@@ -127,9 +125,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
 			"Create Place 3rd Party Reference" in {pending}
 			"Get Place 3rd Party Reference by ID" in {pending}	
 			"Get Place 3rd Party Reference by TerraTraveler Place ID" in {pending}	
-			"Get Place by ID" in {pending}	
-			"Get Users (attendies) by Event ID" in {pending}	
-			"Get all Activity Types and Categories" in {pending}	
+			"Get Users (attendies) by Event ID" in {pending}		
 			"Get User Contacts by User ID" in {pending}	
 
 			"Create Place 3rd Party Reference" in {pending}				
@@ -160,7 +156,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		    ttt_EventsApiTest_createEvent
 		    ttt_EventsApiTest_getEventById
 			ttt_EventsApiTest_getAllActivityTypesAndCategories
-				
+		
 			"Get Events by User ID" in {pending}		
 			"Get Events by location radius using location ID" in {pending}
 			"Get Events by latitude, longitude, radius, activity, and category" in {pending}
@@ -177,8 +173,12 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		//
 		// =================================================================
 		"Trips API tests" should {
-			ttt_TripsApiTest_createNewTrip
-			ttt_TripsApiTest_getTripsById
+		  
+TripsEdgeTests.temp1
+TripsEdgeTests.temp2		  
+TripsApiTests.test1
+			TripsApiTests.ttt_TripsApiTest_createNewTrip
+			TripsApiTests.ttt_TripsApiTest_getTripsById
 		  
 			"End of trips API test" in {"End" must beEqualTo("End")}
 		}
@@ -209,7 +209,30 @@ class ApplicationSpec extends Specification with JsonMatchers {
 			}
 			
 			"Edge Tests - Create User Profile" in {pending}
-			"Edge Tests - Get User Profile" in {pending}
+			"Edge Tests - Get User Profile" in {pending}			
+			"Edge Tests - Create Event" in {pending}
+			"Edge Tests - Get Events by User Id" in {pending}
+			"Edge Tests - Get Event by Id" in {pending}
+			"Edge Tests - Get Events by location radius using location ID" in {pending}
+			"Edge Tests - Get Events by latitude, longitude, radius, activity, and category" in {pending}
+			"Edge Tests - Create Place" in {pending}
+			"Edge Tests - Create Place 3rd Party Reference" in {pending}
+			"Edge Tests - Get Place 3rd Party Reference by ID" in {pending}
+			"Edge Tests - Get Place 3rd Party Reference by TerraTraveler Place ID" in {pending}
+			"Edge Tests - Get Place by ID" in {pending}
+			"Edge Tests - Get Places by latitude, longitude, and radius" in {pending}
+			"Edge Tests - Associate User and Event" in {pending}
+			"Edge Tests - Get Users (attendies) by Event ID" in {pending}
+			"Edge Tests - Get all Activity Types and Categories" in {pending}
+			"Edge Tests - Get User Contacts by User ID" in {pending}
+			"Edge Tests - Associate User to Contact" in {pending}
+			"Edge Tests - Create new Trip" in {pending}
+			"Edge Tests - Get Trip by ID" in {pending}
+			"Edge Tests - Create new Journal" in {pending}
+			"Edge Tests - Get Journal by ID" in {pending}
+			
+			
+			
 		
 			
 		} // End of Edge Test		
@@ -231,10 +254,13 @@ class ApplicationSpec extends Specification with JsonMatchers {
 // TODO - Move these functions to another file
 // TODO - Move these functions to another file	
 
- 	def ttt_getUserById_WithMatchers(id: String, title: String,expectedErrorMessage: String): String = {	    
-	    // expectedFailure - Blank if you expect test to pass
-	    //                 - or error message you expect to receive
-	    
+
+	
+		// =================================================================================
+ 	//                      ttt_EdgeTests_getUserById
+	//
+ 	def ttt_EdgeTests_getUserById {
+ 	  
 	  /*
 		curl \
 			--header "Content-type: application/json" \
@@ -253,28 +279,65 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		        "role": "BIZ",
 		        "userName": "Homer"
 		    }
- 	   */
-	    
-    	var temp = Helpers.await(WS.url(serverLocation + "/api/v1/users/" + id).get()).body	 
-	    
-	    title + "(" + "id= " +id +")" in {
-          	
-	    	if (expectedErrorMessage.length() > 0) {  // Expecting a failure to occur
-  		
-	    		temp must not contain("userName")
-	    		temp must contain(expectedErrorMessage)
+ 	   */	  
+ 	  
+ 	  	  
+		ttt_getUserById_WithMatchers("dsfddf", "Get User By Id - Send text instead of a number", """{}""")
+		
+		// Send negative number
+		ttt_getUserById_WithMatchers("-1", "Get User By Id - Send a negative number", """{"status":"None"}""")
+		
+		// Very large and very small integer sizes for ID
+		ttt_getUserById_WithMatchers("0", "Get User By Id - Check user id zerro", """{"status":"None"}""")
+		ttt_getUserById_WithMatchers("9223372036854775807", "Get User By Id - Send largest 'long' size available", """{"status":"None"}""")
+		ttt_getUserById_WithMatchers("9223372036854775807", "Get User By Id - Send greater than largest 'long' size ", """{"status":"None"}""")
+		ttt_getUserById_WithMatchers("-9223372036854775808", "Get User By Id - Send the smallest 'long' available", """{"status":"None"}""")
+		ttt_getUserById_WithMatchers("-9223372036854775809", "Get User By Id - Send less than smallest 'long' available", """{"status":"None"}""")	  
+ 
+ 			
+	  	def ttt_getUserById_WithMatchers(id: String, title: String,expectedErrorMessage: String): String = {	    
+		    // expectedFailure - Blank if you expect test to pass
+		    //                 - or error message you expect to receive
+		    
+		  
+		  
+			var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(),
+			    "users/" + id, title)
+//	    	var temp = Helpers.await(WS.url(serverLocation + "/api/v1/users/" + id).get()).body	 
 
-	    	}
-	    	else  // Expecting a correct user name
-	    	{	    	  
-  	    		temp must contain(""""id":""" + id.trim() )  // ID is on left side of string
-	    		temp must contain("primaryLoc")              // Check other end of string
-	    		
-	    	}
-	    }
-
- 		temp
-  	}
+			    
+			var temp = results.toString
+			
+println("\n\n================" + title + "============\n" + results + "\n============ temp =========" + temp + "\n========")
+			
+			
+			    
+		    title + "(" + "id= " +id +")" in {
+	          	
+		    	if (expectedErrorMessage.length() > 0) {  // Expecting a failure to occur
+	  		
+		    		temp must not contain("userName")
+		    		temp must contain(expectedErrorMessage)
+	
+		    	}
+		    	else  // Expecting a correct user name
+		    	{	    	  
+	  	    		temp must contain(""""id":""" + id.trim() )  // ID is on left side of string
+		    		temp must contain("primaryLoc")              // Check other end of string
+		    		
+		    	}
+		    }
+	
+	 		temp
+	  	} // End of ttt_getUserById_WithMatchers	
+		
+		
+		"End of function ttt_EdgeTests_getUserById" in {1 must beEqualTo(1)}
+		
+ 	 	
+ 	} // End of ttt_EdgeTests_getUserById
+	
+	
 
  	def ttt_testCreateUser(user: JsObject, checkDuplicateUserName: Boolean): String = {
  	  
@@ -327,22 +390,8 @@ class ApplicationSpec extends Specification with JsonMatchers {
 	    temp
  	} 	
 	 	
-	
-	
- 	def ttt_EdgeTests_getUserById {
- 	  
-		ttt_getUserById_WithMatchers("dsfddf", "Get User By Id - Send text instead of a number", "Cannot parse parameter id as Long:")
-		
-		// Send negative number
-		ttt_getUserById_WithMatchers("-1", "Get User By Id - Send a negative number", """{"status":"None"}""")
-		
-		// Very large and very small integer sizes for ID
-		ttt_getUserById_WithMatchers("0", "Get User By Id - Check user id zerro", """{"status":"None"}""")
-		ttt_getUserById_WithMatchers("9223372036854775807", "Get User By Id - Send largest 'long' size available", """{"status":"None"}""")
-		ttt_getUserById_WithMatchers("9223372036854775807", "Get User By Id - Send greater than largest 'long' size ", """{"status":"None"}""")
-		ttt_getUserById_WithMatchers("-9223372036854775808", "Get User By Id - Send the smallest 'long' available", """{"status":"None"}""")
-		ttt_getUserById_WithMatchers("-9223372036854775809", "Get User By Id - Send less than smallest 'long' available", "Cannot parse parameter id as Long:")	  
- 	}
+
+ 	
  		
  	def ttt_EdgeTests_CreateUser {
 		
@@ -392,8 +441,10 @@ class ApplicationSpec extends Specification with JsonMatchers {
 	       	// TODO - Verify latitude and longitude are around 10 degrees
 		}
 		
+		
  	    
 		"Create User - send commands with missing data" in {
+		  
 			pending
 		}
 		
@@ -454,7 +505,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
 			"longitude" -> longitude	
 		)
 
-		var (placeId:Long, newPlace:JsObject) =  PlacesTest.ttt_Places_CreateNewPlace(createPlace, 0)
+		var (placeId:Long, newPlace:JsObject) =  LocationsApi.ttt_Places_CreateNewPlace(createPlace, 0)
  
   		"ttt_placesApiTest_createPlace called " + name in {
  		  
@@ -492,8 +543,8 @@ class ApplicationSpec extends Specification with JsonMatchers {
 			"longitude" -> longitude	
 		)
 		
-		var (placeId:Long, newPlace:JsValue) =  PlacesTest.ttt_Places_CreateNewPlace (place, 0)
-		var placeById:JsValue = PlacesTest.ttt_Places_getPlaceById(placeId)
+		var (placeId:Long, newPlace:JsValue) =  LocationsApi.ttt_Places_CreateNewPlace (place, 0)
+		var placeById:JsValue = LocationsApi.ttt_Places_getPlaceById(placeId)
 		
 
  	  
@@ -541,7 +592,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		var waitListTot:Long = 3
 		
 		// Create a new place since place Id is needed to create and event
-		var(placeId:Long, newPlace:JsValue) = PlacesTest.ttt_Places_CreateNewPlace(place, 0)
+		var(placeId:Long, newPlace:JsValue) = LocationsApi.ttt_Places_CreateNewPlace(place, 0)
 		  	  
 	 	var event = Json.obj(
 			"from" -> from, 
@@ -558,7 +609,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		)
 		
 		// Create a new event
-		var (eventId:Long, newEvent:JsValue) = EventsTest.ttt_Events_createEvent(event)
+		var (eventId:Long, newEvent:JsValue) = EventsApi.ttt_Events_createEvent(event)
 
 		
 		"ttt_EventsApiTest_createEvent - Create Event, " + title + ", id= " + eventId in { 
@@ -602,7 +653,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		)
 		
 		// Create a new place since place Id is needed to create and event
-		var(placeId:Long, newPlace:JsValue) = PlacesTest.ttt_Places_CreateNewPlace(place, 0)
+		var(placeId:Long, newPlace:JsValue) = LocationsApi.ttt_Places_CreateNewPlace(place, 0)
 		
 		var from = "2014-02-23 10:30:00.0"
 		var to   = "2014-03-23 11:30:00.0" 
@@ -630,10 +681,10 @@ class ApplicationSpec extends Specification with JsonMatchers {
 		)
 		
 		// Create a new event
-		var (eventId:Long, newEvent:JsValue) = EventsTest.ttt_Events_createEvent(event)
+		var (eventId:Long, newEvent:JsValue) = EventsApi.ttt_Events_createEvent(event)
 		
 		// Get an event using the event Id
-		var eventFromId:JsValue = EventsTest.ttt_Events_getEventById(eventId)
+		var eventFromId:JsValue = EventsApi.ttt_Events_getEventById(eventId)
   	  
 		
 		"ttt_EventsApiTest_getEventById - Get Event By Id, " + title + ", id= " + eventId in { 
@@ -670,7 +721,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
   		var longitude = -122.050000
   		var role = "NORM"
   	     	    
-  		var(id:Long, user:JsValue) = UsersTests.ttt_Users_createUser(latitude, longitude, role)
+  		var(id:Long, user:JsValue) = UsersApi.ttt_Users_createUser(latitude, longitude, role)
 
   		// User name, email and password are returned as
   		//    userName =  bob123 which is random name with unique number
@@ -710,14 +761,14 @@ class ApplicationSpec extends Specification with JsonMatchers {
   		var role = "NORM"  	  
   	  
   		// Create a new user
-		var(id:Long, user:JsValue) = UsersTests.ttt_Users_createUser(latitude, longitude, role)
+		var(id:Long, user:JsValue) = UsersApi.ttt_Users_createUser(latitude, longitude, role)
 
  		val userName = (user \ "user" \ "userName").toString() 
  		val email    = (user \ "user" \ "email").toString()
  		val password = (user \ "user" \ "password").toString()
 		val primaryLoc = (user \ "user" \ "primaryLoc")
  		
-		var userFromId:JsValue = UsersTests.ttt_Users_getUserById(id)
+		var userFromId:JsValue = UsersApi.ttt_Users_getUserById(id)
 		
 		"ttt_UsersApiTest_getUserById - Get " + userName +  " with ID=" + id in {
   		 
@@ -761,7 +812,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
   	  
   	  
   		// Get activity types from database
-  		var (results:JsValue, categoriesFromDatabase, typesFromDatabase) = EventsTest.ttt_Events_getAllActivityTypesAndCategories
+  		var (results:JsValue, categoriesFromDatabase, typesFromDatabase) = EventsApi.ttt_Events_getAllActivityTypesAndCategories
 
   		// Get hard coded activity types
   		var activityType = TestCommon.activityType
@@ -833,7 +884,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
   		var role = "NORM"
   		      
   		// Create user and get ID
-  		var(userId:Long, user:JsValue) = UsersTests.ttt_Users_createUser(latitude, longitude, role)
+  		var(userId:Long, user:JsValue) = UsersApi.ttt_Users_createUser(latitude, longitude, role)
   		
 
 		var firstName = "Raymond" 
@@ -861,8 +912,9 @@ class ApplicationSpec extends Specification with JsonMatchers {
  
  		
  		// Create user profile
- 		var (profileId:Long, newProfile:JsValue) = UsersTests.ttt_Users_createUserProfile(profile)
+ 		var (profileId:Long, newProfile:JsValue) = UsersApi.ttt_Users_createUserProfile(profile)
  
+ 		var sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S");
  		
  		"ttt_UsersApiTest_createUserProfile - Create profile for " + firstName + " " + lastName + " profile id = " +profileId in {
  		
@@ -871,9 +923,11 @@ class ApplicationSpec extends Specification with JsonMatchers {
 	  		lastName must beEqualTo ((newProfile \ "userProfile" \ "lastName").as[String])
 	  		gender must beEqualTo ((newProfile \ "userProfile" \ "gender").as[String])
 	 		
-	 		// TODO - Covert date formats to match
-	  		//userId must beEqualTo ((newProfile \ "userProfile" \ "birthdate").as[String])
-	  		nationality must beEqualTo ((newProfile \ "userProfile" \ "nationality").as[String])
+   			var newDate = (newProfile \ "userProfile" \ birthdate).as[Long]
+ 
+ 			birthdate must beEqualTo(sdf.format(new Date(newDate)))
+ 	 		
+	 		nationality must beEqualTo ((newProfile \ "userProfile" \ "nationality").as[String])
 	  		portraitUrl must beEqualTo ((newProfile \ "userProfile" \ "portraitUrl").as[String])
 	  		bio must beEqualTo ((newProfile \ "userProfile" \ "bio").as[String])
 	  		story must beEqualTo ((newProfile \ "userProfile" \ "story").as[String]) 		
@@ -892,7 +946,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
   		var role = "NORM"
   		      
   		// Create user and get ID
-  		var(userId:Long, user:JsValue) = UsersTests.ttt_Users_createUser(latitude, longitude, role)
+  		var(userId:Long, user:JsValue) = UsersApi.ttt_Users_createUser(latitude, longitude, role)
   		
 		var firstName = "Mark" 
 		var lastName = "Zamora" 
@@ -916,8 +970,8 @@ class ApplicationSpec extends Specification with JsonMatchers {
 			"story"       -> story
  		)
 		  
-		var (profileId:Long, newProfile:JsValue) = UsersTests.ttt_Users_createUserProfile(profile)
-		var profileFromId:JsValue = UsersTests.ttt_Users_getUserProfile(userId)
+		var (profileId:Long, newProfile:JsValue) = UsersApi.ttt_Users_createUserProfile(profile)
+		var profileFromId:JsValue = UsersApi.ttt_Users_getUserProfile(userId)
  
  
   		"ttt_ttt_UsersApiTest_getUserProfile - Create profile for " + firstName + " " + lastName + " profile id = " +profileId in {
@@ -970,7 +1024,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
 // 		var(placeId:Long, newPlace:JsValue) = PlacesTest.ttt_Places_CreateNewPlace(place, 0)
 //println("<<<<<<<<<<< Place id=" + placeId + ">>>>>>>>>>>>") 	  
  	  
- 		var (passFailStatus:Boolean, results:JsValue) = PlacesTest.ttt_Places_getPlacesByLatitudeLongitudeAndRadius(latitude, longitude, radiusSearch)
+ 		var (passFailStatus:Boolean, results:JsValue) = LocationsApi.ttt_Places_getPlacesByLatitudeLongitudeAndRadius(latitude, longitude, radiusSearch)
  	  
  		println("\n--------------------Santa Cruz with on place in radius --------")
  		println(results)
@@ -980,7 +1034,7 @@ class ApplicationSpec extends Specification with JsonMatchers {
  	
 
  		
-var(passFailStatus2:Boolean, results2:JsValue) = PlacesTest.ttt_Places_getPlacesByLatitudeLongitudeAndRadius(37.386052, -122.083851, radiusSearch)
+var(passFailStatus2:Boolean, results2:JsValue) = LocationsApi.ttt_Places_getPlacesByLatitudeLongitudeAndRadius(37.386052, -122.083851, radiusSearch)
 
  
 println("\n----------------Hacker Dojo with 1200 places in radius --------")
@@ -1013,7 +1067,7 @@ println("\n-------------------------End places in radius ---------")
   		var role = "NORM"
   	    
   		// Create user
-  		var(userId:Long, user:JsValue) = UsersTests.ttt_Users_createUser(latitude, longitude, role)
+  		var(userId:Long, user:JsValue) = UsersApi.ttt_Users_createUser(latitude, longitude, role)
 
   		// Create a place to hold the event
  		var createPlace = Json.obj(
@@ -1024,7 +1078,7 @@ println("\n-------------------------End places in radius ---------")
 			"latitude" -> latitude, 
 			"longitude" -> longitude	
 		)
-  		var (placeId:Long, newPlace:JsObject) =  PlacesTest.ttt_Places_CreateNewPlace(createPlace, 0)
+  		var (placeId:Long, newPlace:JsObject) =  LocationsApi.ttt_Places_CreateNewPlace(createPlace, 0)
  		
   		// Create an event 
   		var activityCategories: List[Long] = List(1,2)
@@ -1041,14 +1095,17 @@ println("\n-------------------------End places in radius ---------")
 		    "rsvpTot" -> 7, 
 		    "waitListTot" -> 3
 		)
-		var (eventId:Long, newEvent:JsValue) = EventsTest.ttt_Events_createEvent(event)
+		var (eventId:Long, newEvent:JsValue) = EventsApi.ttt_Events_createEvent(event)
 
   		// Associate the user with the event
+
 		
- // TODO - Test failing here but works manual, probably some simple problem I will find later.
- // TODO		var (passFailStatus:Boolean, results:JsValue) = UsersTests.ttt_Users_associateUserAndEvent(userId, eventId)
+//println("-------- Assoicate UserId: " + userId + " Event Id = " + eventId)
 		
- //println("========== Associate User and Event ==========\n" + results + "\n==============")	
+ // TODO - Test failing here but works manualy, probably some simple problem I will find later.
+//		var (passFailStatus:Boolean, results:JsValue) = UsersTests.ttt_Users_associateUserAndEvent(userId, eventId)
+		
+//     println("========== Associate User and Event ==========\n" + results + "\n==============")	
   	
  		
  		"ttt_UsersApiTest_associateUserAndEvent" in {pending} 
@@ -1056,18 +1113,20 @@ println("\n-------------------------End places in radius ---------")
  	  	  
  	} // End of ttt_UsersApiTest_associateUserAndEvent
  	
- 	
+ /*	
  	// =================================================================================
  	//                       ttt_TripsApiTest_createNewTrip
  	//
  	def ttt_TripsApiTest_createNewTrip() {
+ 	
+ 		// TODO - Add tests for PLANNING, ONGOING, ENDED, DEFAULT
  	  
  		var latitude = 37.865348
   		var longitude = -119.538374
   		var role = "NORM"
   	    
   		// Create user
-  		var(userId:Long, user:JsValue) = UsersTests.ttt_Users_createUser(latitude, longitude, role)
+  		var(userId:Long, user:JsValue) = UsersApi.ttt_Users_createUser(latitude, longitude, role)
 
   		 var name  =  "Istanbul 2014"
   		 var desc  = """It's been too long since I visited my favorite city. I'm going to booking a flight this week!""" 
@@ -1084,25 +1143,27 @@ println("\n-------------------------End places in radius ---------")
   				"status"   -> status
  		)
  		
- 		var (passFailStatus:Boolean, tripId:Long, resultsDefault:JsValue) = TripsTests.ttt_Trips_createNewTrip(newTrip)
-
+ 		var (passFailStatus:Boolean, tripId:Long, resultsDefault:JsValue) = TripsApi.ttt_Trips_createNewTrip(newTrip)
+ 		var sdf = new SimpleDateFormat("yyyy-MM-dd");
  		
  		"ttt_TripsApiTest_createNewTrip" in {
  		
- 			var (passFailStatus1:Boolean, tripId:Long, resultsDefault:JsValue) = TripsTests.ttt_Trips_createNewTrip(newTrip)
+ 			var (passFailStatus1:Boolean, tripId:Long, resultsDefault:JsValue) = TripsApi.ttt_Trips_createNewTrip(newTrip) 
  		  
  			name       must beEqualTo((resultsDefault \ "trip" \ "name").as[String])
  			desc 	   must beEqualTo((resultsDefault \ "trip" \ "desc").as[String])
- 			userId 	   must beEqualTo((resultsDefault \ "trip" \ "userId").as[Long]) 	 			
- 			// TODO date conversions
+ 			userId 	   must beEqualTo((resultsDefault \ "trip" \ "userId").as[Long]) 
  			
- 			// TODO add tests for PLANNING, ONGOING, ENDED, DEFAULT
-
- 			
+   			var newDateFrom = (resultsDefault \ "trip" \ "dateFrom").as[Long]
+ 			var newDateTo = (resultsDefault \ "trip" \ "dateFrom").as[Long]
+ 
+ 			dateFrom must beEqualTo(sdf.format(new Date(newDateFrom)))
+ 			dateTo must beEqualTo(sdf.format(new Date(newDateTo)))
  			
  		} // End of matchers
  	  
  	} // End of ttt_TripsApiTest_createNewTrip
+ 	
  	
  	// =================================================================================
  	//                    ttt_TripsApiTest_getTripsById
@@ -1114,7 +1175,7 @@ println("\n-------------------------End places in radius ---------")
   		var role = "NORM"
   	    
   		// Create user
-  		var(userId:Long, user:JsValue) = UsersTests.ttt_Users_createUser(latitude, longitude, role)
+  		var(userId:Long, user:JsValue) = UsersApi.ttt_Users_createUser(latitude, longitude, role)
 
   		 var name  =  "Istanbul 2015"
   		 var desc  = "I am going to visit again"
@@ -1130,20 +1191,28 @@ println("\n-------------------------End places in radius ---------")
   				"dateTo"   -> dateTo, 
   				"status"   -> status
  		)
+ 
+ 		
+ 		var sdf = new SimpleDateFormat("yyyy-MM-dd");
  		
  		// Create new trip and get the tripId
- 		var (passFailStatus:Boolean, tripId:Long, resultsDefault:JsValue) = TripsTests.ttt_Trips_createNewTrip(newTrip)
+ 		var (passFailStatus:Boolean, tripId:Long, resultsDefault:JsValue) = TripsApi.ttt_Trips_createNewTrip(newTrip)
  		
- 		var (passFailId:Boolean, results:JsValue) = TripsTests.ttt_Trips_getTripById(tripId)
+ 		var (passFailId:Boolean, results:JsValue) = TripsApi.ttt_Trips_getTripById(tripId)
  			
  		"ttt_TripsApiTest_getTripsById" in {
  		
- 			var (passFailStatus:Boolean, tripId:Long, results:JsValue) = TripsTests.ttt_Trips_createNewTrip(newTrip)
+ 			var (passFailStatus:Boolean, tripId:Long, results:JsValue) = TripsApi.ttt_Trips_createNewTrip(newTrip)
  		  
  			name       must beEqualTo((results \ "trip" \ "name").as[String])
  			desc 	   must beEqualTo((results \ "trip" \ "desc").as[String])
- 			userId 	   must beEqualTo((results \ "trip" \ "userId").as[Long]) 	 			
- 			// TODO date conversions
+ 			userId 	   must beEqualTo((results \ "trip" \ "userId").as[Long]) 	 
+ 			
+   			var newDateFrom = (results \ "trip" \ "dateFrom").as[Long]
+ 			var newDateTo = (results \ "trip" \ "dateFrom").as[Long]
+ 
+ 			dateFrom must beEqualTo(sdf.format(new Date(newDateFrom)))
+ 			dateTo must beEqualTo(sdf.format(new Date(newDateTo)))
  			
   			
  		} // End of matchers
@@ -1151,7 +1220,7 @@ println("\n-------------------------End places in radius ---------")
  	  
  	  
  	}  // End of ttt_TripsApiTest_getTripsById
- 	
+ */	
  		     
 }  // end of class ApplicationSpec
 

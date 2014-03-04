@@ -17,7 +17,7 @@ import play.api.Application
 
 import scala.sys.process._
 
-object EventsTest {
+object EventsApi {
 
 	
 	// =================================================================================

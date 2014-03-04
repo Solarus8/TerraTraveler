@@ -12,7 +12,7 @@ import play.api.test.Helpers.await
 
 import java.lang.Object
 
-object TripsTests {
+object TripsApi  {
   
 	// =================================================================================
     //                          ttt_Trips_createNewTrip
