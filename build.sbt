@@ -9,4 +9,6 @@ libraryDependencies ++= Seq(
   	cache
 )     
 
+testOptions in Test := Seq(Tests.Filter((s: String) => !s.startsWith("ttt")))
+
 play.Project.playScalaSettings

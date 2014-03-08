@@ -1,14 +1,24 @@
-import play.api.libs.json._
-import java.text.SimpleDateFormat
-import java.util.Date
 
-object TripsApiTests extends ApplicationSpec {
+
+trait TripsApiTests extends org.specs2.mutable.Specification {
   
-	def test1 {
-		"Test1" in {1 must beEqualTo(1)}
+	import play.api.libs.json._
+  	import java.text.SimpleDateFormat
+  	import java.util.Date
+  
+	def Trips_test1 {
+		println("TripsApiTests - Test1")
+		"TripsApiTests - Test1" in {"1" must beEqualTo("1")}	
 	}
-  
-  
+	
+		def Trips_test2 {
+		println("TripsApiTests - Test2")
+		"TripsApiTests - Test1" in {"1" must beEqualTo("1")}	
+	}
+	
+	
+	
+	
   	
  	// =================================================================================
  	//                       ttt_TripsApiTest_createNewTrip
@@ -17,7 +27,6 @@ object TripsApiTests extends ApplicationSpec {
  	
  		// TODO - Add tests for PLANNING, ONGOING, ENDED, DEFAULT
  
-"Beginning of trip test" in {1 must beEqualTo(1)} 	  
  		var latitude = 37.865348
   		var longitude = -119.538374
   		var role = "NORM"
@@ -40,7 +49,6 @@ object TripsApiTests extends ApplicationSpec {
   				"status"   -> status
  		)
  		
- 		var (passFailStatus:Boolean, tripId:Long, resultsDefault:JsValue) = TripsApi.ttt_Trips_createNewTrip(newTrip)
  		var sdf = new SimpleDateFormat("yyyy-MM-dd");
  
  		

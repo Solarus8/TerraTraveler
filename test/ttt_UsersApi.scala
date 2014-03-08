@@ -24,7 +24,7 @@ import scala.util.Random
 //
 // ==================
 
-object UsersApi extends ApplicationSpec {
+object UsersApi{
   
 
 	
