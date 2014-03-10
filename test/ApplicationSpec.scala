@@ -17,10 +17,9 @@ import play.api.test.Helpers._
 //
 
 @RunWith(classOf[JUnitRunner])
-//class ApplicationSpec extends Specification with JsonMatchers {
 class ApplicationSpec extends org.specs2.mutable.Specification 
-	with UsersApiTests with LocationsApiTests with EventsApiTests with TripsApiTests
-	with UsersEdgeTests with LocationsEdgeTests with EventsEdgeTests with TripsEdgeTests {
+	with UsersApiTests  with LocationsApiTests  with EventsApiTests  with TripsApiTests  with JournalsApiTests
+	with UsersEdgeTests with LocationsEdgeTests with EventsEdgeTests with TripsEdgeTests with JournalsEdgeTests {
  
   
 	// TODO - add test to verify server is running or nothing works 
@@ -31,14 +30,13 @@ class ApplicationSpec extends org.specs2.mutable.Specification
 		println("\n\n\n\n==================== Test Started " + Calendar.getInstance().getTime() + " =======================")
 
 
+		// Default tests that verify web server works
 		"Web server tests" should {
 		
 			"send 404 on a bad request" in new WithApplication{
 				  route(FakeRequest(GET, "/boum")) must beNone
 			}
-			
-
-			
+						
 			"render the index page" in new WithApplication{
 				val home = route(FakeRequest(GET, "/")).get
 				
@@ -47,9 +45,7 @@ class ApplicationSpec extends org.specs2.mutable.Specification
 				contentAsString(home) must contain ("Terra Traveler app is ready.")
 			}
 		}
-
 	
-
 		// =================================================================
 		//    Users API tests
 		//        Get User by ID
@@ -71,16 +67,15 @@ class ApplicationSpec extends org.specs2.mutable.Specification
 			
 			// TODO - Get All Users test would take a long time - test not written yet
 						
-			// At least one test must be directly inside of "should {}" for test results to 
-			// work properly. Tests in a function work but tests in another file or class don't print
-			// the results correctly.				
+			// At least one test must be directly inside of "should {}" or "in {} for test results 
+			// to work properly. 		
 			"End of users API test" in {"End" must beEqualTo("End")}		
 
 				
 		} // End of user API tests
 
 		// =================================================================
-		//    Places API tests
+		//    Locations API tests
 		//        Create Place
 		//        Create Place 3rd Party Reference
 		//        Get Place 3rd Party Reference by ID
@@ -94,8 +89,6 @@ class ApplicationSpec extends org.specs2.mutable.Specification
 		// =================================================================
 			
 		"Locations tests API" should {
-		  
-		  
 		  
 			ttt_placesApiTest_createPlace
 			ttt_placesApiTest_getPlaceById
@@ -162,48 +155,14 @@ class ApplicationSpec extends org.specs2.mutable.Specification
 		
 
 		"Edge tests" should	{
-		
-			"Edge Tests - Create New User /api/v1/users" should {
-			  
-				ttt_EdgeTests_CreateUser
-			  			  				
-				"End of Edge Tests for Create User" in {"End" must beEqualTo("End")}
-				  				  
+		  
+			ttt_runAll_usersEdgeTests
+			ttt_runAll_eventsEdgeTests
+			ttt_runAll_locationsEdgeTests
+			ttt_runAll_tripsEdgeTests
+			ttt_runAll_journalsEdgeTests
 
-			
-			} // End of Create User edge tests
-
-
-			"Edge Tests - Get User By Id /api/v1/users/1:" should {
-			  
-				ttt_EdgeTests_getUserById
-			  				
-				"End of Edge Tests for Get User By Id" in {"End" must beEqualTo("End")}
-									
-			}
-			
-			"Edge Tests - Create User Profile" in {pending}
-			"Edge Tests - Get User Profile" in {pending}			
-			"Edge Tests - Create Event" in {pending}
-			"Edge Tests - Get Events by User Id" in {pending}
-			"Edge Tests - Get Event by Id" in {pending}
-			"Edge Tests - Get Events by location radius using location ID" in {pending}
-			"Edge Tests - Get Events by latitude, longitude, radius, activity, and category" in {pending}
-			"Edge Tests - Create Place" in {pending}
-			"Edge Tests - Create Place 3rd Party Reference" in {pending}
-			"Edge Tests - Get Place 3rd Party Reference by ID" in {pending}
-			"Edge Tests - Get Place 3rd Party Reference by TerraTraveler Place ID" in {pending}
-			"Edge Tests - Get Place by ID" in {pending}
-			"Edge Tests - Get Places by latitude, longitude, and radius" in {pending}
-			"Edge Tests - Associate User and Event" in {pending}
-			"Edge Tests - Get Users (attendies) by Event ID" in {pending}
-			"Edge Tests - Get all Activity Types and Categories" in {pending}
-			"Edge Tests - Get User Contacts by User ID" in {pending}
-			"Edge Tests - Associate User to Contact" in {pending}
-			"Edge Tests - Create new Trip" in {pending}
-			"Edge Tests - Get Trip by ID" in {pending}
-			"Edge Tests - Create new Journal" in {pending}
-			"Edge Tests - Get Journal by ID" in {pending}
+			"End of Edge tests" in {"End" must beEqualTo("End")}
 			
 		} // End of Edge Test		
 		
@@ -213,9 +172,12 @@ class ApplicationSpec extends org.specs2.mutable.Specification
 	
 	} // End of Terra Traveler Test should
 
-  //} // End of "Application" should 
+ 
+
   
-}
+} // End of the main program ApplicationSpec
+
+
 
 	
 	

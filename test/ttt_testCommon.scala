@@ -225,11 +225,11 @@ object TestCommon {
        } catch {
         	       	
         	case e: Exception => 
-        	  println("\n======== ERROR - " + description )
+        	  println("\n\n======== ERROR - " + description )
 			  println("    ** Exception - " + e)
         	  println("    ** Failed on " + apiUrl)
         	  println("    ** Json object that was sent \n" + jsonToSend)
-        	  println("==================================\n")
+        	  println("==================================\n\n")
         	  
         	  passFailStatus = false
         	        

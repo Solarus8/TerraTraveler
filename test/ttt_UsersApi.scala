@@ -27,6 +27,9 @@ import scala.util.Random
 object UsersApi{
   
 
+	// =================================================================================
+	//                    ttt_Users_getUserById
+	//
 	
 	def ttt_Users_getUserById(userId: Long): JsValue ={
 
@@ -58,7 +61,7 @@ object UsersApi{
 		var (passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), "users/" + userId.toString.trim, "Get User By Id")
 
 		temp
-	}
+	} // End of ttt_Users_getUserById
 
 			
 	// =================================================================================
@@ -294,7 +297,6 @@ println ("User profile JSON = " + userProfile)
 	// =================================================================================
 	//                   ttt_Users_associateUserAndEvent
 	//
-
 	def ttt_Users_associateUserAndEvent(userId:Long, eventId:Long): (Boolean, JsValue) = {
 		// API Documentation version 20
 		/*
@@ -336,16 +338,13 @@ println ("User profile JSON = " + userProfile)
 
 		var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(),
 		    "events/" + eventId.toString.trim() + "/user/" + userId.toString.trim(), "Associate User and Event")		
-	  
-	  
+	  	  
 	    return (passFailStatus, results)
 		    
 	    	   
 	} // End of ttt_Users_associateUserAndEvent
 	
-
 	
- 	
 } // End of UsersTests object
 
 

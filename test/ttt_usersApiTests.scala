@@ -227,7 +227,7 @@ trait UsersApiTests extends org.specs2.mutable.Specification {
 			"latitude" -> latitude, 
 			"longitude" -> longitude	
 		)
-  		var (placeId:Long, newPlace:JsObject) =  LocationsApi.ttt_Places_CreateNewPlace(createPlace, 0)
+  		var (placeId:Long, newPlace:JsObject) =  LocationsApi.ttt_Places_CreatePlace(createPlace, 0)
  		
   		// Create an event 
   		var activityCategories: List[Long] = List(1,2)

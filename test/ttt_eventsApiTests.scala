@@ -33,7 +33,9 @@ trait EventsApiTests extends org.specs2.mutable.Specification {
 		var waitListTot:Long = 3
 		
 		// Create a new place since place Id is needed to create and event
-		var(placeId:Long, newPlace:JsValue) = LocationsApi.ttt_Places_CreateNewPlace(place, 0)
+		var(placeId:Long, newPlace:JsValue) = LocationsApi.ttt_Places_CreatePlace(place, 0)
+		
+		
 		  	  
 	 	var event = Json.obj(
 			"from" -> from, 
@@ -95,7 +97,7 @@ trait EventsApiTests extends org.specs2.mutable.Specification {
 		)
 		
 		// Create a new place since place Id is needed to create and event
-		var(placeId:Long, newPlace:JsValue) = LocationsApi.ttt_Places_CreateNewPlace(place, 0)
+		var(placeId:Long, newPlace:JsValue) = LocationsApi.ttt_Places_CreatePlace(place, 0)
 		
 		var from = "2014-02-23 10:30:00.0"
 		var to   = "2014-03-23 11:30:00.0" 

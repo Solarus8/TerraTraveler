@@ -24,7 +24,7 @@ trait LocationsApiTests extends org.specs2.mutable.Specification {
 			"longitude" -> longitude	
 		)
 
-		var (placeId:Long, newPlace:JsObject) =  LocationsApi.ttt_Places_CreateNewPlace(createPlace, 0)
+		var (placeId:Long, newPlace:JsObject) =  LocationsApi.ttt_Places_CreatePlace(createPlace, 0)
  
   		"ttt_placesApiTest_createPlace called " + name in {
  		  
@@ -62,7 +62,7 @@ trait LocationsApiTests extends org.specs2.mutable.Specification {
 			"longitude" -> longitude	
 		)
 		
-		var (placeId:Long, newPlace:JsValue) =  LocationsApi.ttt_Places_CreateNewPlace (place, 0)
+		var (placeId:Long, newPlace:JsValue) =  LocationsApi.ttt_Places_CreatePlace (place, 0)
 		var placeById:JsValue = LocationsApi.ttt_Places_getPlaceById(placeId)
 		
 

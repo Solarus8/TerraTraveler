@@ -17,7 +17,7 @@ import controllers._
 
 import scala.util.Random
 
-object LocationsApi {
+object LocationsApi{
  
   
 	// =================================================================================
@@ -28,7 +28,7 @@ object LocationsApi {
     //
     //     If name, url or description are blank then include random text"
     //
-  	def ttt_Places_CreateNewPlace(place:JsValue,radiusMeters:Long): (Long, JsValue) = {
+  	def ttt_Places_CreatePlace(place:JsValue,radiusMeters:Long): (Long, JsValue) = {
   	  
 		/*	  
 			curl \
@@ -73,45 +73,82 @@ object LocationsApi {
 	   	return (placeId, temp)
 	}  // End function ttt_Places_CreateNewPlace
  	
-
-	// =================================================================================
-  	//                    ttt_Places_getPlaceById
-  	//
-  	def ttt_Places_getPlaceById(id: Long): JsValue = {
-
-  		/*
-		  	  curl \
-			--header "Content-type: application/json" \
-			--request GET \
-			--data '{}' \
-			localhost:9000/api/v1/locations/place/3 \
-			| python -mjson.tool
-			
-			example response
-			{
-			    "place": {
-			        "cat": "PARK",
-			        "desc": "In Golden Gate Park",
-			        "id": 3,
-			        "lat": 37.768395,
-			        "locId": 5,
-			        "lon": -122.492259,
-			        "name": "Polo Fields",
-			        "url": "http://sfrecpark.org/destination/golden-gate-park/"
-			    }
-			}			
-			
-		*/
- 	
- 		
-        var(passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), 
-            "locations/place/" + id.toString.trim(), "Get Plce By Id")
-	   	  
-  		return temp
-  				
-  	}
   	
-	// =================================================================================
+  	// =================================================================================
+  	//                      ttt_Places_createPlace3rdPartyReference
+  	//
+  	def ttt_Places_createPlace3rdPartyReference (placeId:Long, thirdPartyID:Long, thirdPartyPlaceId:String, thirdPartyRef:String): (Boolean, JsValue) =  {
+ 
+  		// TODO - Not tested
+  	  
+  		/*
+  			curl \
+				--header "Content-type: application/json" \
+				--request POST \
+				--data '{ "placeId" : "", "thirdPartyID" : 1, "thirdPartyPlaceId" : "375H216T938572PQ810", "thirdPartyRef" : "8572PQ810375H216" }' \
+				ec2-54-193-80-119.us-west-1.compute.amazonaws.com:9000/api/v1/locations/place-synd \
+				| python -mjson.tool
+  		 */
+  	  
+  		var temp = Json.obj(
+			"placeId" -> placeId,
+			"thirdPartyID" -> thirdPartyID,
+			"thirdPartyPlaceId" -> thirdPartyPlaceId,
+			"thirdPartyRef" -> thirdPartyRef
+		
+		)
+  		  	  
+  		var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(temp, "locations/place-synd", "Create 3rd party reference")
+    		  	
+  		return (passFailStatus, results)
+  	} // End of ttt_Places_createPlace3rdPartyReference
+  	
+  	
+    // =================================================================================
+  	//               ttt_Places_get3rdPartyReferenceById
+  	// 
+  	def ttt_Places_get3rdPartyReferenceById (id:Long): (Boolean, JsValue) = {
+  		/*
+			curl \
+				--header "Content-type: application/json" \
+				--request GET \
+				--data '{}' \
+				ec2-54-193-80-119.us-west-1.compute.amazonaws.com:9000/api/v1/locations/place-synd/3 \
+				| python -mjson.tool
+		*/
+  	  
+   		var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), 
+   				"locations/place-synd/" + id.toString, "Get Place 3rd Party Reference by ID")
+ 	  
+  	  
+		return (passFailStatus, results)
+  	}  // End of ttt_Places_get3rdPartyReferenceById
+
+  	
+  	
+   	// =================================================================================
+  	//             ttt_Places_getPlace3rdPartyReferenceByTerraTravelerPlaceId 	
+  	//
+  	def ttt_Places_getPlace3rdPartyReferenceByTerraTravelerPlaceId(placeId:Long): (Boolean, JsValue) = {
+  		/*
+		  	curl \
+				--header "Content-type: application/json" \
+				--request GET \
+				--data '{}' \
+				ec2-54-193-80-119.us-west-1.compute.amazonaws.com:9000/api/v1/locations/place/2/place-synd \
+				| python -mjson.tool
+  		*/
+  	  
+  		var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), 
+   				"locations/place/" + placeId.toString.trim() + "/place-synd/" ,
+   				"Get Place 3rd Party Reference by TerraTraveler Place ID")
+  	  
+ 				
+		return (passFailStatus, results)
+  	} // End of ttt_Places_getPlace3rdPartyReferenceByTerraTravelerPlaceId
+  	
+	
+  	// =================================================================================
 	//                ttt_Places_getPlacesByLatitudeLongitudeAndRadius
   	//
   	def ttt_Places_getPlacesByLatitudeLongitudeAndRadius(latitude:Double, longitude:Double, radius:Long): (Boolean, JsValue) = {
@@ -155,8 +192,45 @@ object LocationsApi {
   	  
   	}  // End of ttt_Places_getPlacesByLatitudeLongitudeAndRadius
   	
- 	 	
-  
+  	
+  	// =================================================================================
+  	//                    ttt_Places_getPlaceById
+  	//
+  	def ttt_Places_getPlaceById(id: Long): JsValue = {
+
+  		/*
+		  	  curl \
+			--header "Content-type: application/json" \
+			--request GET \
+			--data '{}' \
+			localhost:9000/api/v1/locations/place/3 \
+			| python -mjson.tool
+			
+			example response
+			{
+			    "place": {
+			        "cat": "PARK",
+			        "desc": "In Golden Gate Park",
+			        "id": 3,
+			        "lat": 37.768395,
+			        "locId": 5,
+			        "lon": -122.492259,
+			        "name": "Polo Fields",
+			        "url": "http://sfrecpark.org/destination/golden-gate-park/"
+			    }
+			}			
+			
+		*/
+ 	
+ 		
+        var(passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), 
+            "locations/place/" + id.toString.trim(), "Get Plce By Id")
+	   	  
+  		return temp
+  				
+  	} // End of ttt_Places_getPlaceById
+  	
+ 
 } // end of object PlacesTest
   
 
