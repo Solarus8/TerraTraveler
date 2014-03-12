@@ -110,41 +110,21 @@ println("================= Edge test create place - id = " + placeId + "\n======
 		
 		var (eventId:Long, newEvent:JsValue) = EventsApi.ttt_Events_createEvent(event)
 
-println("================= Edge test create event - id = " + eventId + "\n===========\n" + "=========" + newEvent)
-		
 		"Edge Tests - Create New Event /api/v1/events" should {
 	    	"Create Event" in {
-
-
-	    		var newDate = (newEvent \ "event" \ "from").as[Long]
-	    		var newFromDate = sdf.format(new Date(newDate))
-	
-	    		if (from == newFromDate ) {
-	    			println("Dates are equal")
-	    		} else {
-	    			println("\nComparison From\n" + from + "\n" + newFromDate)
-	    			    }
-	    		
-println("NewDate = " + newDate + ", " + sdf.format(new Date(newDate)) )	
-
-
-//'2014-02-23 10:30:00.0' is not equal to '2014-02-23 12:00:00.0'
-
-//	    		from must beEqualTo(newFromDate)
-
-println("End of date")
-/*	    	 
+	    	 
 		    	title  must beEqualTo((newEvent \ "event" \ "title").as[String]) 
 		    	activityType  must beEqualTo((newEvent \ "event" \ "activityType").as[Long]) 
 		    	//activityCategories  must beEqualTo((newEvent \ "event" \ "activityCategories").as[List(Long,Long)])
 		    	// TODO - parse List(1,2)
+
 		    	placeId     must beEqualTo((newEvent \ "event" \ "placeId").as[Long])
-				desc        must beEqualTo((newEvent \ "event" \ "desc").as[String]) 
+//				desc        must beEqualTo((newEvent \ "event" \ "desc").as[String]) 
 				minSize     must beEqualTo((newEvent \ "event" \ "minSize").as[Long])			
 				maxSize     must beEqualTo((newEvent \ "event" \ "maxSize").as[Long]) 
-				rsvpTot     must beEqualTo((newEvent \ "event" \ "rsvpTot").as[Long]) 
-				waitListTot must beEqualTo((newEvent \ "event" \ "waitListTot").as[Long])	    	
-*/	 
+//				rsvpTot     must beEqualTo((newEvent \ "event" \ "rsvpTot").as[Long]) 
+//				waitListTot must beEqualTo((newEvent \ "event" \ "waitListTot").as[Long])	    	
+	 
 				"Create event" in {pending}
 
 	    		"End of Create Event Tests" in {"End" must beEqualTo("End")}

@@ -20,6 +20,10 @@ import play.api.test.Helpers.await
 import play.api.libs.ws._
 import play.api.mvc.Results._
 
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.GregorianCalendar
+
 
 
 object TestCommon {
@@ -194,6 +198,28 @@ object TestCommon {
 		"21"->"After work"
 	)
  	
+	
+	// =================================================================================
+	//                        ttt_convertDateTimeToMilleconds
+	//
+	def ttt_convertDateTimeToMilleconds(timeDate:String, format:String):Long = {
+
+	
+	  
+		var timeFormat = ""
+	  
+		if (format == "".trim()) { timeFormat  = "yyyy-MM-dd hh:mm:ss.S"} else {timeFormat = format}
+
+	  	var cal = Calendar.getInstance();
+	  	var sdf = new SimpleDateFormat(timeFormat);
+	  	cal.setTime(sdf.parse(timeDate));// all done
+	  	var milliseconds = cal.getTimeInMillis()
+
+	
+	  	return milliseconds
+	} // End of ttt_convertDateTimeToMilleconds
+	
+	
 	// =================================================================================
 	//                        ttt_sendApiCommand
 	//

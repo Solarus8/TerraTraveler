@@ -208,10 +208,7 @@ object UsersApi{
 		}
 
 	  
-//		var temp = Json.parse(Helpers.await(WS.url(TestCommon.serverLocation + "/api/v1/users/profile").post(profile)).body)
-		
-		    
-//		    var profileId = (temp \ "userProfile" \ "id").as[Long]
+
 		
 		return (proFileId, temp)
 	}  // End of ttt_Users_createUserProfile

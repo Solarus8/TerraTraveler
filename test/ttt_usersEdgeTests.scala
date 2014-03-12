@@ -4,7 +4,6 @@ import play.api.test.Helpers.await
 import play.api.libs.ws._
 import play.api.test.Helpers
 
-
 trait UsersEdgeTests extends org.specs2.mutable.Specification {
  
 	// =================================================================================
@@ -36,7 +35,11 @@ trait UsersEdgeTests extends org.specs2.mutable.Specification {
 				"End of Edge Tests for Get User By Id" in {"End" must beEqualTo("End")}								
 			}
 			
-			"Edge Tests - Create User Profile" in {pending}
+			"Edge Tests - Create User Profile /api/v1/users" should {
+				ttt_UsersEdgeTests_CreateUserProfile
+				"End of Edge Tests for Create User Profile" in {"End" must beEqualTo("End")}	
+			 
+			}
 			"Edge Tests - Get User Profile" in {pending}				
 			"Edge Tests - Get User Contacts by User ID" in {pending}
 			"Edge Tests - Associate User to Contact" in {pending}
@@ -93,6 +96,7 @@ trait UsersEdgeTests extends org.specs2.mutable.Specification {
 		    
 		  
 		  
+	
 			var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(),
 			    "users/" + id, title)
 			    
@@ -201,9 +205,99 @@ trait UsersEdgeTests extends org.specs2.mutable.Specification {
   
   
 
+	// ==============================================================================
+	//                     ttt_UsersEdgeTests_CreateUserProfile
+	//
+	def ttt_UsersEdgeTests_CreateUserProfile () {
 
- 	
- 	
+/*	  
+curl \
+	--header "Content-type: application/json" \
+	--request POST \
+	--data '{"userId" : 1, "firstName" : "Raymond", "lastName" : "Zamora", "gender" : "M", "birthdate" : "1990-02-23 10:30:00.0", "nationality" : "Brazilian", "portraitUrl" : "http://www.me.jpg", "bio" : "I began life as a small child.", "story" : "I am a very tough guy."}' \
+	ec2-54-193-80-119.us-west-1.compute.amazonaws.com:9000/api/v1/users/profile \
+	| python -mjson.tool
+*/	  
+	
+		var prefix = "Create Profile - "
+	  
+		// Greenwater Lake Provincial Park, Canada 
+  		var latitude = 52.528699
+  		var longitude = -103.476105
+  		var role = "NORM"
+ 	    
+  		// Create user and get the user Id for creating  a profile
+  		var(userId, userResults:JsValue) = UsersApi.ttt_Users_createUser(latitude, longitude, role)
+
+  		if (userId < 1 ) {  
+  			"Create User Profile - TEST ABORTED, invalid User Id prevents creating profile, Id=" + userId in {		  
+  				failure
+  			}
+  			
+  		} else {
+  		
+			var firstName   = "Mike"
+			var lastName    = "Thomas"
+			var gender      = "M"
+			var birthdate   = "1990-02-23 10:30:00.0"   // 635769000 635797800000
+			var nationality = "Brazilian"
+			var portraitUrl = "http://www.me.jpg"
+			var bio         = "I was born"
+			var story       = "It was a dark and stormy night"
+			  
+			var profile = Json.obj(
+	    		 "userId"      ->  userId,		
+				 "firstName"   ->  firstName,
+				 "lastName"    ->  lastName, 
+				 "gender"      ->  gender,
+				 "birthdate"   ->  birthdate,
+				 "nationality" ->  nationality,
+				 "portraitUrl" ->  portraitUrl,
+				 "role"        ->  role,
+				 "bio"         ->  bio,
+				 "story"       ->  story 	    
+			)
+
+			
+			prefix + "Verify a new profile is created" in {
+			
+				var (profileId:Long, profileResults:JsValue) = 
+					UsersApi.ttt_Users_createUserProfile(profile)
+println("Create User Profile = " + profileResults)					
+				firstName    must beEqualTo((profileResults \ "userProfile" \ "firstName").as[String]) 
+				lastName     must beEqualTo((profileResults \ "userProfile" \ "lastName").as[String]) 
+// TODO - Github issue 2 filed for gender
+				//				gender       must beEqualTo((profileResults \ "userProfile" \ "gender").as[String]) 
+// TODO - Github issue 4 filed for missing hour. minute and second
+//				TestCommon.ttt_convertDateTimeToMilleconds(birthdate, "")    must beEqualTo((profileResults \ "userProfile" \ "birthdate").as[Long])
+				nationality  must beEqualTo((profileResults \ "userProfile" \ "nationality").as[String])
+				portraitUrl  must beEqualTo((profileResults \ "userProfile" \ "portraitUrl").as[String])
+				bio          must beEqualTo((profileResults \ "userProfile" \ "bio").as[String])
+				story        must beEqualTo((profileResults \ "userProfile" \ "story").as[String])	
+				story        must not(beEqualTo("dddd"))					
+			}
+			
+			prefix + "Github issue 2 - gender" in {failure}
+			prefix + "Github issue 4 - hours in birthdate" in {failure}
+			
+			
+		prefix + "Profile with name longer than database field" in {
+			var longName = "x" + 1000
+
+			val updatedJson = profile.as[JsObject] ++ Json.obj("firstName" -> longName)	
+
+			
+println("Profile long name" + updatedJson)
+//			firstName  must beEqualTo((profileResults \ "userProfile" \ "firstName").as[String])
+			
+			1 must beEqualTo(1)
+		}			
+			
+			
+			
+  		} // End of if statement to check for profile id is 1 or greater  
+	} // End of ttt_UsersEdgeTests_CreateUserProfile
+		
  	
  	// ==============================================================================
  	// ttt_sendUserApiCommand 
