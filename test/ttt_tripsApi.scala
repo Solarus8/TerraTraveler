@@ -45,7 +45,7 @@ object TripsApi  {
 	  
 		var tripId:Long = 0
 	  
-		var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(newTrip, 
+		var (passFailStatus:Boolean, results:JsValue, error:String) = TestCommon.ttt_sendApiCommand(newTrip, 
 		    "trips", "Create New Trip")
 		    
 		if (passFailStatus == true) {(tripId = (results \ "trip" \ "id").as[Long])}
@@ -84,7 +84,7 @@ object TripsApi  {
 			}
 		*/	
 	  
-		var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), 
+		var (passFailStatus:Boolean, results:JsValue, error:String) = TestCommon.ttt_sendApiCommand(Json.obj(), 
 		    "trips/" + tripId.toString.trim(), "Get Trip by Id")
 		    
 		return (passFailStatus, results)

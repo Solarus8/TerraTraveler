@@ -219,15 +219,7 @@ trait UsersApiTests extends org.specs2.mutable.Specification {
   		var(userId:Long, user:JsValue) = UsersApi.ttt_Users_createUser(latitude, longitude, role)
 
   		// Create a place to hold the event
- 		var createPlace = Json.obj(
-			"name" -> name,
-			"desc" -> desc, 
-			"cat"  -> cat,
-			"url" -> url, 
-			"latitude" -> latitude, 
-			"longitude" -> longitude	
-		)
-  		var (placeId:Long, newPlace:JsObject) =  LocationsApi.ttt_Places_CreatePlace(createPlace, 0)
+  		var (placeId:Long, newPlace:JsObject) =  LocationsApi.ttt_Places_CreatePlace(Places.placeYosimiteNationalPark, 0)
  		
   		// Create an event 
   		var activityCategories: List[Long] = List(1,2)
@@ -246,15 +238,18 @@ trait UsersApiTests extends org.specs2.mutable.Specification {
 		)
 		var (eventId:Long, newEvent:JsValue) = EventsApi.ttt_Events_createEvent(event)
 
+
+		
+		
   		// Associate the user with the event
 
 		
-		//println("-------- Assoicate UserId: " + userId + " Event Id = " + eventId)
+		println("-------- Assoicate UserId: " + userId + " Event Id = " + eventId)
 				
-		 // TODO - Test failing here but works manualy, probably some simple problem I will find later.
-		//		var (passFailStatus:Boolean, results:JsValue) = UsersTests.ttt_Users_associateUserAndEvent(userId, eventId)
+		 // TODO - Test failing here but works manually, probably some simple problem I will find later.
+				var (passFailStatus:Boolean, results:JsValue) = UsersApi.ttt_Users_associateUserAndEvent(userId, eventId)
 				
-		//     println("========== Associate User and Event ==========\n" + results + "\n==============")	
+		     println("========== Associate User and Event ==========\n" + results + "\n==============")	
   	
  		
  		"ttt_UsersApiTest_associateUserAndEvent" in {pending} 

@@ -58,7 +58,7 @@ object UsersApi{
 		*/
 
 	  
-		var (passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), "users/" + userId.toString.trim, "Get User By Id")
+		var (passFailStatus:Boolean, temp:JsValue, error:String) = TestCommon.ttt_sendApiCommand(Json.obj(), "users/" + userId.toString.trim, "Get User By Id")
 
 		temp
 	} // End of ttt_Users_getUserById
@@ -111,7 +111,7 @@ object UsersApi{
     		"longitude" -> longitude
     	)
    
-    	var (passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(userSent, "users", "Create User")
+    	var (passFailStatus:Boolean, temp:JsValue, error:String) = TestCommon.ttt_sendApiCommand(userSent, "users", "Create User")
     	    
     	var id:Long = 0;
 		
@@ -156,7 +156,7 @@ object UsersApi{
 			}
 		*/
 	  
-		var (passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), 
+		var (passFailStatus:Boolean, temp:JsValue, error:String) = TestCommon.ttt_sendApiCommand(Json.obj(), 
 		    "users/" + userId.toString.trim + "/profile", "Get User Profile")
 	  
 	  	    
@@ -198,7 +198,7 @@ object UsersApi{
 		 */
 
 	  
-		var (passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(profile,
+		var (passFailStatus:Boolean, temp:JsValue, error:String) = TestCommon.ttt_sendApiCommand(profile,
 		    "users/profile", "Create User Profile")
 
 		var proFileId:Long = 0;
@@ -284,7 +284,7 @@ example request
 println ("User profile id = " + userId)
 println ("User profile JSON = " + userProfile)
 
-	   var (passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(userProfile,
+	   var (passFailStatus:Boolean, temp:JsValue, error:String) = TestCommon.ttt_sendApiCommand(userProfile,
 		   "users/profile", "Generate User Profile")
 
 		   
@@ -333,7 +333,7 @@ println ("User profile JSON = " + userProfile)
 		*/
 	  
 
-		var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(),
+		var (passFailStatus:Boolean, results:JsValue, error:String) = TestCommon.ttt_sendApiCommand(Json.obj(),
 		    "events/" + eventId.toString.trim() + "/user/" + userId.toString.trim(), "Associate User and Event")		
 	  	  
 	    return (passFailStatus, results)

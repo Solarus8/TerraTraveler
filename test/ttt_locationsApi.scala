@@ -62,7 +62,7 @@ object LocationsApi{
         var placeId:Long = 0
         var locId:Long =0
 
-        var(passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(place, "locations/place", "Create Place")
+        var(passFailStatus:Boolean, temp:JsValue, error:String) = TestCommon.ttt_sendApiCommand(place, "locations/place", "Create Place")
         if (passFailStatus == true)
         {
 	        placeId = (temp \ "place" \ "id").as[Long]
@@ -98,7 +98,7 @@ object LocationsApi{
 		
 		)
   		  	  
-  		var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(temp, "locations/place-synd", "Create 3rd party reference")
+  		var (passFailStatus:Boolean, results:JsValue, error:String) = TestCommon.ttt_sendApiCommand(temp, "locations/place-synd", "Create 3rd party reference")
     		  	
   		return (passFailStatus, results)
   	} // End of ttt_Places_createPlace3rdPartyReference
@@ -117,7 +117,7 @@ object LocationsApi{
 				| python -mjson.tool
 		*/
   	  
-   		var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), 
+   		var (passFailStatus:Boolean, results:JsValue, error:String) = TestCommon.ttt_sendApiCommand(Json.obj(), 
    				"locations/place-synd/" + id.toString, "Get Place 3rd Party Reference by ID")
  	  
   	  
@@ -139,7 +139,7 @@ object LocationsApi{
 				| python -mjson.tool
   		*/
   	  
-  		var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), 
+  		var (passFailStatus:Boolean, results:JsValue, error:String) = TestCommon.ttt_sendApiCommand(Json.obj(), 
    				"locations/place/" + placeId.toString.trim() + "/place-synd/" ,
    				"Get Place 3rd Party Reference by TerraTraveler Place ID")
   	  
@@ -185,7 +185,7 @@ object LocationsApi{
 	  	var apiString = "locations/place/" + latitude.toString + "/" + longitude.toString + "/" + radius.toString
 	  	var description = "Get places by Latitude Longitude and Range"
 	  	
-	  	var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), apiString, description)
+	  	var (passFailStatus:Boolean, results:JsValue, error:String) = TestCommon.ttt_sendApiCommand(Json.obj(), apiString, description)
   
   		  	
 	  	return (passFailStatus, results)
@@ -223,7 +223,7 @@ object LocationsApi{
 		*/
  	
  		
-        var(passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), 
+        var(passFailStatus:Boolean, temp:JsValue, error:String) = TestCommon.ttt_sendApiCommand(Json.obj(), 
             "locations/place/" + id.toString.trim(), "Get Plce By Id")
 	   	  
   		return temp

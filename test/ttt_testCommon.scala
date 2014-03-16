@@ -28,6 +28,10 @@ import java.util.GregorianCalendar
 
 object TestCommon {
 
+	val EMPTY_FIELD_LONG:Long = 999999
+	val EMPTY_FIELD_DOUBLE:Double = 999999.99
+	val EMPTY_FIELD_STRING:String = "EMPTY_FIELD"
+  
 	val serverLocation = "http://localhost:9998"
 	
 	// Each user name consists of text and a number.  This counter increments
@@ -220,33 +224,36 @@ object TestCommon {
 	} // End of ttt_convertDateTimeToMilleconds
 	
 	
+
+	
+	
 	// =================================================================================
 	//                        ttt_sendApiCommand
 	//
-	def ttt_sendApiCommand(jsonToSend:JsValue, apiString:String, description:String): (Boolean, JsValue) = {
+	def ttt_sendApiCommand(jsonToSend:JsValue, apiString:String, description:String): (Boolean, JsValue, String) = {
 	
-		var temp:JsValue = Json.obj()
+		var tempJson:JsValue = Json.obj()
+		var tempText = ""
 		var passFailStatus:Boolean = false
 		var apiUrl = TestCommon.serverLocation +  "/api/v1/" + apiString
 
-
-//		println("******** Command sent = " + apiUrl)
-//		println("******** Description  = " + description)
-//		println(jsonToSend)
-//		println("======================================")
-	  
 		try {
 		  
 			if (jsonToSend == Json.obj()) {
 //println("++++++++++ Get - " + apiUrl + " - " + description)			  
-				temp = Json.parse(Helpers.await(WS.url(apiUrl).get()).body)
+				//temp = Json.parse(Helpers.await(WS.url(apiUrl).get()).body)
+				tempText = Helpers.await(WS.url(apiUrl).get()).body
+				tempJson = Json.parse(tempText)
 				passFailStatus = true
 				
 			} else {
 //println("+++++++++ Post - " + apiUrl + " - " + description)
-			    temp = Json.parse(Helpers.await(WS.url(apiUrl).post(jsonToSend)).body)
+			    var tempText = Helpers.await(WS.url(apiUrl).post(jsonToSend)).body
+			    tempJson = Json.parse(tempText)
+			    
 				passFailStatus = true
 			}
+					
 	
        } catch {
         	       	
@@ -255,15 +262,51 @@ object TestCommon {
 			  println("    ** Exception - " + e)
         	  println("    ** Failed on " + apiUrl)
         	  println("    ** Json object that was sent \n" + jsonToSend)
+        	  println("    ** Json object recieved" + tempJson)
+        	  println("    ** Text recieved" + tempText)
         	  println("==================================\n\n")
         	  
         	  passFailStatus = false
         	        
         }
        
-		return (passFailStatus, temp)
+		return (passFailStatus, tempJson, tempText)
 	} // End of ttt_sendApiCommand
 
  
   
 } // End of object TestCommon()
+
+
+
+
+object Places {
+  
+	def placeSternGrove(): JsObject = {
+
+	  	var place = Json.obj (
+	  	    "name" -> "Stern Grove",
+	  	    "desc" -> "Free Summer concerts!", 
+	  	    "cat" -> "PARK", 
+			"url" -> "http->//www.sterngrove.org/", 
+			"latitude" -> 37.735681, 
+			"longitude" -> -122.476959
+		)
+		return place
+	}
+	
+	def placeYosimiteNationalPark(): JsObject =  {
+	  	var place = Json.obj (
+	  	    "name" -> "Yosemite National Park",
+	  	    "desc" -> "Hiking, camping and skiing", 
+	  	    "cat" -> "PARK", 
+			"url" -> "http->//www.yosemit.org/", 
+			"latitude" -> 37.865348, 
+			"longitude" -> -119.538374
+		)
+		return place
+	}
+	
+  
+	
+}

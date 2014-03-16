@@ -97,7 +97,7 @@ trait UsersEdgeTests extends org.specs2.mutable.Specification {
 		  
 		  
 	
-			var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(),
+			var (passFailStatus:Boolean, results:JsValue, error:String) = TestCommon.ttt_sendApiCommand(Json.obj(),
 			    "users/" + id, title)
 			    
 			var temp = results.toString
@@ -209,6 +209,8 @@ trait UsersEdgeTests extends org.specs2.mutable.Specification {
 	//                     ttt_UsersEdgeTests_CreateUserProfile
 	//
 	def ttt_UsersEdgeTests_CreateUserProfile () {
+	  
+
 
 /*	  
 curl \
@@ -260,6 +262,9 @@ curl \
 
 			
 			prefix + "Verify a new profile is created" in {
+
+
+
 			
 				var (profileId:Long, profileResults:JsValue) = 
 					UsersApi.ttt_Users_createUserProfile(profile)
@@ -277,22 +282,47 @@ println("Create User Profile = " + profileResults)
 				story        must not(beEqualTo("dddd"))					
 			}
 			
-			prefix + "Github issue 2 - gender" in {failure}
-			prefix + "Github issue 4 - hours in birthdate" in {failure}
-			
-			
-		prefix + "Profile with name longer than database field" in {
-			var longName = "x" + 1000
-
-			val updatedJson = profile.as[JsObject] ++ Json.obj("firstName" -> longName)	
+			prefix + "Github issue 2 - gender has extra spaces on string" in {failure}
+			prefix + "Github issue 4 - should birthday contain Mon, day, year only, not time?" in {failure}
+			prefix + "Github issue 6 -can't revise profile after profile created" in {failure}
 
 			
-println("Profile long name" + updatedJson)
-//			firstName  must beEqualTo((profileResults \ "userProfile" \ "firstName").as[String])
+			prefix + "Profile with name longer than database field" in {
+				var longName = "x" + 1000
+	
+				val updatedJson = profile.as[JsObject] ++ Json.obj("firstName" -> longName)	
+	
+				
+	println("Profile long name" + updatedJson)
+	//			firstName  must beEqualTo((profileResults \ "userProfile" \ "firstName").as[String])
+				
+				1 must beEqualTo(1)
+			}	
 			
-			1 must beEqualTo(1)
-		}			
+			"Test with missing or extra keys in Json" should {
+			  
 			
+			    var (userId1, userResults1:JsValue) = UsersApi.ttt_Users_createUser(latitude, longitude, role)			  
+				var (profile_id1, results1) = ttt_Edge_createUserProfileJson(TestCommon.EMPTY_FIELD_LONG, 
+				    firstName, lastName, gender, birthdate, nationality, portraitUrl, role, bio,story, 
+				    TestCommon.EMPTY_FIELD_STRING, TestCommon.EMPTY_FIELD_LONG,TestCommon.EMPTY_FIELD_DOUBLE)
+				"Detect missing userId" in {userResults1.toString must beEqualTo("{}")}
+				
+				    
+				    
+println("\n\n************** Missing Json fields ****************")
+println(results1)
+println("*" * 30)
+				    
+				    
+				"End of Json missing field tests" in {1 must beEqualTo(1)}
+			  
+			}
+			
+
+			
+ //  	 	val updatedJson = temp.as[JsObject] ++ Json.obj("name" -> "Ron") ++ Json.obj("new" -> "item") 
+ //   	println("Json with new item" + update
 			
 			
   		} // End of if statement to check for profile id is 1 or greater  
@@ -319,6 +349,64 @@ println("Profile long name" + updatedJson)
  	  
 		temp
  	}
+ 	
+ 	def ttt_Edge_createUserProfileJson(userId:Long, firstName:String, lastName:String, gender:String, 
+ 	    birthdate:String, nationality:String, portraitUrl:String, role:String, bio:String,story:String,
+ 	    extraString:String, extraLong:Long, extraDouble:Double): (Long, JsValue) = {
+ 	   	  
+			var temp = Json.obj()
+			
+			var profile = (temp.as[JsObject] 
+				++ useJsonFieldLong("userId", userId)
+ 			    ++ useJsonFieldString("firstName", firstName) 
+ 			    ++ useJsonFieldString("lastNamee", lastName)
+ 			    ++ useJsonFieldString("gender", gender)
+ 			    ++ useJsonFieldString("birthdate", birthdate)
+ 			    ++ useJsonFieldString("nationality", nationality)
+ 			    ++ useJsonFieldString("portraitUrl", portraitUrl)
+ 			    ++ useJsonFieldString("role", role)
+ 			    ++ useJsonFieldString("bio", bio)
+ 			    ++ useJsonFieldString("story", story)
+
+   	 	    )
+ 
+   	 	println("\n\n\nCreateUserProfileJson" + profile + "\n\n")
+  	  
+   	 	var (profileId:Long, results:JsValue) =  UsersApi.ttt_Users_createUserProfile(profile)
+   	 	
+   	 	return (profileId, results)
+ 	}
+ 	
+ 	
+ 	def useJsonFieldString(key:String, value:String): JsObject = {
+ 
+ 		var temp:JsObject = null
+ 
+ 		if (TestCommon.EMPTY_FIELD_STRING == value) { 
+ 			temp = null
+ 		} else {
+ 			temp = Json.obj(key -> value)
+ 		}
+ 		  
+    	println("String, Key= " + key + ", Value = " + value + ", " + temp)
+    	
+    	return temp
+    }
+ 	
+ 	def useJsonFieldLong(key:String, value:Long): JsObject = {
+      
+		var temp:JsObject = null
+ 		  
+ 		if (TestCommon.EMPTY_FIELD_LONG == value) { 
+ 			temp = Json.obj()
+ 		} else {
+ 			temp = Json.obj(key -> value)
+ 		}
+   
+    	println("Long, Key= " + key + ", Value = " + value + ", " + temp)
+    	
+    	return temp
+    }
  	
 
   

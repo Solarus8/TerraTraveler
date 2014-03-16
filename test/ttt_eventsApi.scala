@@ -40,7 +40,7 @@ object EventsApi {
 	  // No events in database {"events":[]}	
 	  
   
-		var (passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(event,
+		var (passFailStatus:Boolean, temp:JsValue, error:String) = TestCommon.ttt_sendApiCommand(event,
 				"events", "Create Event")
 		
 		var eventId:Long = 0
@@ -64,7 +64,7 @@ object EventsApi {
 		| python -mjson.tool
 		*/
   
-		var (passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), 
+		var (passFailStatus:Boolean, temp:JsValue, error:String) = TestCommon.ttt_sendApiCommand(Json.obj(), 
 		    "events/" + id.toString.trim(), "Get Event By Id")
 	  
 		temp
@@ -144,7 +144,7 @@ object EventsApi {
 			"activityCategory" -> activityCategory 
 		)
 	  
-		var (passFailStatus:Boolean, temp:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), 
+		var (passFailStatus:Boolean, temp:JsValue, error:String) = TestCommon.ttt_sendApiCommand(Json.obj(), 
 		    "events/location/" + locationId + "/" + radius,
 		    "Get Events By Location Radius Using LocationId")
 
@@ -173,10 +173,14 @@ object EventsApi {
 				localhost:9998/api/v1/events/2/user/1 \
 				| python -mjson.tool
 		*/	
+	  	  
+//		var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), 
+//		    "events/" + eventId.toString + "/user/" + userId.toString, "Associate User and Event")
+		
+		var apiString = "events/" + eventId + "user/" + userId
 	  
-	  
-		var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(), 
-		    "events/" + eventId.toString + "/user/" + userId.toString, "Associate User and Event")
+		var (passFailStatus:Boolean, results:JsValue, error:String) = TestCommon.ttt_sendApiCommand(Json.obj(), 
+		    apiString, "Associate User and Event")
 
 		println("\n-------- Associate User and event ------\n" + results + "\n--------------")
 		
@@ -201,7 +205,7 @@ object EventsApi {
 		  */
 
 	  
-		var (passFailStatus:Boolean, results:JsValue) = TestCommon.ttt_sendApiCommand(Json.obj(),
+		var (passFailStatus:Boolean, results:JsValue, error:String) = TestCommon.ttt_sendApiCommand(Json.obj(),
 		    "activity-types-cats/all", "Get all Activity Types and Categories")
  
 
