@@ -1,5 +1,10 @@
 import play.api.libs.json._
 
+import play.api.libs.json.Reads._
+import play.api.libs.json.Writes._
+import play.api.libs.functional.syntax._
+import play.api.data.validation.ValidationError
+
 
 trait LocationsApiTests extends org.specs2.mutable.Specification {
   
@@ -26,7 +31,7 @@ trait LocationsApiTests extends org.specs2.mutable.Specification {
 
 		var (placeId:Long, newPlace:JsObject) =  LocationsApi.ttt_Places_CreatePlace(createPlace, 0)
  
-  		"ttt_placesApiTest_createPlace called " + name in {
+  		"ttt_placesApiTest_createPlace - Create a place and verify the place was created" in {
  		  
  		    cat       must beEqualTo((newPlace \ "place" \ "cat").as[String])
  		    desc      must beEqualTo((newPlace \ "place" \ "desc").as[String])
@@ -67,7 +72,7 @@ trait LocationsApiTests extends org.specs2.mutable.Specification {
 		
 
  	  
-		"ttt_placesApiTest_getPlaceById - " + name + " with id = " + placeId + " " in {
+		"ttt_placesApiTest_getPlaceById - Verify the place Id matches the corrent place" in {
  		  
  			name      must beEqualTo((newPlace \ "place" \ "name").as[String])
  			desc      must beEqualTo((newPlace \ "place" \ "desc").as[String])
@@ -80,22 +85,26 @@ trait LocationsApiTests extends org.specs2.mutable.Specification {
  	  
  	} // End of ttt_placesApiTest_getPlaceById
  	
- 	 	// =================================================================================
+ 	// =================================================================================
  	//                   ttt_placesApiTest_getPlacesByLatitudeLongitudeAndRadius
  	//
  	def ttt_placesApiTest_getPlacesByLatitudeLongitudeAndRadius () {
+ 
+ 
+ 		var radiusSearch = 1000  // Get latitude and longitude within this radius in meters
+ 		var numberPlacesInRange = 5 
+ 		var distanceStatus = true
+ 		var distanceErrorMsg = ""
+ 
  	  
- 		var name = "Santa Cruz Beach Boardwalk"
- 		var desc = "Beach and amusement park"
- 		var cat  = "PARK"
- 		var url  = "boardwalk@santacruz.com"
- 		var latitude:Double  =  36.964207
- 		var longitude:Double =  -122.018237
- 
- 		
- 		var radiusSearch = 1000
- 
- 			
+ 		var name = "Puerto Rico"
+ 		var desc = "Visit Puerto Rico"
+ 		var cat  = "COUNTRY"
+ 		var url  = "www.puertorico.com"
+ 		var latitude:Double  =  18.265696
+ 		var longitude:Double =  -66.485825
+	
+  			
  		 var place = Json.obj(
 			"name" -> name,
 			"desc" -> desc, 
@@ -104,34 +113,84 @@ trait LocationsApiTests extends org.specs2.mutable.Specification {
 			"latitude" -> latitude, 
 			"longitude" -> longitude	
 		)
-		
- 		
-	 	  
-// 		var(placeId:Long, newPlace:JsValue) = PlacesTest.ttt_Places_CreateNewPlace(place, 0)
-//println("<<<<<<<<<<< Place id=" + placeId + ">>>>>>>>>>>>") 	  
- 	  
- 		var (passFailStatus:Boolean, results:JsValue) = LocationsApi.ttt_Places_getPlacesByLatitudeLongitudeAndRadius(latitude, longitude, radiusSearch)
- 	  
- 		println("\n--------------------Santa Cruz with on place in radius --------")
- 		println(results)
- 		println("\n-------------------------End places in radius ---------")
- 
- 		
- 	
 
- 		
-var(passFailStatus2:Boolean, results2:JsValue) = LocationsApi.ttt_Places_getPlacesByLatitudeLongitudeAndRadius(37.386052, -122.083851, radiusSearch)
 
- 
-println("\n----------------Hacker Dojo with 1200 places in radius --------")
-println(results2)
-println("\n-------------------------End places in radius ---------")
- 
- 		
- 		
- 		"ttt_placesApiTest_getPlacesByLatitudeLongitudeAndRadius - Lots of places cause timeout" in {
- 			failure
+		// Create first place at center of radius
+		var (placeId:Long, placeResults:JsValue) = LocationsApi.ttt_Places_CreatePlace(place, 0)
+
+		var lat = new Array[Double](6)
+		var lon = new Array[Double](6)
+		var places = new Array[JsValue](6)	// Json for new places that get created	
+		var range = Array(.25, 0.5, 0.75, 0.95, 1.05, 1.2) // Distance in 
+				
+		// Create new places using the distance from the first place created
+ 		for(i <- 0 to 5) { 	
+ 		  
+ 		    //  Get latitude and longitude after moving x meters north of original place
+ 			var (lat1, lon1) = TestCommon.ttt_distanceAndBearing(latitude, longitude, range(i), 0)
+ 			lat(i) = lat1
+ 			lon(i)  = lon1
+ 			
+ 			
+ 			
+ 			// Modify the latitude and longitude in the Json object for the place
+ 			var tempPlace = place.as[JsObject] ++ Json.obj("latitude" -> lat1) ++ Json.obj("longitude" -> lon1) 			
+
+ 			// Create the new place
+ 			var(placeId, newPlace) = LocationsApi.ttt_Places_CreatePlace(tempPlace, 0) 			
+ 			places(i) = newPlace
+ 						
  		}
+				
+		var (passFailStatus:Boolean, results:JsValue) = LocationsApi.ttt_Places_getPlacesByLatitudeLongitudeAndRadius(latitude, longitude, radiusSearch)
+
+	  
+ 		println("\n--------------------Places within radius --------")
+ 		println(results)
+ 
+		 
+ 		 // Get the latitude and longitude
+ 		 implicit val personReader: Reads[(Double, Double)] = (
+			 (__ \ "lat").read[Double] and 
+			 (__ \ "lon").read[Double]
+		 ).tupled
+		 		 
+		 val locations = (results \ "places").as[List[(Double, Double)]]
+		 locations.foreach(value => 
+			{
+				println("the value2 is " + value)
+
+				var a = value.toString.replace("(","").replace(")","").split(",")
+				
+				// Array must contain a latitude and longitude
+				if (a.length == 2) {
+					var distance = TestCommon.ttt_calculateDistanceBetweenTwoPoints(latitude, longitude, a(0).toDouble, a(1).toDouble)
+
+					if ((distance * 100) > radiusSearch ) {
+						distanceStatus = false
+						distanceErrorMsg = "\nDistance of " + (distance * 100) + " meters greater than " 
+							+ radiusSearch + " for latutude " + latitude + " and longitude " + longitude 					
+					}
+
+				} else {
+					distanceStatus = false // Found unknown latitude and longitude
+					distanceErrorMsg = "\nArray is missing parameters for latitude and longitude"
+				}			  	
+			}
+		) 
+		var count = locations.size
+		
+		if (count != numberPlacesInRange) {
+			distanceStatus = false
+			distanceErrorMsg = "\nFound " + count + " places in range instead of " + numberPlacesInRange		  
+		}
+		
+		if (distanceStatus == true) {
+			"ttt_placesApiTest_getPlacesByLatitudeLongitudeAndRadius, Verifed " + numberPlacesInRange + "were in range" in {success}		  
+		} else {
+			"ttt_placesApiTest_getPlacesByLatitudeLongitudeAndRadius, Unable to verify " + numberPlacesInRange + "were in range" in {failure}
+		}
+		  
 
  		
  	} // End of ttt_placesApiTest_getPlacesByLatitudeLongitudeAndRadius

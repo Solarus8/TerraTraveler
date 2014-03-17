@@ -32,7 +32,7 @@ trait TripsApiTests extends org.specs2.mutable.Specification {
  		)
  		
 		
- 		"ttt_TripsApiTest_createNewTrip" in {
+ 		"ttt_TripsApiTest_createNewTrip - Verify new trip was created" in {
  		  
  		   var dateFormat = "yyyy-MM-dd"
  		
@@ -87,7 +87,7 @@ trait TripsApiTests extends org.specs2.mutable.Specification {
  		
  		var (passFailId:Boolean, results:JsValue) = TripsApi.ttt_Trips_getTripById(tripId)
  			
- 		"ttt_TripsApiTest_getTripsById" in {
+ 		"ttt_TripsApiTest_getTripsById - Verify a trip was created and the trip can be verified by trip Id" in {
  		
  			var (passFailStatus:Boolean, tripId:Long, results:JsValue) = TripsApi.ttt_Trips_createNewTrip(newTrip)
  		  

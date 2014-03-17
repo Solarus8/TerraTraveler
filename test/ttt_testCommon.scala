@@ -96,7 +96,7 @@ object TestCommon {
 	//  Pass a longitude and latitude to this function and it will calculate a
 	//  new longitude and latitude based on the distance and compass bearing.
 	//
-	def ttt_distanceAndBearing(latitude:Double, longitude:Double, d:Double, brng:Double) {
+	def ttt_distanceAndBearing(latitude:Double, longitude:Double, d:Double, brng:Double): (Double, Double) = {
 	  	  
 		var R = 6371.0  // Radius of the earth 6371.0
 		
@@ -107,13 +107,43 @@ object TestCommon {
           Math.cos(lat1)*Math.sin(d/R)*Math.cos(brng) );
 		var lon2 = lon1 + Math.atan2(Math.sin(brng)*Math.sin(d/R)*Math.cos(lat1), 
                  Math.cos(d/R)-Math.sin(lat1)*Math.sin(lat2));
-
 	
 		println("\n************* New longitude and latitude *****************")
 		println("Latitude  = " + lat2.toDegrees)
-		println("Longitude = " + lon2.toDegrees)	
+		println("Longitude = " + lon2.toDegrees)
+		
+		return (lat2.toDegrees, lon2.toDegrees)
 	
-	}
+	} // End of ttt_distanceAndBearing
+
+	
+	// =================================================================================
+	//                   ttt_calculateDistanceBetweenTwoPoints
+	//
+	//    Uses the Haversine formula to calculate the distance between two
+	//    coordinates and returns the distance in kilometers.
+	//
+	def ttt_calculateDistanceBetweenTwoPoints(latitude1:Double, longitude1:Double, latitude2:Double, longitude2:Double): Double = {
+ 	  
+		val earthRadius = 6371.0
+	    
+	    // convert to radians
+	    var lat1 = latitude1.toRadians
+	    var lng1 = longitude1.toRadians;
+	    var lat2 = latitude2.toRadians
+	    var lng2 = longitude2.toRadians
+
+	    
+	    var dlon:Double = lng2 - lng1;
+	    var dlat:Double = lat2 - lat1;
+	
+	    var a:Double = Math.pow((Math.sin(dlat/2)),2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon/2),2);
+	
+	    var c:Double = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+	    return earthRadius * c;
+
+	} // End of ttt_calculateDistanceBetweenTwoPoints
 	
 	
 	// =================================================================================
@@ -278,8 +308,9 @@ object TestCommon {
 } // End of object TestCommon()
 
 
-
-
+// =================================================================================
+//    
+//
 object Places {
   
 	def placeSternGrove(): JsObject = {
@@ -307,6 +338,45 @@ object Places {
 		return place
 	}
 	
-  
+	def placeCentralParkNewYorCity(): JsObject =  {
+	  	var place = Json.obj (
+	  	    "name" -> "Central Park, New York City",
+	  	    "desc" -> "Large park in Manhattan", 
+	  	    "cat" -> "PARK", 
+			"url" -> "http->//www.centralpark.org/", 
+			"latitude" -> 40.781953, 
+			"longitude" -> -73.965787
+		)
+		return place
+	}
 	
-}
+	def placeGreatSandHillsCanada(): JsObject =  {
+
+		var place = Json.obj (
+	  	    "name" -> "Great Sand Hills, Canada",
+	  	    "desc" -> "I clicked a random spot on the map", 
+	  	    "cat" -> "PARK", 
+			"url" -> "http->//www.greatsandhills.org/", 
+			"latitude" -> 50.531645, 
+			"longitude" -> -109.037247
+		)
+		return place
+	  
+	}
+	
+	def placePuertoRico(): JsObject = {
+	  
+  		var place = Json.obj (
+	  	    "name" -> "Puerto Rico",
+	  	    "desc" -> "Visit Puerto Roce", 
+	  	    "cat" -> "COUNTRY", 
+			"url" -> "www.puertoroco.com", 
+			"latitude" -> 18.265696, 
+			"longitude" -> -66.485825
+		)
+		return place
+	  
+	}
+	
+  	
+} // End of object Places

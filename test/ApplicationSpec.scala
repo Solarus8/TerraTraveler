@@ -92,7 +92,7 @@ class ApplicationSpec extends org.specs2.mutable.Specification
 		  
 			ttt_placesApiTest_createPlace
 			ttt_placesApiTest_getPlaceById
-//			ttt_placesApiTest_getPlacesByLatitudeLongitudeAndRadius
+			ttt_placesApiTest_getPlacesByLatitudeLongitudeAndRadius
 	
 						
 			"Create Place 3rd Party Reference" in {pending}

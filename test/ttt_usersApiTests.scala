@@ -26,7 +26,7 @@ trait UsersApiTests extends org.specs2.mutable.Specification {
  		val email    = (user \ "user" \ "email").toString()
  		val password = (user \ "user" \ "password").toString()
     		  		
-  		"ttt_UsersApiTest_createUser - Create New User " + userName in {
+  		"ttt_UsersApiTest_createUser - Verify that a new user was created" in {
    		 		
 	  		latitude  must beEqualTo((user \ "user" \ "lat").as[Double])
 	  		longitude must beEqualTo((user \ "user" \ "lon").as[Double])
@@ -62,7 +62,7 @@ trait UsersApiTests extends org.specs2.mutable.Specification {
  		
 		var userFromId:JsValue = UsersApi.ttt_Users_getUserById(id)
 		
-		"ttt_UsersApiTest_getUserById - Get " + userName +  " with ID=" + id in {
+		"ttt_UsersApiTest_getUserById - Verify that the correct user is returned from the user Id" in {
   		 
   	  		userName must not be empty
 	  		email must contain("""@""")
@@ -123,7 +123,7 @@ trait UsersApiTests extends org.specs2.mutable.Specification {
  
  		var sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S");
  		
- 		"ttt_UsersApiTest_createUserProfile - Create profile for " + firstName + " " + lastName + " profile id = " +profileId in {
+ 		"ttt_UsersApiTest_createUserProfile - Create user profile and verify profile was created" in {
  		
 	 		userId must beEqualTo ((newProfile \ "userProfile" \ "userId").as[Long])
 	  		firstName must beEqualTo ((newProfile \ "userProfile" \ "firstName").as[String])
@@ -181,7 +181,7 @@ trait UsersApiTests extends org.specs2.mutable.Specification {
 		var profileFromId:JsValue = UsersApi.ttt_Users_getUserProfile(userId)
  
  
-  		"ttt_ttt_UsersApiTest_getUserProfile - Create profile for " + firstName + " " + lastName + " profile id = " +profileId in {
+  		"ttt_ttt_UsersApiTest_getUserProfile - Verify the correct profile was returned from profile Id" in {
  		
 	 		userId must beEqualTo ((profileFromId \ "userProfile" \ "userId").as[Long])
 	  		firstName must beEqualTo ((profileFromId \ "userProfile" \ "firstName").as[String])

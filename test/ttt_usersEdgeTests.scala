@@ -77,17 +77,17 @@ trait UsersEdgeTests extends org.specs2.mutable.Specification {
  	   */	  
  	  
  	  	  
-		ttt_getUserById_WithMatchers("dsfddf", "Get User By Id - Send text instead of a number", """{}""")
+		ttt_getUserById_WithMatchers("dsfddf", "Get User By Id - Send text instead of a number, verify server returns 'status:None' ", """{}""")
 		
 		// Send negative number
-		ttt_getUserById_WithMatchers("-1", "Get User By Id - Send a negative number", """{"status":"None"}""")
+		ttt_getUserById_WithMatchers("-1", "Get User By Id - Send a negative number, verify server returns 'status:None'", """{"status":"None"}""")
 		
 		// Very large and very small integer sizes for ID
-		ttt_getUserById_WithMatchers("0", "Get User By Id - Check user id zerro", """{"status":"None"}""")
-		ttt_getUserById_WithMatchers("9223372036854775807", "Get User By Id - Send largest 'long' size available", """{"status":"None"}""")
-		ttt_getUserById_WithMatchers("9223372036854775807", "Get User By Id - Send greater than largest 'long' size ", """{"status":"None"}""")
-		ttt_getUserById_WithMatchers("-9223372036854775808", "Get User By Id - Send the smallest 'long' available", """{"status":"None"}""")
-		ttt_getUserById_WithMatchers("-9223372036854775809", "Get User By Id - Send less than smallest 'long' available", """{"status":"None"}""")	  
+		ttt_getUserById_WithMatchers("0", "Get User By Id - Check user id zerro, verify server returns 'status:None'", """{"status":"None"}""")
+		ttt_getUserById_WithMatchers("9223372036854775807", "Get User By Id - Send largest 'long' size available, verify server returns 'status:None'", """{"status":"None"}""")
+		ttt_getUserById_WithMatchers("9223372036854775807", "Get User By Id - Send greater than largest 'long' size, verify server returns 'status:None' ", """{"status":"None"}""")
+		ttt_getUserById_WithMatchers("-9223372036854775808", "Get User By Id - Send the smallest 'long' available, verify server returns 'status:None'", """{"status":"None"}""")
+		ttt_getUserById_WithMatchers("-9223372036854775809", "Get User By Id - Send less than smallest 'long' available, verify server returns 'status:None'", """{"status":"None"}""")	  
  
  			
 	  	def ttt_getUserById_WithMatchers(id: String, title: String,expectedErrorMessage: String): String = {	    
@@ -140,33 +140,33 @@ trait UsersEdgeTests extends org.specs2.mutable.Specification {
  	    var longitude = 127.5678
  	    var apiPath = "users"
 
-		"Create User - Missing user name" in {
+		"Create User - Verify server can handle missing User Name and fails to create user" in {
  	       	 var temp = ttt_sendUserApiCommand (apiPath, "", email, password, role, latitude, longitude)
   	       	 temp must not contain("password")   		
 			 temp must contain("This exception has been logged with id")
 		}
 		
 		// Single quote could cause database errors or database crash
-		"Create User - User name with single quote (') in name get's created" in {
+		"Create User - Verify User name with single quote (') in name get's created" in {
  	       	 var temp = ttt_sendUserApiCommand (apiPath, userName + "'", email, password, role, latitude, longitude)
    			 temp must contain(userName + """'""")
  	       	 temp must contain("primaryLoc")
 		}
 		
 		// Semicolon could cause database problems and is used in SQL injection
-		"Create User - User name with single semicolon (;) in name get's created" in {
+		"Create User - Verify User name with single semicolon (;) in name get's created" in {
  	       	 var temp = ttt_sendUserApiCommand (apiPath, userName + ";", email, password, role, latitude, longitude)
 			temp must contain(userName + """;""")
  	       	temp must contain("primaryLoc")
 		}
 
-		"Create User - User name with spaces in name fails" in {
+		"Create User - Verify User name with spaces in name fails" in {
  	       	 var temp = ttt_sendUserApiCommand (apiPath, """SELECT password FROM user""", email, password, role, latitude, longitude)
  	       	 temp must contain("This exception has been logged with id")
  	       	temp must not contain("primaryLoc")
 		}
 		
-		"Create User - User name with " +  """!@#$%^&*()|,."""  + " in name gets created" in {
+		"Create User - Verify User name with " +  """!@#$%^&*()|,."""  + " in name gets created" in {
  	       	 var temp = ttt_sendUserApiCommand (apiPath, userName + """!@#$%^&*()|,.""", email, password, role, latitude, longitude)
     		 temp must contain(userName + """!@#$%^&*()|,.""")
  	       	 temp must contain("primaryLoc")
