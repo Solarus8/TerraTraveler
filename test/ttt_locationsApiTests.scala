@@ -41,9 +41,39 @@ trait LocationsApiTests extends org.specs2.mutable.Specification {
   
  		}
  
-
+ 		
  	} // End of ttt_placesApiTest_createPlace
+ 	
+ 	
+ 	// =================================================================================
+ 	//                 ttt_placesApiTest_createPlace3rdPartyReference
+ 	//
+ 	def ttt_placesApiTest_createPlace3rdPartyReference() {
+ 	  
+ 		"ttt_placesApiTest_createPlace3rdPartyReference - Github issue 9 " in {pending}
+
+ 	}  // End of ttt_placesApiTest_createPlace3rdPartyReference
+ 	
+ 	
+ 	// =================================================================================
+    //                  ttt_placesApiTest_getPlace3rdPartyReferenceById
+ 	
+ 	def ttt_placesApiTest_getPlace3rdPartyReferenceById() {
+ 	  
+ 		"ttt_placesApiTest_getPlace3rdPartyReferenceById - Github issue 9 " in {pending}
+ 	  
+ 	} // End of ttt_placesApiTest_getPlace3rdPartyReferenceById
+ 	
  
+ 	// =================================================================================
+ 	//
+ 	//       ttt_placesApiTest_getPlace3rdPartyReferenceByTerraTravelerPlaceId
+ 	def ttt_placesApiTest_getPlace3rdPartyReferenceByTerraTravelerPlaceId() {
+ 	  
+ 		"ttt_placesApiTest_getPlace3rdPartyReferenceByTerraTravelerPlaceId - Github issue 9 " in {pending}
+ 	  
+ 	}
+ 	
  	
  	// =================================================================================
  	//                       ttt_placesApiTest_getPlaceById
@@ -96,13 +126,13 @@ trait LocationsApiTests extends org.specs2.mutable.Specification {
  		var distanceStatus = true
  		var distanceErrorMsg = ""
  
- 	  
- 		var name = "Puerto Rico"
- 		var desc = "Visit Puerto Rico"
- 		var cat  = "COUNTRY"
- 		var url  = "www.puertorico.com"
- 		var latitude:Double  =  18.265696
- 		var longitude:Double =  -66.485825
+
+ 		var name = "Louvre Museum"
+ 		var desc = "Home of the Mona Lisa"
+ 		var cat  = "MUSEUM"
+ 		var url  = "www.louvreMuseum.com"
+ 		var latitude:Double  =  48.860712
+ 		var longitude:Double =  -2.336797
 	
   			
  		 var place = Json.obj(
@@ -186,9 +216,9 @@ trait LocationsApiTests extends org.specs2.mutable.Specification {
 		}
 		
 		if (distanceStatus == true) {
-			"ttt_placesApiTest_getPlacesByLatitudeLongitudeAndRadius, Verifed " + numberPlacesInRange + "were in range" in {success}		  
+			"ttt_placesApiTest_getPlacesByLatitudeLongitudeAndRadius, Verifed " + numberPlacesInRange + " places were in range" in {success}		  
 		} else {
-			"ttt_placesApiTest_getPlacesByLatitudeLongitudeAndRadius, Unable to verify " + numberPlacesInRange + "were in range" in {failure}
+			"ttt_placesApiTest_getPlacesByLatitudeLongitudeAndRadius, Unable to verify " + numberPlacesInRange + " place were in range" in {failure}
 		}
 		  
 

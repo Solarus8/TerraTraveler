@@ -253,13 +253,17 @@ object TestCommon {
 	  	return milliseconds
 	} // End of ttt_convertDateTimeToMilleconds
 	
-	
-
-	
-	
+		
 	// =================================================================================
 	//                        ttt_sendApiCommand
 	//
+	//    Returns
+	//        passFailStatus - Returns fail when exception error occurs
+	//        tempJason - Returns Json response from server but often just
+	//            returns {} when an error occurs
+	//        tempText - When an error occurs this usually returns a web page saying
+	//            an error occurs it sometimes may show a more detailed error.  When this
+	//            web page shows up check the server for exception errors.
 	def ttt_sendApiCommand(jsonToSend:JsValue, apiString:String, description:String): (Boolean, JsValue, String) = {
 	
 		var tempJson:JsValue = Json.obj()
@@ -296,8 +300,7 @@ object TestCommon {
         	  println("    ** Text recieved" + tempText)
         	  println("==================================\n\n")
         	  
-        	  passFailStatus = false
-        	        
+        	  passFailStatus = false        	        
         }
        
 		return (passFailStatus, tempJson, tempText)
@@ -376,6 +379,32 @@ object Places {
 		)
 		return place
 	  
+	}
+	
+	def placeLouvreMuseum(): JsObject = {
+	  
+  		var place = Json.obj (
+	  	    "name" -> "Louvre Museum",
+	  	    "desc" -> "Home of the Mona Lisa", 
+	  	    "cat" -> "MUSEUM", 
+			"url" -> "www.louvreMuseum.com", 
+			"latitude" -> 48.860712, 
+			"longitude" -> -2.336797
+		)
+		return place
+	}
+		
+		
+	def placeHagaparkenForest(): JsObject = {  
+  		var place = Json.obj (
+	  	    "name" -> "Hagaparken, Sweden",
+	  	    "desc" -> "Forest near Stokholm", 
+	  	    "cat" -> "FOREST", 
+			"url" -> "www.hagaparken.com", 
+			"latitude" -> 59.363503, 
+			"longitude" -> 18.033092
+		)
+		return place	  
 	}
 	
   	

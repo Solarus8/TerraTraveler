@@ -210,18 +210,16 @@ trait UsersEdgeTests extends org.specs2.mutable.Specification {
 	//
 	def ttt_UsersEdgeTests_CreateUserProfile () {
 	  
-
-
-/*	  
-curl \
-	--header "Content-type: application/json" \
-	--request POST \
-	--data '{"userId" : 1, "firstName" : "Raymond", "lastName" : "Zamora", "gender" : "M", "birthdate" : "1990-02-23 10:30:00.0", "nationality" : "Brazilian", "portraitUrl" : "http://www.me.jpg", "bio" : "I began life as a small child.", "story" : "I am a very tough guy."}' \
-	ec2-54-193-80-119.us-west-1.compute.amazonaws.com:9000/api/v1/users/profile \
-	| python -mjson.tool
-*/	  
+		/*	  
+			curl \
+				--header "Content-type: application/json" \
+				--request POST \
+				--data '{"userId" : 1, "firstName" : "Raymond", "lastName" : "Zamora", "gender" : "M", "birthdate" : "1990-02-23 10:30:00.0", "nationality" : "Brazilian", "portraitUrl" : "http://www.me.jpg", "bio" : "I began life as a small child.", "story" : "I am a very tough guy."}' \
+				ec2-54-193-80-119.us-west-1.compute.amazonaws.com:9000/api/v1/users/profile \
+				| python -mjson.tool
+		*/	  
 	
-		var prefix = "Create Profile - "
+		var prefix = "Create User Profile - "
 	  
 		// Greenwater Lake Provincial Park, Canada 
   		var latitude = 52.528699
@@ -232,7 +230,7 @@ curl \
   		var(userId, userResults:JsValue) = UsersApi.ttt_Users_createUser(latitude, longitude, role)
 
   		if (userId < 1 ) {  
-  			"Create User Profile - TEST ABORTED, invalid User Id prevents creating profile, Id=" + userId in {		  
+  			prefix +  "TEST ABORTED, invalid User Id prevents creating profile, Id=" + userId in {		  
   				failure
   			}
   			
@@ -262,11 +260,8 @@ curl \
 
 			
 			prefix + "Verify a new profile is created" in {
-
-
-
 			
-				var (profileId:Long, profileResults:JsValue) = 
+				var (profileId:Long, profileResults:JsValue, textResults:String) = 
 					UsersApi.ttt_Users_createUserProfile(profile)
 println("Create User Profile = " + profileResults)					
 				firstName    must beEqualTo((profileResults \ "userProfile" \ "firstName").as[String]) 
@@ -282,36 +277,69 @@ println("Create User Profile = " + profileResults)
 				story        must not(beEqualTo("dddd"))					
 			}
 			
-			prefix + "Github issue 2 - gender has extra spaces on string" in {failure}
-			prefix + "Github issue 4 - should birthday contain Mon, day, year only, not time?" in {failure}
-			prefix + "Github issue 6 -can't revise profile after profile created" in {failure}
+			prefix + "Github issue 2 - gender has extra spaces on string" in {pending}
+			prefix + "Github issue 4 - should birthday contain Mon, day, year only, not time?" in {pending}
+			prefix + "Github issue 6 -can't revise profile after profile created" in {pending}
 
-			
+		
 			prefix + "Profile with name longer than database field" in {
-				var longName = "x" + 1000
+				var longName = "x" * 10000000
 	
 				val updatedJson = profile.as[JsObject] ++ Json.obj("firstName" -> longName)	
-	
 				
-	println("Profile long name" + updatedJson)
+
+				
+				
+	
+	println("Length of user name is: " + longName.size)			
+	println("Profile with long name" + updatedJson)
 	//			firstName  must beEqualTo((profileResults \ "userProfile" \ "firstName").as[String])
 				
 				1 must beEqualTo(1)
 			}	
 			
 			"Test with missing or extra keys in Json" should {
-			  
-			
-			    var (userId1, userResults1:JsValue) = UsersApi.ttt_Users_createUser(latitude, longitude, role)			  
-				var (profile_id1, results1) = ttt_Edge_createUserProfileJson(TestCommon.EMPTY_FIELD_LONG, 
+				
+	
+			    var userIdResults = UsersApi.ttt_Users_createUser(latitude, longitude, role)			  
+				var profileIdJsonTest = ttt_Edge_createUserProfileJson(TestCommon.EMPTY_FIELD_LONG, 
 				    firstName, lastName, gender, birthdate, nationality, portraitUrl, role, bio,story, 
 				    TestCommon.EMPTY_FIELD_STRING, TestCommon.EMPTY_FIELD_LONG,TestCommon.EMPTY_FIELD_DOUBLE)
-				"Detect missing userId" in {userResults1.toString must beEqualTo("{}")}
-				
+				"Detect missing userId and verify profile not created" in {profileIdJsonTest._2.toString must beEqualTo("{}")}
+
+println("\n\n************** Missing Json fields Id ****************")
+println("Json results = " + profileIdJsonTest._2)
+println("Text results = " + profileIdJsonTest._3)
+println("*" * 30)
+			    
+			    
+			    userIdResults = UsersApi.ttt_Users_createUser(latitude, longitude, role)			  
+				profileIdJsonTest = ttt_Edge_createUserProfileJson(userIdResults._1, 
+				    TestCommon.EMPTY_FIELD_STRING, lastName, gender, birthdate, nationality, portraitUrl, role, bio,story, 
+				    TestCommon.EMPTY_FIELD_STRING, TestCommon.EMPTY_FIELD_LONG,TestCommon.EMPTY_FIELD_DOUBLE)
+				"Verify missing firstname parameter returned as null" in {
+					(profileIdJsonTest._2 \ "userProfile" \ "firstName").as[String] must beEqualTo(null)
+					(profileIdJsonTest._2 \ "userProfile" \ "lastName").as[String] must beEqualTo(lastName)
+				}			    
+
+println("\n\n************** Missing Json fields First Name ****************")
+println("Json results = " + profileIdJsonTest._2)
+println("Text results = " + profileIdJsonTest._3)
+println("*" * 30)
+
+			    userIdResults = UsersApi.ttt_Users_createUser(latitude, longitude, role)			  
+				profileIdJsonTest = ttt_Edge_createUserProfileJson(userIdResults._1, 
+				    firstName , TestCommon.EMPTY_FIELD_STRING, gender, birthdate, nationality, portraitUrl, role, bio,story, 
+				    TestCommon.EMPTY_FIELD_STRING, TestCommon.EMPTY_FIELD_LONG,TestCommon.EMPTY_FIELD_DOUBLE)
+				"Verify missing lastName paramet returned as null" in {
+					(profileIdJsonTest._2 \ "userProfile" \ "firstName").as[String] must beEqualTo(firstName)
+					(profileIdJsonTest._2 \ "userProfile" \ "lastName").as[String] must beEqualTo(null)
+
+				}			    
 				    
-				    
-println("\n\n************** Missing Json fields ****************")
-println(results1)
+println("\n\n************** Missing Json fields Last Name ****************")
+println("Json results = " + profileIdJsonTest._2)
+println("Text results = " + profileIdJsonTest._3)
 println("*" * 30)
 				    
 				    
@@ -349,17 +377,21 @@ println("*" * 30)
  	  
 		temp
  	}
+
  	
+ 	
+ 	//          ttt_Edge_createUserProfileJson
+ 	//   Build up Create Profile Json object with missing or additional fields	
  	def ttt_Edge_createUserProfileJson(userId:Long, firstName:String, lastName:String, gender:String, 
  	    birthdate:String, nationality:String, portraitUrl:String, role:String, bio:String,story:String,
- 	    extraString:String, extraLong:Long, extraDouble:Double): (Long, JsValue) = {
+ 	    extraString:String, extraLong:Long, extraDouble:Double): (Long, JsValue, String) = {
  	   	  
 			var temp = Json.obj()
 			
 			var profile = (temp.as[JsObject] 
 				++ useJsonFieldLong("userId", userId)
  			    ++ useJsonFieldString("firstName", firstName) 
- 			    ++ useJsonFieldString("lastNamee", lastName)
+ 			    ++ useJsonFieldString("lastName", lastName)
  			    ++ useJsonFieldString("gender", gender)
  			    ++ useJsonFieldString("birthdate", birthdate)
  			    ++ useJsonFieldString("nationality", nationality)
@@ -372,9 +404,9 @@ println("*" * 30)
  
    	 	println("\n\n\nCreateUserProfileJson" + profile + "\n\n")
   	  
-   	 	var (profileId:Long, results:JsValue) =  UsersApi.ttt_Users_createUserProfile(profile)
+   	 	var (profileId:Long, results:JsValue, error:String) =  UsersApi.ttt_Users_createUserProfile(profile)
    	 	
-   	 	return (profileId, results)
+   	 	return (profileId, results, error)
  	}
  	
  	
@@ -383,7 +415,7 @@ println("*" * 30)
  		var temp:JsObject = null
  
  		if (TestCommon.EMPTY_FIELD_STRING == value) { 
- 			temp = null
+ 			temp = Json.obj()
  		} else {
  			temp = Json.obj(key -> value)
  		}

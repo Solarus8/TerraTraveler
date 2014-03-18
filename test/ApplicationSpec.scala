@@ -47,26 +47,18 @@ class ApplicationSpec extends org.specs2.mutable.Specification
 		}
 	
 		// =================================================================
-		//    Users API tests
-		//        Get User by ID
-		//        Create User
-		//        Create UserProfile
-		//        Get UserProfile
-		//        Get all Users (Should test be written since this may go away
-		//                       but is very useful for test and debug
-		// =================================================================
-		
+		//                   Users API tests
+		//       
+		//
 		"Users API test" should
 		{
-		  
+		    // No test for get all users
 		    ttt_UsersApiTest_createUser
 			ttt_UsersApiTest_getUserById
 			ttt_UsersApiTest_createUserProfile
 			ttt_UsersApiTest_getUserProfile
 			ttt_UsersApiTest_associateUserAndEvent
-			
-			// TODO - Get All Users test would take a long time - test not written yet
-						
+							
 			// At least one test must be directly inside of "should {}" or "in {} for test results 
 			// to work properly. 		
 			"End of users API test" in {"End" must beEqualTo("End")}		
@@ -75,61 +67,36 @@ class ApplicationSpec extends org.specs2.mutable.Specification
 		} // End of user API tests
 
 		// =================================================================
-		//    Locations API tests
-		//        Create Place
-		//        Create Place 3rd Party Reference
-		//        Get Place 3rd Party Reference by ID
-	    //        Get Place 3rd Party Reference by TerraTraveler Place ID
-	    //        Get Place by ID
-		//        Get Users (attendies) by Event ID"
-		//        Get all Activity Types and Categories
-		//        Get User Contacts by User ID
-		//        Associate User to Contact
-		//        Create Place 3rd Party Reference
-		// =================================================================
-			
+		//                        Locations API tests
+		//
 		"Locations tests API" should {
 		  
 			ttt_placesApiTest_createPlace
 			ttt_placesApiTest_getPlaceById
 			ttt_placesApiTest_getPlacesByLatitudeLongitudeAndRadius
-	
-						
-			"Create Place 3rd Party Reference" in {pending}
-			"Get Place 3rd Party Reference by ID" in {pending}	
-			"Get Place 3rd Party Reference by TerraTraveler Place ID" in {pending}	
-			"Get Users (attendies) by Event ID" in {pending}		
-			"Get User Contacts by User ID" in {pending}	
-
-			"Create Place 3rd Party Reference" in {pending}				
 			
+			"ttt_placesApiTest_createPlace3rdPartyReference - Github issue 9" in {pending}
+			"ttt_placesApiTest_getPlace3rdPartyReferenceById - Github issue 9" in {pending}
+			"ttt_placesApiTest_getPlace3rdPartyReferenceByTerraTravelerPlaceId - Github issue 9" in {pending}			
+			//ttt_placesApiTest_createPlace3rdPartyReference
+			//ttt_placesApiTest_getPlace3rdPartyReferenceById
+			//ttt_placesApiTest_getPlace3rdPartyReferenceByTerraTravelerPlaceId
 			
-			"End of users API test" in {			
-					"End of users API test" must contain("End")
-			}
+			"End of users API test" in {"End of users API test" must contain("End")}			
 			
   		} // End of Places Test API
 
 		
-	
-		
-		
 		// =================================================================
-		//    Events API tests	
-		//        Create Event
-		//        Get Events by User ID
-		//        Get Event by ID
+		//                        Events API tests	
 		//
-		//        What is the accuracy for radius of events at the equator, Mountain View,
-		//            Fairbanks Alaska and Johannesburg South Affrica.
-		// =================================================================
-		
 		"Events API tests" should {
 		  
 		    ttt_EventsApiTest_createEvent
 		    ttt_EventsApiTest_getEventById
 			ttt_EventsApiTest_getAllActivityTypesAndCategories
-		
+		    "Get Users (attendies) by Event ID" in {pending}		
+			"Get User Contacts by User ID" in {pending}			
 			"Get Events by User ID" in {pending}		
 			"Get Events by location radius using location ID" in {pending}
 			"Get Events by latitude, longitude, radius, activity, and category" in {pending}
@@ -140,11 +107,8 @@ class ApplicationSpec extends org.specs2.mutable.Specification
 		
 
 		// =================================================================
-		//    Trips API tests
-		//        Create New Trip
-		//        Get trip by ID
+		//                      Trips API tests
 		//
-		// =================================================================
 		"Trips API tests" should {
 		  
 			ttt_TripsApiTest_createNewTrip
@@ -173,8 +137,6 @@ class ApplicationSpec extends org.specs2.mutable.Specification
 	} // End of Terra Traveler Test should
 
  
-
-  
 } // End of the main program ApplicationSpec
 
 

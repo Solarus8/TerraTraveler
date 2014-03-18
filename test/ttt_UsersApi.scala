@@ -167,7 +167,7 @@ object UsersApi{
 	// =================================================================================
 	//                      ttt_Users_createUserProfile
 	//
-	def ttt_Users_createUserProfile(profile:JsValue): (Long, JsValue) = {
+	def ttt_Users_createUserProfile(profile:JsValue): (Long, JsValue, String) = {
 	  
 		/*
 		 *  API documentation version 20
@@ -210,7 +210,7 @@ object UsersApi{
 	  
 
 		
-		return (proFileId, temp)
+		return (proFileId, temp, error)
 	}  // End of ttt_Users_createUserProfile
 	
 	
@@ -226,7 +226,7 @@ object UsersApi{
 	  // TODO - Not finished and not tested
 	  
 			/*
-example request
+			example request
 			curl \
 				--header "Content-type: application/json" \
 				--request POST \
@@ -284,11 +284,11 @@ example request
 println ("User profile id = " + userId)
 println ("User profile JSON = " + userProfile)
 
-	   var (passFailStatus:Boolean, temp:JsValue, error:String) = TestCommon.ttt_sendApiCommand(userProfile,
+	   var (passFailStatus:Boolean, jsonResults:JsValue, textResults:String) = TestCommon.ttt_sendApiCommand(userProfile,
 		   "users/profile", "Generate User Profile")
 
 		   
-	   temp
+	   jsonResults
 	}
 
 	// =================================================================================
@@ -332,11 +332,14 @@ println ("User profile JSON = " + userProfile)
 			}
 		*/
 	  
+		var test:JsValue = Json.obj()
 
-		var (passFailStatus:Boolean, results:JsValue, error:String) = TestCommon.ttt_sendApiCommand(Json.obj(),
+		var (passFailStatus:Boolean, jsonResults:JsValue, textResults:String) = TestCommon.ttt_sendApiCommand(test,
 		    "events/" + eventId.toString.trim() + "/user/" + userId.toString.trim(), "Associate User and Event")		
-	  	  
-	    return (passFailStatus, results)
+
+	    
+		    
+	    return (passFailStatus, jsonResults)
 		    
 	    	   
 	} // End of ttt_Users_associateUserAndEvent

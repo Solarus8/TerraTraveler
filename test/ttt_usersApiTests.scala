@@ -119,7 +119,7 @@ trait UsersApiTests extends org.specs2.mutable.Specification {
  
  		
  		// Create user profile
- 		var (profileId:Long, newProfile:JsValue) = UsersApi.ttt_Users_createUserProfile(profile)
+ 		var (profileId:Long, newProfile:JsValue, error:String) = UsersApi.ttt_Users_createUserProfile(profile)
  
  		var sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.S");
  		
@@ -177,7 +177,7 @@ trait UsersApiTests extends org.specs2.mutable.Specification {
 			"story"       -> story
  		)
 		  
-		var (profileId:Long, newProfile:JsValue) = UsersApi.ttt_Users_createUserProfile(profile)
+		var (profileId:Long, newProfile:JsValue, error:String) = UsersApi.ttt_Users_createUserProfile(profile)
 		var profileFromId:JsValue = UsersApi.ttt_Users_getUserProfile(userId)
  
  
@@ -204,19 +204,9 @@ trait UsersApiTests extends org.specs2.mutable.Specification {
  	//                      ttt_UsersApiTest_associateUserAndEvent
  	//
  	def ttt_UsersApiTest_associateUserAndEvent() {
- 	  
- 	
- 		// Yosemite National Park  37.865348  -119.538374
- 		var name = "Yosemite Nationa Park"
- 		var desc = "Camping, skiing and nature"
- 		var cat  = "PARK"
- 		var url  = "www.yosemite.gov"	  
- 		var latitude = 37.865348
-  		var longitude = -119.538374
-  		var role = "NORM"
-  	    
+ 	  	    
   		// Create user
-  		var(userId:Long, user:JsValue) = UsersApi.ttt_Users_createUser(latitude, longitude, role)
+  		var(userId:Long, user:JsValue) = UsersApi.ttt_Users_createUser(37.865348, -119.538374, "NORM")
 
   		// Create a place to hold the event
   		var (placeId:Long, newPlace:JsObject) =  LocationsApi.ttt_Places_CreatePlace(Places.placeYosimiteNationalPark, 0)
@@ -239,6 +229,12 @@ trait UsersApiTests extends org.specs2.mutable.Specification {
 		var (eventId:Long, newEvent:JsValue) = EventsApi.ttt_Events_createEvent(event)
 
 
+println("===== Associate user and event ============")
+println("Event id = " + eventId)
+println("User id =  " + userId)
+println("Event Json = " + event)
+		
+		
 		
 		
   		// Associate the user with the event
